@@ -267,7 +267,7 @@ productRoute.delete(
     admin,
     asyncHandler(async (req, res) => {
         const product = await Product.findById(req.params.id);
-        const listImage = product?.image;
+        const listImage = product?.optionColor;
         if (listImage) {
             for (let i = 0; i < listImage.length; i++) {
                 fs.unlink(path.join(__dirname, 'public/productImage', listImage[i].image), (err) => {
@@ -287,7 +287,7 @@ productRoute.delete(
     }),
 );
 
-// DELETE PRODUCT OPTION COLOR AND AMOUNT
+// DELETE PRODUCT OPTION COLOR AND AMOUNT AND IMAGE
 productRoute.post(
     '/:id/delete',
     protect,
@@ -295,6 +295,12 @@ productRoute.post(
     asyncHandler(async (req, res) => {
         const { optionId } = req.body;
         const product = await Product.findById(req.params.id);
+        const findImage = product?.optionColor.find((id) => id._id == optionId);
+        if (findImage) {
+            fs.unlink(path.join(__dirname, 'public/productImage', findImage.image), (err) => {
+                if (err) console.log('Delete old productImage have err:', err);
+            });
+        }
         if (product) {
             product.optionColor = product?.optionColor.filter((option) => option._id != optionId);
             await product.save();
@@ -312,7 +318,7 @@ productRoute.post(
     protect,
     admin,
     asyncHandler(async (req, res) => {
-        const { name, price, description, category, image } = req.body;
+        const { name, price, description, category } = req.body;
         const productExist = await Product.findOne({ name });
         if (price <= 0) {
             res.status(400);
@@ -327,7 +333,6 @@ productRoute.post(
                 price,
                 description,
                 category,
-                image,
                 user: req.user._id,
             });
             if (product) {
@@ -347,7 +352,7 @@ productRoute.post(
     protect,
     admin,
     asyncHandler(async (req, res) => {
-        const { color, countInStock } = req.body;
+        const { color, countInStock, image } = req.body;
         const product = await Product.findById(req.params.id);
         const optionColors = product.optionColor;
         const colorExist = optionColors.some((optionColor) => optionColor.color == color);
@@ -364,6 +369,7 @@ productRoute.post(
             const colors = {
                 color,
                 countInStock,
+                image,
             };
             optionColors.push(colors);
             await product.save();
@@ -381,7 +387,7 @@ productRoute.put(
     protect,
     admin,
     asyncHandler(async (req, res) => {
-        const { name, price, description, category, image } = req.body;
+        const { name, price, description, category } = req.body;
         const product = await Product.findById(req.params.id);
         if (price <= 0) {
             res.status(400);
@@ -392,8 +398,6 @@ productRoute.put(
             product.price = price || product.price;
             product.description = description || product.description;
             product.category = category || product.category;
-            product.image = image || product.image;
-            // product.countInStock = countInStock || product.countInStock;
 
             const updatedProduct = await product.save();
             res.json(updatedProduct);
@@ -445,7 +449,7 @@ productRoute.post(
     asyncHandler(async (req, res) => {
         const { imageId } = req.body;
         const product = await Product.findById(req.params.id);
-        const listImage = product?.image;
+        const listImage = product?.optionColor;
         const finDelete = listImage.find((image) => image.id == imageId);
         if (finDelete) {
             fs.unlink(path.join(__dirname, 'public/productImage', finDelete.image), (err) => {

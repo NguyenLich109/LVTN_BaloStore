@@ -13,6 +13,7 @@ const cartItem = mongoose.Schema(
             require: true,
             default: false,
         },
+        image: { type: String, required: true },
     },
     {
         timestamps: true,

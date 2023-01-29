@@ -38,7 +38,7 @@ const PlaceOrderScreen = ({ history }) => {
                 name: pro.product.name,
                 color: pro.color,
                 qty: pro.qty,
-                image: pro.product.image[0].image,
+                image: pro.image,
                 price: pro.product.price,
                 product: pro.product._id,
             });
@@ -124,11 +124,11 @@ const PlaceOrderScreen = ({ history }) => {
                 )}
                 {findCart?.countInStock < item?.qty ? (
                     <div className="col-md-2 col-5">
-                        <img src={`/productImage/${item.product?.image[0].image}`} alt={item.name} />
+                        <img src={`/productImage/${item?.image}`} alt={item.name} />
                     </div>
                 ) : (
                     <div className="col-md-2 col-6">
-                        <img src={`/productImage/${item.product?.image[0].image}`} alt={item.name} />
+                        <img src={`/productImage/${item?.image}`} alt={item.name} />
                     </div>
                 )}
                 {findCart?.countInStock < item?.qty ? (

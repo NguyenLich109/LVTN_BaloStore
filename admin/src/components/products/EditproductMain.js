@@ -40,9 +40,7 @@ const EditproductMain = (props) => {
     const [category, setCategory] = useState('');
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
-    const [image, setImage] = useState([]);
-    const [inputImage, setInputImage] = useState([]);
-    const [arrImage, setArrImage] = useState([]);
+    const [inputImage, setInputImage] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [description, setDescription] = useState('');
     const [color, setColor] = useState('');
@@ -51,7 +49,6 @@ const EditproductMain = (props) => {
     const [AddCountInStock, setAddCountInStock] = useState('');
     const [checkEdit, setCheckEdit] = useState(false);
     const [checkAdd, setCheckAdd] = useState(true);
-    const [check, setCheck] = useState(false);
     const dispatch = useDispatch();
 
     const productEdit = useSelector((state) => state.productEdit);
@@ -107,35 +104,21 @@ const EditproductMain = (props) => {
     }, [optionId]);
 
     useEffect(() => {
-        if (check) {
+        if (successCreactImage) {
+            dispatch({ type: PRODUCT_CREATE_IMAGE_RESET });
             dispatch(
-                updateProduct({
-                    _id: productId,
-                    name,
-                    price,
-                    category,
-                    description,
-                    image,
+                createOptionColor(productId, {
+                    color: AddColor,
+                    countInStock: AddCountInStock,
+                    image: urlImages[0].filename,
                 }),
             );
-            dispatch({ type: PRODUCT_CREATE_IMAGE_RESET });
-            setCheck(false);
+            setAddColor('');
+            setAddCountInStock('');
+            setInputImage('');
         }
-    }, [check]);
-    useEffect(() => {
-        if (successCreactImage) {
-            for (let i = 0; i < urlImages.length; i++) {
-                setImage((image) => [...image, { image: urlImages[i].filename, id: uuidv4() }]);
-            }
-            setCheck(true);
-            setArrImage([]);
-        }
-    }, [urlImages, successCreactImage]);
-    useEffect(() => {
-        for (let i = 0; i < inputImage.length; i++) {
-            setArrImage((image) => [...image, { image: inputImage[i], id: arrImage.length + i }]);
-        }
-    }, [inputImage]);
+    }, [urlImages, successCreactImage, dispatch, AddColor, AddCountInStock, productId]);
+
     useEffect(() => {
         dispatch(ListCategory());
         if (successUpdate) {
@@ -147,9 +130,7 @@ const EditproductMain = (props) => {
             } else {
                 setName(product.name);
                 setDescription(product.description);
-                setCountInStock(product.countInStock);
                 setCategory(product.category);
-                setImage(product.image);
                 setPrice(product.price);
             }
         }
@@ -157,7 +138,7 @@ const EditproductMain = (props) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if (category != -1) {
+        if (category !== -1) {
             dispatch(
                 updateProduct({
                     _id: productId,
@@ -165,7 +146,6 @@ const EditproductMain = (props) => {
                     price,
                     category,
                     description,
-                    image,
                 }),
             );
         }
@@ -174,24 +154,16 @@ const EditproductMain = (props) => {
         e.preventDefault();
         dispatch(updateOptionProduct(productId, { optionId, color, countInStock }));
     };
+
     const submitOptionSaveHandler = (e) => {
         e.preventDefault();
-        dispatch(createOptionColor(productId, { color: AddColor, countInStock: AddCountInStock }));
-        setAddColor('');
-        setAddCountInStock('');
-    };
-    const handlerSubmitImage = () => {
         let images = new FormData();
-        for (let i = 0; i < arrImage.length; i++) {
-            images.append('image', arrImage[i].image);
-        }
-        if (arrImage.length !== 0) {
+        images.append('image', inputImage);
+        if (inputImage !== '') {
             dispatch(createImageProduct(images));
         }
-        if (arrImage.length === 0) {
-            toast.error('Không thể gửi đi', ToastObjects);
-        }
     };
+
     const modules = {
         toolbar: [
             [{ header: [1, 2, false] }],
@@ -301,108 +273,6 @@ const EditproductMain = (props) => {
                                                     ))}
                                                 </select>
                                             </div>
-
-                                            <div className="mb-0">
-                                                <label className="form-label">Ảnh</label>
-                                                {/* <input
-                                                    className={`form-control `}
-                                                    type="text"
-                                                    placeholder="URL"
-                                                    value={image}
-                                                    //required
-
-                                                    onChange={(e) => setImage(e.target.value)}
-                                                /> */}
-                                                <div className="row">
-                                                    {image &&
-                                                        image?.map((img) => {
-                                                            return (
-                                                                <div
-                                                                    key={img.id}
-                                                                    className="col-2 col-sm-2 col-md-2 col-lg-2 product_image_arr"
-                                                                >
-                                                                    <div className="row">
-                                                                        <img
-                                                                            className="img_css col-10 col-sm-10 col-md-10 col-lg-10"
-                                                                            src={`/productImage/${img?.image}`}
-                                                                        ></img>
-                                                                        <p
-                                                                            className="product_image_p"
-                                                                            onClick={() => {
-                                                                                dispatch(
-                                                                                    deleteImageProduct(
-                                                                                        productId,
-                                                                                        img.id,
-                                                                                    ),
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            <i class="far fa-times-circle"></i>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    {arrImage !== ' ' &&
-                                                        arrImage?.map((ima) => {
-                                                            return (
-                                                                <div
-                                                                    key={ima.id}
-                                                                    className="col-2 col-sm-2 col-md-2 col-lg-2 product_image_arr"
-                                                                >
-                                                                    <div
-                                                                        className="row"
-                                                                        style={{ display: 'flex', flexWrap: 'wrap' }}
-                                                                    >
-                                                                        <img
-                                                                            className="img_css col-10 col-sm-10 col-md-10 col-lg-10"
-                                                                            src={
-                                                                                ima.image !== undefined
-                                                                                    ? `${URL.createObjectURL(
-                                                                                          ima?.image,
-                                                                                      )}`
-                                                                                    : ''
-                                                                            }
-                                                                        ></img>
-                                                                        <p
-                                                                            className="product_image_p"
-                                                                            onClick={() => {
-                                                                                const retult = arrImage?.filter(
-                                                                                    (image) => image.id !== ima.id,
-                                                                                );
-                                                                                setArrImage(retult);
-                                                                            }}
-                                                                        >
-                                                                            <i class="far fa-times-circle"></i>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                </div>
-                                                <div style={{ display: 'flex' }}>
-                                                    <label
-                                                        for="inputFile"
-                                                        className="form-control mt-2 col-10 col-sm-10 col-md-10 col-lg-10"
-                                                        style={{ cursor: 'pointer' }}
-                                                    >
-                                                        Chọn tệp
-                                                    </label>
-                                                    <input
-                                                        id="inputFile"
-                                                        className="d-none"
-                                                        onChange={(e) => setInputImage(e.target.files)}
-                                                        type="file"
-                                                        multiple
-                                                    />
-                                                    <input
-                                                        type="button"
-                                                        className="col-2 col-sm-2 col-md-2 col-lg-2 mt-2 mb-2"
-                                                        onClick={handlerSubmitImage}
-                                                        value="Lưu tệp"
-                                                    ></input>
-                                                </div>
-                                            </div>
                                             <div className="mb-0">
                                                 <label className="form-label">Nội dung</label>
                                                 <ReactQuill
@@ -485,6 +355,7 @@ const EditproductMain = (props) => {
                                                             <th>Stt</th>
                                                             <th>Màu sắc</th>
                                                             <th>Số lượng</th>
+                                                            <th>Hình ảnh</th>
                                                             <th className="text-end">Action</th>
                                                         </tr>
                                                     </thead>
@@ -499,6 +370,16 @@ const EditproductMain = (props) => {
                                                                     </td>
                                                                     <td>
                                                                         <span>{option.countInStock}</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <img
+                                                                            style={{
+                                                                                height: '40px',
+                                                                                width: '40px',
+                                                                            }}
+                                                                            src={`/productImage/${option?.image}`}
+                                                                            alt="Product"
+                                                                        />
                                                                     </td>
                                                                     <td className="text-end">
                                                                         <div
@@ -574,6 +455,17 @@ const EditproductMain = (props) => {
                                                                 //required
                                                                 value={AddCountInStock}
                                                                 onChange={(e) => setAddCountInStock(e.target.value)}
+                                                            />
+                                                        </div>
+
+                                                        <div className="mb-0">
+                                                            <label htmlFor="product_price" className="form-label">
+                                                                Hình ảnh
+                                                            </label>
+                                                            <input
+                                                                className="form-control col-12 col-sm-12 col-md-12 col-lg-12"
+                                                                onChange={(e) => setInputImage(e.target.files[0])}
+                                                                type="file"
                                                             />
                                                         </div>
 

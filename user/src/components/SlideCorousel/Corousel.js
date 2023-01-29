@@ -71,7 +71,7 @@ export default function Corousel() {
                             <div key={index} className="corousel-div" style={{ maxHeight: '300px' }}>
                                 <Link to={`/products/${product._id}`} className="corousel-link">
                                     <img
-                                        src={`/productImage/${product?.image[0]?.image}`}
+                                        src={`/productImage/${product?.optionColor[0]?.image}`}
                                         className="corousel-img"
                                     ></img>
                                     <p className="corousel-noti">{product.name}</p>

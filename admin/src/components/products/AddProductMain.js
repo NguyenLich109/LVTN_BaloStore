@@ -16,7 +16,6 @@ import Loading from '../LoadingError/Loading';
 import { ListCategory } from '../../Redux/Actions/categoryActions';
 import isEmpty from 'validator/lib/isEmpty';
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
 
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -29,17 +28,13 @@ const AddProductMain = () => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
-    const [image, setImage] = useState([]);
-    const [inputImage, setInputImage] = useState([]);
-    const [arrImage, setArrImage] = useState([]);
+    const [inputImage, setInputImage] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [description, setDescription] = useState('');
     const [color, setColor] = useState('');
     const [productId, setProducId] = useState('');
     const [validate, setValidate] = useState({});
     const { quill, quillRef } = useQuill();
-    const [ble, setBle] = useState(false);
-    const [check, setCheck] = useState(0);
     const [disabledOptionColor, setDisabledOptionColor] = useState(false);
     const [disabledProduct, setDisabledProduct] = useState(true);
     const dispatch = useDispatch();
@@ -68,10 +63,7 @@ const AddProductMain = () => {
             setColor('');
             setCountInStock(1);
         }
-        if (successCreactImage) {
-            dispatch({ type: PRODUCT_CREATE_IMAGE_RESET });
-        }
-    }, [successOption, successCreactImage, dispatch]);
+    }, [successOption, dispatch]);
 
     useEffect(() => {
         dispatch(editProduct(productId));
@@ -80,13 +72,13 @@ const AddProductMain = () => {
     useEffect(() => {
         dispatch(ListCategory());
     }, []);
+
     useEffect(() => {
-        if (urlImages) {
-            for (let i = 0; i < urlImages.length; i++) {
-                setImage((image) => [...image, { image: urlImages[i].filename, id: uuidv4() }]);
-            }
+        if (successCreactImage) {
+            dispatch({ type: PRODUCT_CREATE_IMAGE_RESET });
+            dispatch(createOptionColor(productId, { color, countInStock, image: urlImages[0].filename }));
         }
-    }, [urlImages]);
+    }, [successCreactImage, dispatch, productId, color, countInStock, urlImages]);
     useEffect(() => {
         if (quill) {
             quill.on('text-change', () => {
@@ -94,6 +86,7 @@ const AddProductMain = () => {
             });
         }
     }, [quill]);
+
     const isEmptyCheckEdit = () => {
         const msg = {};
         if (isEmpty(category)) {
@@ -113,10 +106,6 @@ const AddProductMain = () => {
                 msg.borderRed3 = 'border-red';
             }
         }
-        // if (isEmpty(image)) {
-        //     msg.image = 'Vui lòng nhập hình ảnh sản phẩm';
-        //     msg.borderRed4 = 'border-red';
-        // }
         if (isEmpty(description)) {
             msg.description = 'Vui lòng nhập mô tả sản phẩm';
             msg.borderRed6 = 'border-red';
@@ -130,37 +119,21 @@ const AddProductMain = () => {
         e.preventDefault();
         const isEmptyValidate = isEmptyCheckEdit();
         if (!isEmptyValidate) return;
-        // console.log(category);
         if (category !== -1) {
-            dispatch(createProduct(name, price, description, category, image, countInStock));
+            dispatch(createProduct(name, price, description, category));
             setDisabledProduct(false);
             setDisabledOptionColor(true);
         }
     };
     const submitOptionHandler = (e) => {
         e.preventDefault();
-        dispatch(createOptionColor(productId, { color, countInStock }));
+        let images = new FormData();
+        images.append('image', inputImage);
+        dispatch(createImageProduct(images));
+        setInputImage('');
     };
     const handlerOnchane = (e) => {
-        setInputImage(e.target.files);
-        if (check === 0) {
-            setCheck(1);
-            setBle(true);
-        }
-    };
-    useEffect(() => {
-        for (let i = 0; i < inputImage.length; i++) {
-            setArrImage((image) => [...image, { image: inputImage[i], id: arrImage.length + i }]);
-        }
-    }, [inputImage]);
-    const handlerSubmitImage = () => {
-        let images = new FormData();
-        for (let i = 0; i < arrImage.length; i++) {
-            images.append('image', arrImage[i].image);
-        }
-        dispatch(createImageProduct(images));
-        setBle(false);
-        setCheck(2);
+        setInputImage(e.target.files[0]);
     };
     return (
         <>
@@ -270,67 +243,6 @@ const AddProductMain = () => {
                                                 <p className="product_validate">{validate.category}</p>
                                             </div>
                                             <div className="mb-0">
-                                                <label className="form-label">Ảnh</label>
-                                                <div className="row">
-                                                    {arrImage !== ' ' &&
-                                                        arrImage?.map((ima) => {
-                                                            return (
-                                                                <div
-                                                                    key={ima.id}
-                                                                    className="col-2 col-sm-2 col-md-2 col-lg-2 product_image_arr"
-                                                                >
-                                                                    <div
-                                                                        className="row"
-                                                                        style={{ display: 'flex', flexWrap: 'wrap' }}
-                                                                    >
-                                                                        <img
-                                                                            className="img_css col-10 col-sm-10 col-md-10 col-lg-10"
-                                                                            src={
-                                                                                ima.image !== undefined
-                                                                                    ? `${URL.createObjectURL(
-                                                                                          ima?.image,
-                                                                                      )}`
-                                                                                    : ''
-                                                                            }
-                                                                        ></img>
-                                                                        <p
-                                                                            className="product_image_p"
-                                                                            onClick={() => {
-                                                                                const retult = arrImage?.filter(
-                                                                                    (image) => image.id !== ima.id,
-                                                                                );
-                                                                                setArrImage(retult);
-                                                                            }}
-                                                                        >
-                                                                            <i class="far fa-times-circle"></i>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                </div>
-                                                <div style={{ display: 'flex' }}>
-                                                    <input
-                                                        className={
-                                                            ble === false
-                                                                ? 'form-control mt-2 col-12 col-sm-12 col-md-12 col-lg-12'
-                                                                : 'form-control mt-2 col-10 col-sm-10 col-md-10 col-lg-10'
-                                                        }
-                                                        onChange={handlerOnchane}
-                                                        type="file"
-                                                        multiple
-                                                    />
-                                                    {check === 1 && (
-                                                        <input
-                                                            type="button"
-                                                            className="col-2 col-sm-2 col-md-2 col-lg-2 mt-2"
-                                                            onClick={handlerSubmitImage}
-                                                            value="Lưu"
-                                                        ></input>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="mb-0">
                                                 <label className="form-label">Nội dung</label>
                                                 <div
                                                     onClick={() => {
@@ -422,6 +334,17 @@ const AddProductMain = () => {
                                                         <p className="product_validate">{validate.countInStock}</p>
                                                     </div>
 
+                                                    <div className="mb-0">
+                                                        <label htmlFor="product_price" className="form-label">
+                                                            Hình Ảnh
+                                                        </label>
+                                                        <input
+                                                            className="form-control col-12 col-sm-12 col-md-12 col-lg-12"
+                                                            onChange={handlerOnchane}
+                                                            type="file"
+                                                        />
+                                                    </div>
+
                                                     <div className="d-grid" style={{ marginTop: '10px' }}>
                                                         {disabledOptionColor && (
                                                             <button
@@ -441,6 +364,7 @@ const AddProductMain = () => {
                                                             <th>Stt</th>
                                                             <th>Màu sắc</th>
                                                             <th>Số lượng</th>
+                                                            <th>Hình ảnh</th>
                                                         </tr>
                                                     </thead>
                                                     {/* Table Data */}
@@ -454,6 +378,16 @@ const AddProductMain = () => {
                                                                     </td>
                                                                     <td>
                                                                         <span>{option.countInStock}</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <img
+                                                                            style={{
+                                                                                height: '40px',
+                                                                                width: '40px',
+                                                                            }}
+                                                                            src={`/productImage/${option?.image}`}
+                                                                            alt="Product"
+                                                                        />
                                                                     </td>
                                                                 </tr>
                                                             ))}

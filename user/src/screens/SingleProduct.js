@@ -57,7 +57,9 @@ const SingleProduct = ({ history, match }) => {
     const [optionIndex, setOptionIndex] = useState(0);
     const [optionsArrColor, setOptionArrColor] = useState('');
     const [color, setColor] = useState('');
+    const [image, setImage] = useState('');
     const [reviewColor, setReviewColor] = useState('');
+    const [numberIndexColor, setNumberIndexColor] = useState(0);
     const productId = match.params.id;
     const dispatch = useDispatch();
 
@@ -102,6 +104,7 @@ const SingleProduct = ({ history, match }) => {
     useEffect(() => {
         if (optionColor) {
             setColor(optionColor[0]?.color);
+            setImage(optionColor[0]?.image);
         }
     }, [optionColor]);
 
@@ -204,7 +207,7 @@ const SingleProduct = ({ history, match }) => {
     const AddToCartHandle = (e) => {
         e.preventDefault();
         if (userInfo) {
-            dispatch(addToCart(productId, color, qty, userInfo._id));
+            dispatch(addToCart(productId, color, qty, image, userInfo._id));
         } else history.push('/login');
     };
     const submitHandler = (e) => {
@@ -259,7 +262,10 @@ const SingleProduct = ({ history, match }) => {
                                 <div className="row">
                                     <div className="col-md-5">
                                         <div className="single-image">
-                                            <DetailProduct products={product.image} />
+                                            <DetailProduct
+                                                products={product?.optionColor}
+                                                indexNumber={numberIndexColor}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-7 product-postion">
@@ -306,6 +312,8 @@ const SingleProduct = ({ history, match }) => {
                                                                 onClick={() => {
                                                                     setOptionIndex(index);
                                                                     setColor(option.color);
+                                                                    setImage(option.image);
+                                                                    setNumberIndexColor(index);
                                                                 }}
                                                                 class={
                                                                     optionIndex === index

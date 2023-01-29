@@ -177,7 +177,8 @@ const CartScreen = ({ match, location, history }) => {
                                     {findCartCountInStock(item)}
                                     <div className="cart-image col-md-1 col-4">
                                         <img
-                                            src={`/productImage/${item.product?.image[0].image}`}
+                                            style={{ height: '80px', width: '80px' }}
+                                            src={`/productImage/${item?.image}`}
                                             alt={item.product?.name}
                                         />
                                     </div>

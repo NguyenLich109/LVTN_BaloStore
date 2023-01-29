@@ -57,6 +57,7 @@ const optionColorSchema = mongoose.Schema(
     {
         color: { type: String, required: true },
         countInStock: { type: Number, required: true, default: 0 },
+        image: { type: String, required: true },
     },
     {
         timestamps: true,
@@ -69,10 +70,10 @@ const productSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        image: {
-            type: Array,
-            required: true,
-        },
+        // image: {
+        //     type: Array,
+        //     required: true,
+        // },
         description: {
             type: String,
             required: true,

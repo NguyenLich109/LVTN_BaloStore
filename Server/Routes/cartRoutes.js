@@ -22,7 +22,7 @@ cartRoutes.post(
     '/',
     protect,
     asyncHandler(async (req, res) => {
-        const { productId, color, qty, _id } = req.body;
+        const { productId, color, qty, image, _id } = req.body;
         // const product = await Pcolorroduct.findById(productId);
         const cartExist = await Cart.findOne({ user: _id });
         if (req?.user?.disabled) {
@@ -53,6 +53,7 @@ cartRoutes.post(
                 product: productId,
                 color: color,
                 qty: qty,
+                image,
             };
             cartExist.cartItems.push(cartadd);
             await cartExist.save();
@@ -67,6 +68,7 @@ cartRoutes.post(
                         product: productId,
                         color,
                         qty,
+                        image,
                     },
                 ],
             });
