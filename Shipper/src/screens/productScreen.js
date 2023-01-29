@@ -12,7 +12,7 @@ const ProductScreen = ({ match }) => {
             <Sidebar />
             <main className="main-wrap">
                 <Header />
-                <MainProducts keyword={keyword} category={category} pageNumber={pageNumber} />
+                {/* <MainProducts keyword={keyword} category={category} pageNumber={pageNumber} /> */}
             </main>
         </>
     );

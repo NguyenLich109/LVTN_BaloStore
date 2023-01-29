@@ -10,7 +10,7 @@ const EditNewsScreen = ({ match }) => {
             <Sidebar />
             <main className="main-wrap">
                 <Header />
-                <EditNews idNews={idNews} />
+                {/* <EditNews idNews={idNews} /> */}
             </main>
         </>
     );

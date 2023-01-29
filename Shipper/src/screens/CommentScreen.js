@@ -10,7 +10,7 @@ const CommentScreen = () => {
             <Sidebar />
             <main className="main-wrap">
                 <Header />
-                <CommentMain></CommentMain>
+                {/* <CommentMain></CommentMain> */}
             </main>
         </>
     );

@@ -10,7 +10,7 @@ const AddNewsScreen = () => {
             <Sidebar />
             <main className="main-wrap">
                 <Header />
-                <AddNews />
+                {/* <AddNews /> */}
             </main>
         </>
     );

@@ -12,7 +12,7 @@ const OrderScreen = ({ match }) => {
             <Sidebar />
             <main className="main-wrap">
                 <Header />
-                <OrderMain keyword={keyword} status={status} pageNumber={pageNumber} />
+                {/* <OrderMain keyword={keyword} status={status} pageNumber={pageNumber} /> */}
             </main>
         </>
     );
