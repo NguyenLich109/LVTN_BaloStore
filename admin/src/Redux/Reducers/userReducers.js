@@ -1,4 +1,20 @@
 import {
+    CREATE_IMAGE_USER_FAIL,
+    CREATE_IMAGE_USER_REQUEST,
+    CREATE_IMAGE_USER_RESET,
+    CREATE_IMAGE_USER_SUCCESS,
+    CREATE_USER_FAIL,
+    CREATE_USER_REQUEST,
+    CREATE_USER_RESET,
+    CREATE_USER_SUCCESS,
+    SEND_EMAIL_USER_FAIL,
+    SEND_EMAIL_USER_REQUEST,
+    SEND_EMAIL_USER_RESET,
+    SEND_EMAIL_USER_SUCCESS,
+    UPDATE_USER_FAIL,
+    UPDATE_USER_REQUEST,
+    UPDATE_USER_RESET,
+    UPDATE_USER_SUCCESS,
     USER_DISABLED_FAIL,
     USER_DISABLED_REQUEST,
     USER_DISABLED_RESET,
@@ -55,6 +71,70 @@ export const userdisabledReducer = (state = {}, action) => {
         case USER_DISABLED_FAIL:
             return { loading: false, error: action.payload };
         case USER_DISABLED_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+// CREATE USER
+export const createUserReduct = (state = {}, action) => {
+    switch (action.type) {
+        case CREATE_USER_REQUEST:
+            return { loading: true };
+        case CREATE_USER_SUCCESS:
+            return { loading: false, userInfo: action.payload, success: true };
+        case CREATE_USER_FAIL:
+            return { loading: false, error: action.payload };
+        case CREATE_USER_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+// CRATEB IMAGE USER
+export const createImageUserReduct = (state = {}, action) => {
+    switch (action.type) {
+        case CREATE_IMAGE_USER_REQUEST:
+            return { loading: true };
+        case CREATE_IMAGE_USER_SUCCESS:
+            return { loading: false, urlImage: action.payload, success: true };
+        case CREATE_IMAGE_USER_FAIL:
+            return { loading: false, error: action.payload };
+        case CREATE_IMAGE_USER_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+// CRATEB IMAGE USER
+export const sendEmailUserReduce = (state = {}, action) => {
+    switch (action.type) {
+        case SEND_EMAIL_USER_REQUEST:
+            return { loading: true };
+        case SEND_EMAIL_USER_SUCCESS:
+            return { loading: false, success: true };
+        case SEND_EMAIL_USER_FAIL:
+            return { loading: false, error: action.payload };
+        case SEND_EMAIL_USER_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+// UPDATE PROFILE USER
+export const updateProfileReduce = (state = {}, action) => {
+    switch (action.type) {
+        case UPDATE_USER_REQUEST:
+            return { loading: true };
+        case UPDATE_USER_SUCCESS:
+            return { loading: false, retultPass: action.payload, success: true };
+        case UPDATE_USER_FAIL:
+            return { loading: false, error: action.payload };
+        case UPDATE_USER_RESET:
             return {};
         default:
             return state;

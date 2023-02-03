@@ -1,0 +1,23 @@
+.create-user h2 {
+    padding-bottom: 30px;
+}
+
+.image-user {
+    width: 150px;
+    height: 150px;
+    position: relative;
+}
+.create-user__image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.create-user__label {
+    font-size: 1.8rem;
+    position: absolute;
+    bottom: -10px;
+    left: 70%;
+    cursor: pointer;
+    /* color: #ccc; */
+}

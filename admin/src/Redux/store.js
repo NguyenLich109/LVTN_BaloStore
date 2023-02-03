@@ -1,7 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { userListReducer, userLoginReducer, userdisabledReducer } from './Reducers/userReducers';
+import {
+    userListReducer,
+    userLoginReducer,
+    userdisabledReducer,
+    createUserReduct,
+    createImageUserReduct,
+    sendEmailUserReduce,
+    updateProfileReduce,
+} from './Reducers/userReducers';
 import {
     productCreateReducer,
     optionColorCreateReducer,
@@ -47,6 +55,10 @@ const reducer = combineReducers({
     userLogin: userLoginReducer,
     userList: userListReducer,
     userdisabled: userdisabledReducer,
+    createUserReduct,
+    createImageUser: createImageUserReduct,
+    sendEmailUser: sendEmailUserReduce,
+    updateProfileReduce,
     productList: productListReducer,
     productDelete: productDeleteReducer,
     productOptionDelete: productDeleteOptionReducer,

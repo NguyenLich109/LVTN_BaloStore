@@ -7,6 +7,9 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        date: {
+            type: String,
+        },
         email: {
             type: String,
             required: true,
@@ -16,11 +19,19 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        cmnd: {
+            type: String,
+        },
         password: {
             type: String,
             required: true,
         },
         isAdmin: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
+        isNv: {
             type: Boolean,
             required: true,
             default: false,

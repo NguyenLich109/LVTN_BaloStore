@@ -157,10 +157,12 @@ const EditproductMain = (props) => {
 
     const submitOptionSaveHandler = (e) => {
         e.preventDefault();
-        let images = new FormData();
-        images.append('image', inputImage);
         if (inputImage !== '') {
+            let images = new FormData();
+            images.append('image', inputImage);
             dispatch(createImageProduct(images));
+        } else {
+            toast.error('Vui lòng chọn ảnh', ToastObjects);
         }
     };
 

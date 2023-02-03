@@ -127,10 +127,14 @@ const AddProductMain = () => {
     };
     const submitOptionHandler = (e) => {
         e.preventDefault();
-        let images = new FormData();
-        images.append('image', inputImage);
-        dispatch(createImageProduct(images));
-        setInputImage('');
+        if (inputImage === '') {
+            toast.error('Vui lòng chọn ảnh', ToastObjects);
+        } else {
+            let images = new FormData();
+            images.append('image', inputImage);
+            dispatch(createImageProduct(images));
+            setInputImage('');
+        }
     };
     const handlerOnchane = (e) => {
         setInputImage(e.target.files[0]);

@@ -12,16 +12,9 @@ import {
     USER_LOGOUT,
 } from '../Constants/UserContants';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 // LOGIN
 export const login = (email, password) => async (dispatch) => {
-    const ToastObjects = {
-        pauseOnFocusLoss: false,
-        draggable: false,
-        pauseOnHover: false,
-        autoClose: 2000,
-    };
     try {
         dispatch({ type: USER_LOGIN_REQUEST });
 
@@ -31,16 +24,8 @@ export const login = (email, password) => async (dispatch) => {
             },
         };
 
-        const { data } = await axios.post(`/api/users/login`, { email, password }, config);
+        const { data } = await axios.post(`/api/users/loginNv`, { email, password }, config);
 
-        // if (!data.isAdmin !== true) {
-        //     toast.error('You are not Admin', ToastObjects);
-        //     dispatch({
-        //         type: USER_LOGIN_FAIL,
-        //     });
-        // } else {
-        //     dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-        // }
         dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
         localStorage.setItem('userInfo', JSON.stringify(data));
     } catch (error) {

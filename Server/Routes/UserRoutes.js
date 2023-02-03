@@ -6,6 +6,7 @@ import generateToken from '../utils/generateToken.js';
 import User from './../Models/UserModel.js';
 import path from 'path';
 import fs from 'fs';
+import nodemailer from 'nodemailer';
 
 const __dirname = path.resolve();
 const userRouter = express.Router();
@@ -47,7 +48,84 @@ userRouter.post(
             });
         } else {
             res.status(401);
-            throw new Error('Invalid Email or Password');
+            throw new Error('Tài khoản hoặc mật khẩu không chính xác');
+        }
+    }),
+);
+
+// LOGIN ADMIN
+userRouter.post(
+    '/loginAdmin',
+    asyncHandler(async (req, res) => {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (user?.disabled) {
+            res.status(400);
+            throw new Error('Tài khoản đã bạn đã bị khóa, vui lòng liên hệ shop để có thể lấy lại');
+        }
+        if (user && (await user.matchPassword(password))) {
+            if (user.isAdmin) {
+                res.json({
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    isAdmin: user.isAdmin,
+                    token: generateToken(user._id),
+                    createdAt: user.createdAt,
+                    address: user.address,
+                    city: user.city,
+                    country: user.country,
+                    image: user.image,
+                    disabled: user.disabled,
+                });
+            } else {
+                res.status(401);
+                throw new Error('Tài khoản bạn không phải quản trị viên');
+            }
+        } else {
+            res.status(401);
+            throw new Error('Tài khoản hoặc mật khẩu không chính xác');
+        }
+    }),
+);
+
+// LOGIN NHAN VIEN
+userRouter.post(
+    '/loginNv',
+    asyncHandler(async (req, res) => {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (user?.disabled) {
+            res.status(400);
+            throw new Error('Tài khoản đã bạn đã bị khóa, vui lòng liên hệ shop để có thể lấy lại');
+        }
+        if (user && (await user.matchPassword(password))) {
+            if (user.isNv) {
+                res.json({
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    date: user.date,
+                    phone: user.phone,
+                    cmnd: user.cmnd,
+                    isAdmin: user.isAdmin,
+                    isNv: user.isNv,
+                    token: generateToken(user._id),
+                    createdAt: user.createdAt,
+                    address: user.address,
+                    city: user.city,
+                    country: user.country,
+                    image: user.image,
+                    disabled: user.disabled,
+                });
+            } else {
+                res.status(401);
+                throw new Error('Tài khoản bạn không phải nhân viên');
+            }
+        } else {
+            res.status(401);
+            throw new Error('Tài khoản hoặc mật khẩu không chính xác');
         }
     }),
 );
@@ -86,6 +164,42 @@ userRouter.post(
                 disabled: user.disabled,
                 token: generateToken(user._id),
             });
+        } else {
+            res.status(400);
+            throw new Error('Invalid User Data');
+        }
+    }),
+);
+
+// REGISTER
+userRouter.post(
+    '/nhanvien',
+    asyncHandler(async (req, res) => {
+        const { name, date, phone, cmnd, email, country, city, address, password, image } = req.body;
+
+        const userExists = await User.findOne({ email });
+
+        if (userExists) {
+            res.status(400);
+            throw new Error('Tài khoản đã tồn tại');
+        }
+
+        const user = await User.create({
+            name,
+            date,
+            phone,
+            cmnd,
+            email,
+            country,
+            city,
+            address,
+            password,
+            image,
+            isNv: true,
+        });
+
+        if (user) {
+            res.status(201).json('Tạo tại khoản thành công');
         } else {
             res.status(400);
             throw new Error('Invalid User Data');
@@ -175,6 +289,46 @@ userRouter.put(
     }),
 );
 
+// UPDATE PROFILE
+userRouter.put(
+    '/updateProfile',
+    protect,
+    admin,
+    asyncHandler(async (req, res) => {
+        const { name, date, phone, cmnd, email, country, city, address, password, image, id } = req.body;
+        const user = await User.findById(id);
+        if (user?.disabled) {
+            res.status(400);
+            throw new Error('account lock up');
+        }
+        if (image && image !== user.image) {
+            fs.unlink(path.join(__dirname, 'public/userProfile', user.image), (err) => {
+                if (err) console.log('Delete old avatar have err:', err);
+            });
+        }
+        if (user) {
+            user.name = name || user.name;
+            user.date = date || user.date;
+            user.email = email || user.email;
+            user.phone = phone || user.phone;
+            user.cmnd = cmnd || user.cmnd;
+            user.address = address || user.address;
+            user.city = city || user.city;
+            user.country = country || user.country;
+            user.image = image || user.image;
+
+            if (password) {
+                user.password = password;
+            }
+            const updatedUser = await user.save();
+            res.json('Cập nhật thành công');
+        } else {
+            res.status(404);
+            throw new Error('User not found');
+        }
+    }),
+);
+
 // GET ALL USER ADMIN
 userRouter.get(
     '/',
@@ -224,6 +378,48 @@ userRouter.put(
             user.disabled = disabled;
             const retult = await user.save();
             res.status(201).json(retult);
+        }
+    }),
+);
+
+//SEND TK EMAIL
+userRouter.post(
+    '/sendEmail',
+    protect,
+    admin,
+    asyncHandler(async (req, res) => {
+        const { email } = req.body;
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            const text = `
+            Tài khoản của quý khách
+            Tài khoản: ${email}
+            Mật khẩu: ${email}
+            Quý khách vui lòng đổi mật khẩu sau khi đăng nhập thành công, để đảm bảo tính bảo mật của tài khoản
+            `;
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'balostore.owner@gmail.com',
+                    pass: 'ytmgtsqgkgtypwle',
+                },
+            });
+
+            var mailOptions = {
+                from: 'balostore.owner@gmail.com',
+                to: email,
+                subject: 'BaloStore kính chào quý khách, đây là thông tin tài khoản đăng nhập của quý khách',
+                text: text,
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+            res.json({ status: 'TK đã gửi qua email, vui lòng kiểm tra hòm thư của bạn' });
         }
     }),
 );

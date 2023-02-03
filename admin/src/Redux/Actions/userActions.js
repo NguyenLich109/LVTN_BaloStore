@@ -1,4 +1,16 @@
 import {
+    CREATE_IMAGE_USER_FAIL,
+    CREATE_IMAGE_USER_REQUEST,
+    CREATE_IMAGE_USER_SUCCESS,
+    CREATE_USER_FAIL,
+    CREATE_USER_REQUEST,
+    CREATE_USER_SUCCESS,
+    SEND_EMAIL_USER_FAIL,
+    SEND_EMAIL_USER_REQUEST,
+    SEND_EMAIL_USER_SUCCESS,
+    UPDATE_USER_FAIL,
+    UPDATE_USER_REQUEST,
+    UPDATE_USER_SUCCESS,
     USER_DISABLED_FAIL,
     USER_DISABLED_REQUEST,
     USER_DISABLED_SUCCESS,
@@ -12,16 +24,9 @@ import {
     USER_LOGOUT,
 } from '../Constants/UserContants';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 // LOGIN
 export const login = (email, password) => async (dispatch) => {
-    const ToastObjects = {
-        pauseOnFocusLoss: false,
-        draggable: false,
-        pauseOnHover: false,
-        autoClose: 2000,
-    };
     try {
         dispatch({ type: USER_LOGIN_REQUEST });
 
@@ -31,16 +36,9 @@ export const login = (email, password) => async (dispatch) => {
             },
         };
 
-        const { data } = await axios.post(`/api/users/login`, { email, password }, config);
+        const { data } = await axios.post(`/api/users/loginAdmin`, { email, password }, config);
 
-        if (!data.isAdmin === true) {
-            toast.error('You are not Admin', ToastObjects);
-            dispatch({
-                type: USER_LOGIN_FAIL,
-            });
-        } else {
-            dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-        }
+        dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
 
         localStorage.setItem('userInfo', JSON.stringify(data));
     } catch (error) {
@@ -117,6 +115,120 @@ export const disabledUser = (id, disabled) => async (dispatch, getState) => {
         }
         dispatch({
             type: USER_DISABLED_FAIL,
+            payload: message,
+        });
+    }
+};
+
+export const createImageUserAction = (images) => async (dispatch) => {
+    try {
+        dispatch({ type: CREATE_IMAGE_USER_REQUEST });
+
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        };
+
+        const { data } = await axios.post(`/api/uploadAvatar/`, images, config);
+
+        dispatch({ type: CREATE_IMAGE_USER_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: CREATE_IMAGE_USER_FAIL,
+            payload: message,
+        });
+    }
+};
+
+export const createUser = (data) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: CREATE_USER_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        await axios.post(`/api/users/nhanvien`, data, config);
+        dispatch({ type: CREATE_USER_SUCCESS });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: CREATE_USER_FAIL,
+            payload: message,
+        });
+    }
+};
+
+//GUI TK QUA EMAIL
+export const sendEmailAction = (data) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: SEND_EMAIL_USER_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        await axios.post(`/api/users/sendEmail`, data, config);
+        dispatch({ type: SEND_EMAIL_USER_SUCCESS });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: SEND_EMAIL_USER_FAIL,
+            payload: message,
+        });
+    }
+};
+
+//UPDATE PROFILE USER
+export const updateProfileUser = (data) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: UPDATE_USER_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { value } = await axios.put(`/api/users/updateProfile`, data, config);
+        dispatch({ type: UPDATE_USER_SUCCESS, payload: value });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: UPDATE_USER_FAIL,
             payload: message,
         });
     }
