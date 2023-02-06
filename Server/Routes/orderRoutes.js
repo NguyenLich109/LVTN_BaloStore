@@ -175,8 +175,8 @@ orderRouter.get(
 // ADMIN GET ALL ORDERS
 orderRouter.get(
     '/all',
-    // protect,
-    // admin,
+    protect,
+    admin,
     asyncHandler(async (req, res) => {
         const pageSize = 15;
         const page = Number(req.query.pageNumber) || 1;
@@ -218,6 +218,38 @@ orderRouter.get(
         }
         if (status == 6) {
             search.cancel = 1;
+        }
+        const count = await Order.countDocuments({ ...search });
+        let orders = await Order.find({ ...search })
+            .limit(pageSize)
+            .skip(pageSize * (page - 1))
+            .sort({ _id: -1 })
+            .populate('user', 'id name email');
+
+        res.json({ orders, page, pages: Math.ceil(count / pageSize) });
+    }),
+);
+
+// NHAN VIEN GET ALL ORDERS
+orderRouter.get(
+    '/all/orders',
+    protect,
+    asyncHandler(async (req, res) => {
+        const pageSize = 15;
+        const page = Number(req.query.pageNumber) || 1;
+        const status = Number(req.query.status) || 2;
+
+        let search = {};
+        if (req.query.keyword) {
+            search.email = {
+                $regex: req.query.keyword,
+                $options: 'i',
+            };
+        }
+        if (status == 2) {
+            search.cancel = 0;
+            search.waitConfirmation = true;
+            search.isDelivered = false;
         }
         const count = await Order.countDocuments({ ...search });
         let orders = await Order.find({ ...search })

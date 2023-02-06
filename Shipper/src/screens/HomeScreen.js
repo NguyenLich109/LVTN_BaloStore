@@ -9,7 +9,7 @@ const HomeScreen = () => {
             <Sidebar />
             <main className="main-wrap">
                 <Header />
-                {/* <Main /> */}
+                <Main />
             </main>
         </>
     );

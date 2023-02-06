@@ -11,6 +11,10 @@ import {
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
     USER_LOGOUT,
+    USER_UPDATE_FAIL,
+    USER_UPDATE_REQUEST,
+    USER_UPDATE_RESET,
+    USER_UPDATE_SUCCESS,
 } from '../Constants/UserContants';
 
 // LOGIN
@@ -55,6 +59,22 @@ export const userdisabledReducer = (state = {}, action) => {
         case USER_DISABLED_FAIL:
             return { loading: false, error: action.payload };
         case USER_DISABLED_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+// UPDATE PASSWORD USERS
+export const updatePasswordReduce = (state = {}, action) => {
+    switch (action.type) {
+        case USER_UPDATE_REQUEST:
+            return { loading: true };
+        case USER_UPDATE_SUCCESS:
+            return { loading: false, userNoti: action.payload, success: true };
+        case USER_UPDATE_FAIL:
+            return { loading: false, error: action.payload };
+        case USER_UPDATE_RESET:
             return {};
         default:
             return state;

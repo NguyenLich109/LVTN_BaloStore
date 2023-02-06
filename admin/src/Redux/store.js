@@ -9,6 +9,7 @@ import {
     createImageUserReduct,
     sendEmailUserReduce,
     updateProfileReduce,
+    getUserReduce,
 } from './Reducers/userReducers';
 import {
     productCreateReducer,
@@ -59,6 +60,7 @@ const reducer = combineReducers({
     createImageUser: createImageUserReduct,
     sendEmailUser: sendEmailUserReduce,
     updateProfileReduce,
+    getUserReduce,
     productList: productListReducer,
     productDelete: productDeleteReducer,
     productOptionDelete: productDeleteOptionReducer,

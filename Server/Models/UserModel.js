@@ -10,6 +10,9 @@ const userSchema = mongoose.Schema(
         date: {
             type: String,
         },
+        sex: {
+            type: String,
+        },
         email: {
             type: String,
             required: true,
@@ -35,6 +38,9 @@ const userSchema = mongoose.Schema(
             type: Boolean,
             required: true,
             default: false,
+        },
+        homeTown: {
+            type: String,
         },
         address: {
             type: String,

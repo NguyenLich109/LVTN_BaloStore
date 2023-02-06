@@ -23,6 +23,7 @@ import AddNewsScreen from './screens/AddNewsScreen';
 import EditNewsScreen from './screens/EditNewsScreen';
 import NewsScreen from './screens/NewsScreen';
 import CommentScreen from './screens/CommentScreen';
+import OrderReceiveScreen from './screens/OrderReceiveScreen';
 
 function App() {
     const dispatch = useDispatch();
@@ -64,6 +65,32 @@ function App() {
                     <PrivateRouter
                         path="/orders/search/:keyword/page/:pageNumber/status/:status"
                         component={OrderScreen}
+                        exact
+                    />
+
+                    <PrivateRouter path="/ordersReceive" component={OrderReceiveScreen} exact />
+                    <PrivateRouter path="/ordersReceive/page/:pageNumber" component={OrderReceiveScreen} exact />
+                    <PrivateRouter path="/ordersReceive/search/:keyword" component={OrderReceiveScreen} exact />
+                    <PrivateRouter path="/ordersReceive/status/:status" component={OrderReceiveScreen} exact />
+                    <PrivateRouter
+                        path="/ordersReceive/search/:keyword/status/:status"
+                        component={OrderReceiveScreen}
+                        exact
+                    />
+                    <PrivateRouter
+                        path="/ordersReceive/page/:pageNumber/status/:status"
+                        component={OrderReceiveScreen}
+                        exact
+                    />
+                    <PrivateRouter
+                        path="/ordersReceive/page/:pageNumber/search/:keyword"
+                        component={OrderReceiveScreen}
+                        exact
+                    />
+                    <PrivateRouter path="/ordersReceive/page/:pageNumber" component={OrderReceiveScreen} exact />
+                    <PrivateRouter
+                        path="/ordersReceive/search/:keyword/page/:pageNumber/status/:status"
+                        component={OrderReceiveScreen}
                         exact
                     />
 

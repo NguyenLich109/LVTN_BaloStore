@@ -44,7 +44,7 @@ export const listOrders =
             };
 
             const { data } = await axios.get(
-                `/api/orders/all?keyword=${keyword}&status=${status}&pageNumber=${pageNumber}`,
+                `/api/orders/all/orders?keyword=${keyword}&status=${status}&pageNumber=${pageNumber}`,
                 config,
             );
 

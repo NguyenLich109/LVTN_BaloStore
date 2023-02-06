@@ -32,20 +32,25 @@ userRouter.post(
             throw new Error('Tài khoản đã bạn đã bị khóa, vui lòng liên hệ shop để có thể lấy lại');
         }
         if (user && (await user.matchPassword(password))) {
-            res.json({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                isAdmin: user.isAdmin,
-                token: generateToken(user._id),
-                createdAt: user.createdAt,
-                address: user.address,
-                city: user.city,
-                country: user.country,
-                image: user.image,
-                disabled: user.disabled,
-            });
+            if (!user.isNv) {
+                res.json({
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    isAdmin: user.isAdmin,
+                    token: generateToken(user._id),
+                    createdAt: user.createdAt,
+                    address: user.address,
+                    city: user.city,
+                    country: user.country,
+                    image: user.image,
+                    disabled: user.disabled,
+                });
+            } else {
+                res.status(401);
+                throw new Error('Tài khoản bạn không phải là khách hàng');
+            }
         } else {
             res.status(401);
             throw new Error('Tài khoản hoặc mật khẩu không chính xác');
@@ -105,6 +110,7 @@ userRouter.post(
                 res.json({
                     _id: user._id,
                     name: user.name,
+                    sex: user.sex,
                     email: user.email,
                     date: user.date,
                     phone: user.phone,
@@ -113,6 +119,7 @@ userRouter.post(
                     isNv: user.isNv,
                     token: generateToken(user._id),
                     createdAt: user.createdAt,
+                    homeTown: user.homeTown,
                     address: user.address,
                     city: user.city,
                     country: user.country,
@@ -174,8 +181,10 @@ userRouter.post(
 // REGISTER
 userRouter.post(
     '/nhanvien',
+    protect,
+    admin,
     asyncHandler(async (req, res) => {
-        const { name, date, phone, cmnd, email, country, city, address, password, image } = req.body;
+        const { name, date, sex, phone, cmnd, email, country, city, homeTown, address, password, image } = req.body;
 
         const userExists = await User.findOne({ email });
 
@@ -187,9 +196,11 @@ userRouter.post(
         const user = await User.create({
             name,
             date,
+            sex,
             phone,
             cmnd,
             email,
+            homeTown,
             country,
             city,
             address,
@@ -203,6 +214,39 @@ userRouter.post(
         } else {
             res.status(400);
             throw new Error('Invalid User Data');
+        }
+    }),
+);
+
+// GET USER
+userRouter.get(
+    '/:id/user',
+    protect,
+    admin,
+    asyncHandler(async (req, res) => {
+        const user = await User.findById(req.params.id);
+        if (user) {
+            res.json({
+                _id: user._id,
+                name: user.name,
+                sex: user.sex,
+                email: user.email,
+                date: user.date,
+                phone: user.phone,
+                cmnd: user.cmnd,
+                isAdmin: user.isAdmin,
+                isNv: user.isNv,
+                homeTown: user.homeTown,
+                createdAt: user.createdAt,
+                address: user.address,
+                city: user.city,
+                country: user.country,
+                image: user.image,
+                disabled: user.disabled,
+            });
+        } else {
+            res.status(404);
+            throw new Error('User not found');
         }
     }),
 );
@@ -234,7 +278,7 @@ userRouter.get(
     }),
 );
 
-// UPDATE PROFILE
+// UPDATE PROFILE KHACH HANG
 userRouter.put(
     '/profile',
     protect,
@@ -244,7 +288,7 @@ userRouter.put(
             res.status(400);
             throw new Error('account lock up');
         }
-        if (!!user?.image && req.body.image !== user.image) {
+        if (req.body.image && req.body.image !== user.image) {
             fs.unlink(path.join(__dirname, 'public/userProfile', user.image), (err) => {
                 if (err) console.log('Delete old avatar have err:', err);
             });
@@ -289,19 +333,19 @@ userRouter.put(
     }),
 );
 
-// UPDATE PROFILE
+// UPDATE PROFILE NHAN VIEN
 userRouter.put(
     '/updateProfile',
     protect,
     admin,
     asyncHandler(async (req, res) => {
-        const { name, date, phone, cmnd, email, country, city, address, password, image, id } = req.body;
+        const { name, date, sex, phone, cmnd, email, homeTown, country, city, address, password, image, id } = req.body;
         const user = await User.findById(id);
         if (user?.disabled) {
             res.status(400);
             throw new Error('account lock up');
         }
-        if (image && image !== user.image) {
+        if (image && image != user.image) {
             fs.unlink(path.join(__dirname, 'public/userProfile', user.image), (err) => {
                 if (err) console.log('Delete old avatar have err:', err);
             });
@@ -309,9 +353,11 @@ userRouter.put(
         if (user) {
             user.name = name || user.name;
             user.date = date || user.date;
+            user.sex = sex || user.sex;
             user.email = email || user.email;
             user.phone = phone || user.phone;
             user.cmnd = cmnd || user.cmnd;
+            user.homeTown = homeTown || user.homeTown;
             user.address = address || user.address;
             user.city = city || user.city;
             user.country = country || user.country;

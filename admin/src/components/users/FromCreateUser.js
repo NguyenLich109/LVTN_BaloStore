@@ -31,6 +31,8 @@ const FromCreateUser = () => {
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
+    const [sex, setSex] = useState('');
+    const [homeTown, setHomeTown] = useState('');
 
     useEffect(() => {
         if (successUser) {
@@ -46,9 +48,11 @@ const FromCreateUser = () => {
                 createUser({
                     name,
                     date,
+                    sex,
                     phone,
                     cmnd,
                     email,
+                    homeTown,
                     country,
                     city,
                     address,
@@ -58,7 +62,7 @@ const FromCreateUser = () => {
             );
             setImage('');
         }
-    }, [dispatch, success, name, date, phone, cmnd, email, country, city, address, urlImage]);
+    }, [dispatch, success, name, date, sex, phone, cmnd, email, homeTown, country, city, address, urlImage]);
 
     const handleCreate = () => {
         if (image === '') {
@@ -98,7 +102,7 @@ const FromCreateUser = () => {
                         <div className="row">
                             <div className="col-xl-5 col-lg-5">
                                 <div>
-                                    <label for="exampleInputEmail1">Họ tên</label>
+                                    <label for="exampleInputEmail1">Họ tên:</label>
                                     <input
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
@@ -108,7 +112,7 @@ const FromCreateUser = () => {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Ngày sinh</label>
+                                    <label for="exampleInputEmail1">Ngày sinh:</label>
                                     <input
                                         value={date}
                                         onChange={(e) => setDate(e.target.value)}
@@ -118,7 +122,19 @@ const FromCreateUser = () => {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Số điện thoại</label>
+                                    <label for="exampleInputEmail1">Giới tính:</label>
+                                    <select
+                                        onChange={(e) => setSex(e.target.value)}
+                                        class="form-select"
+                                        aria-label="Default select example"
+                                    >
+                                        <option selected>Giới tính</option>
+                                        <option value="Nam">Nam</option>
+                                        <option value="Nữ">Nữ</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="exampleInputEmail1">Số điện thoại:</label>
                                     <input
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
@@ -128,7 +144,7 @@ const FromCreateUser = () => {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">CMND/CCCD</label>
+                                    <label for="exampleInputEmail1">CMND/CCCD:</label>
                                     <input
                                         value={cmnd}
                                         onChange={(e) => setCmnd(e.target.value)}
@@ -140,7 +156,7 @@ const FromCreateUser = () => {
                             </div>
                             <div className="col-xl-5 col-lg-5">
                                 <div>
-                                    <label for="exampleInputEmail1">Email</label>
+                                    <label for="exampleInputEmail1">Email:</label>
                                     <input
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -150,7 +166,17 @@ const FromCreateUser = () => {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Tỉnh/Thành phố</label>
+                                    <label for="exampleInputEmail1">Quê quán:</label>
+                                    <input
+                                        value={homeTown}
+                                        onChange={(e) => setHomeTown(e.target.value)}
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Quê quán"
+                                    ></input>
+                                </div>
+                                <div>
+                                    <label for="exampleInputEmail1">Chổ ở hiện tại: (Tỉnh/Thành phố)</label>
                                     <input
                                         value={country}
                                         onChange={(e) => setCountry(e.target.value)}
@@ -160,7 +186,7 @@ const FromCreateUser = () => {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Huyện/Quận</label>
+                                    <label for="exampleInputEmail1">Chổ ở hiện tại: (Huyện/Quận)</label>
                                     <input
                                         value={city}
                                         onChange={(e) => setCity(e.target.value)}
@@ -170,7 +196,7 @@ const FromCreateUser = () => {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Đường/Hẻm</label>
+                                    <label for="exampleInputEmail1">Chổ ở hiện tại: (Đường/Hẻm)</label>
                                     <input
                                         value={address}
                                         onChange={(e) => setAddress(e.target.value)}

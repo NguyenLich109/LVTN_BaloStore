@@ -7,7 +7,7 @@ import { listOrders } from '../../Redux/Actions/OrderActions';
 import { useSelector, useDispatch } from 'react-redux';
 import PaginatorOrder from './PaginatorOrder';
 
-const Orders = (props) => {
+const MainOrders = (props) => {
     const { keyword, status, pageNumber } = props;
     const dispatch = useDispatch();
     const history = useHistory();
@@ -22,17 +22,17 @@ const Orders = (props) => {
 
     const handleStatus = (value) => {
         if (keyword) {
-            history.push(`/orders/search/${keyword}/status/${value.target.value}`);
+            history.push(`/ordersReceive/search/${keyword}/status/${value.target.value}`);
         } else {
-            history.push(`/orders/status/${value.target.value}`);
+            history.push(`/ordersReceive/status/${value.target.value}`);
         }
     };
     const handleSearch = (e) => {
         e.preventDefault();
         if (kewywordSearch.trim() && kewywordSearch) {
-            history.push(`/orders/search/${kewywordSearch}`);
+            history.push(`/ordersReceive/search/${kewywordSearch}`);
         } else {
-            history.push(`/orders`);
+            history.push(`/ordersReceive`);
         }
     };
     return (
@@ -63,7 +63,9 @@ const Orders = (props) => {
                         </div>
                         <div className="col-lg-2 col-3 col-md-3 me-2">
                             <select className="form-select" value={status} onChange={handleStatus}>
-                                <option value={'2'}>Đã xác nhận</option>
+                                <option value={'3'}>Đang giao</option>
+                                <option value={'4'}>Thanh toán</option>
+                                <option value={'7'}>Thanh toán bị hủy</option>
                             </select>
                         </div>
                     </div>
@@ -153,4 +155,4 @@ const Orders = (props) => {
     );
 };
 
-export default Orders;
+export default MainOrders;

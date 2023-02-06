@@ -199,7 +199,7 @@ body.offcanvas-active {
     justify-content: center;
 }
 .navbar-aside .aside-top .logo {
-    width: 80%;
+    max-width: 80%;
 }
 
 .main-header {

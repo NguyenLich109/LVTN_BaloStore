@@ -5,6 +5,9 @@ import {
     CREATE_USER_FAIL,
     CREATE_USER_REQUEST,
     CREATE_USER_SUCCESS,
+    GET_USER_FAIL,
+    GET_USER_REQUEST,
+    GET_USER_SUCCESS,
     SEND_EMAIL_USER_FAIL,
     SEND_EMAIL_USER_REQUEST,
     SEND_EMAIL_USER_SUCCESS,
@@ -60,6 +63,37 @@ export const logout = () => (dispatch) => {
     dispatch({ type: USER_LIST_RESET });
 };
 
+export const getUserAction =
+    ({ id }) =>
+    async (dispatch, getState) => {
+        try {
+            dispatch({ type: GET_USER_REQUEST });
+
+            const {
+                userLogin: { userInfo },
+            } = getState();
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${userInfo.token}`,
+                },
+            };
+
+            const { data } = await axios.get(`/api/users/${id}/user`, config);
+
+            dispatch({ type: GET_USER_SUCCESS, payload: data });
+        } catch (error) {
+            const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+            if (message === 'Not authorized, token failed') {
+                dispatch(logout());
+            }
+            dispatch({
+                type: GET_USER_FAIL,
+                payload: message,
+            });
+        }
+    };
+
 // ALL USER
 export const listUser = () => async (dispatch, getState) => {
     try {
@@ -90,7 +124,7 @@ export const listUser = () => async (dispatch, getState) => {
     }
 };
 
-// ALL USER
+// LOOK ACCOUNT
 export const disabledUser = (id, disabled) => async (dispatch, getState) => {
     try {
         dispatch({ type: USER_DISABLED_REQUEST });

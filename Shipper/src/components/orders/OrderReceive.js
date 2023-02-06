@@ -1,7 +1,7 @@
 import React from 'react';
-import Orders from './Orders';
+import MainOrders from './MainOrders';
 
-const OrderMain = (props) => {
+export default function OrderReceive(props) {
     const { keyword, status, pageNumber } = props;
     return (
         <section className="content-main">
@@ -12,12 +12,10 @@ const OrderMain = (props) => {
             <div className="card mb-4 shadow-sm">
                 <div className="card-body">
                     <div className="table-responsive">
-                        <Orders keyword={keyword} status={status} pageNumber={pageNumber} />
+                        <MainOrders keyword={keyword} status={status} pageNumber={pageNumber} />
                     </div>
                 </div>
             </div>
         </section>
     );
-};
-
-export default OrderMain;
+}

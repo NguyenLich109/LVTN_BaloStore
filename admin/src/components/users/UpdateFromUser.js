@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { createImageUserAction, createUser } from '../../Redux/Actions/userActions';
-import { CREATE_IMAGE_USER_RESET, CREATE_USER_RESET } from '../../Redux/Constants/UserContants';
+import { createImageUserAction, getUserAction, updateProfileUser } from '../../Redux/Actions/userActions';
+import { UPDATE_USER_RESET, CREATE_IMAGE_USER_RESET } from '../../Redux/Constants/UserContants';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loading from '../LoadingError/Loading';
@@ -14,13 +14,15 @@ const ToastObjects = {
     autoClose: 2000,
 };
 
-export default function UpdateFromUser() {
+export default function UpdateFromUser({ id }) {
     const dispatch = useDispatch();
 
     const createImageUser = useSelector((state) => state.createImageUser);
     const { success, urlImage } = createImageUser;
-    const createUserReduct = useSelector((state) => state.createUserReduct);
-    const { loading, success: successUser } = createUserReduct;
+    const updateProfileReduce = useSelector((state) => state.updateProfileReduce);
+    const { loading: updateloading, success: updatesuccess } = updateProfileReduce;
+    const getUserReduce = useSelector((state) => state.getUserReduce);
+    const { userInfo, loading: loadingGetUser } = getUserReduce;
 
     const [image, setImage] = useState('');
     const [name, setName] = useState('');
@@ -31,38 +33,79 @@ export default function UpdateFromUser() {
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
+    const [sex, setSex] = useState('');
+    const [homeTown, setHomeTown] = useState('');
 
     useEffect(() => {
-        if (successUser) {
-            dispatch({ type: CREATE_USER_RESET });
-            toast.success('Tạo tài khoản thành công', ToastObjects);
+        if (id) {
+            dispatch(getUserAction({ id }));
         }
-    }, [dispatch, successUser]);
+    }, [dispatch, id]);
+
+    useEffect(() => {
+        if (userInfo) {
+            setName(userInfo?.name);
+            setDate(userInfo?.date);
+            setSex(userInfo?.sex);
+            setPhone(userInfo?.phone);
+            setCmnd(userInfo?.cmnd);
+            setEmail(userInfo?.email);
+            setCountry(userInfo?.country);
+            setCity(userInfo?.city);
+            setAddress(userInfo?.address);
+            setHomeTown(userInfo?.homeTown);
+        }
+    }, [userInfo]);
+
+    useEffect(() => {
+        if (updatesuccess) {
+            dispatch({ type: UPDATE_USER_RESET });
+            dispatch(getUserAction({ id }));
+            toast.success('Đã cập nhật tài khoản thành công', ToastObjects);
+        }
+    }, [dispatch, updatesuccess, id]);
 
     useEffect(() => {
         if (success) {
             dispatch({ type: CREATE_IMAGE_USER_RESET });
             dispatch(
-                createUser({
+                updateProfileUser({
                     name,
                     date,
+                    sex,
                     phone,
                     cmnd,
                     email,
+                    homeTown,
                     country,
                     city,
                     address,
                     image: urlImage?.filename,
-                    password: email,
+                    id,
                 }),
             );
             setImage('');
         }
-    }, [dispatch, success, name, date, phone, cmnd, email, country, city, address, urlImage]);
+    }, [dispatch, success, name, date, sex, phone, cmnd, email, homeTown, country, city, address, urlImage, id]);
 
     const handleCreate = () => {
         if (image === '') {
-            toast.error('Vui lòng chọn ảnh', ToastObjects);
+            dispatch(
+                updateProfileUser({
+                    name,
+                    date,
+                    sex,
+                    phone,
+                    cmnd,
+                    email,
+                    homeTown,
+                    country,
+                    city,
+                    address,
+                    image: userInfo?.image,
+                    id,
+                }),
+            );
         } else {
             let images = new FormData();
             images.append('image', image);
@@ -72,14 +115,15 @@ export default function UpdateFromUser() {
     return (
         <>
             <div className="content-main create-user">
-                <h2>Thông tin hồ sơ</h2>
                 <Toast />
-                {loading && <Loading />}
+                {loadingGetUser && <Loading />}
+                {updateloading && <Loading />}
+                <h2>Cập nhật hồ sơ</h2>
                 <div className="row">
                     <div className="col-xl-3 col-lg-3 d-flex justify-content-center">
                         <div className="image-user">
                             <img
-                                src={image ? URL.createObjectURL(image) : '/images/user.png'}
+                                src={image ? URL.createObjectURL(image) : `/userProfile/${userInfo?.image}`}
                                 alt="Img"
                                 className="create-user__image"
                             ></img>
@@ -98,7 +142,7 @@ export default function UpdateFromUser() {
                         <div className="row">
                             <div className="col-xl-5 col-lg-5">
                                 <div>
-                                    <label for="exampleInputEmail1">Họ tên</label>
+                                    <label for="exampleInputEmail1">Họ tên:</label>
                                     <input
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
@@ -108,7 +152,7 @@ export default function UpdateFromUser() {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Ngày sinh</label>
+                                    <label for="exampleInputEmail1">Ngày sinh:</label>
                                     <input
                                         value={date}
                                         onChange={(e) => setDate(e.target.value)}
@@ -118,7 +162,20 @@ export default function UpdateFromUser() {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Số điện thoại</label>
+                                    <label for="exampleInputEmail1">Giới tính:</label>
+                                    <select
+                                        value={sex}
+                                        onChange={(e) => setSex(e.target.value)}
+                                        class="form-select"
+                                        aria-label="Default select example"
+                                    >
+                                        <option selected>Giới tính:</option>
+                                        <option value="Nam">Nam</option>
+                                        <option value="Nữ">Nữ</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="exampleInputEmail1">Số điện thoại:</label>
                                     <input
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
@@ -128,7 +185,7 @@ export default function UpdateFromUser() {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">CMND/CCCD</label>
+                                    <label for="exampleInputEmail1">CMND/CCCD:</label>
                                     <input
                                         value={cmnd}
                                         onChange={(e) => setCmnd(e.target.value)}
@@ -140,9 +197,10 @@ export default function UpdateFromUser() {
                             </div>
                             <div className="col-xl-5 col-lg-5">
                                 <div>
-                                    <label for="exampleInputEmail1">Email</label>
+                                    <label for="exampleInputEmail1">Email:</label>
                                     <input
                                         value={email}
+                                        disabled
                                         onChange={(e) => setEmail(e.target.value)}
                                         type="email"
                                         className="form-control"
@@ -150,7 +208,17 @@ export default function UpdateFromUser() {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Tỉnh/Thành phố</label>
+                                    <label for="exampleInputEmail1">Quê quán:</label>
+                                    <input
+                                        value={homeTown}
+                                        onChange={(e) => setHomeTown(e.target.value)}
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Quê quán"
+                                    ></input>
+                                </div>
+                                <div>
+                                    <label for="exampleInputEmail1">Chổ ở hiện tại: (Tỉnh/Thành phố)</label>
                                     <input
                                         value={country}
                                         onChange={(e) => setCountry(e.target.value)}
@@ -160,7 +228,7 @@ export default function UpdateFromUser() {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Huyện/Quận</label>
+                                    <label for="exampleInputEmail1">Chổ ở hiện tại: (Huyện/Quận)</label>
                                     <input
                                         value={city}
                                         onChange={(e) => setCity(e.target.value)}
@@ -170,7 +238,7 @@ export default function UpdateFromUser() {
                                     ></input>
                                 </div>
                                 <div>
-                                    <label for="exampleInputEmail1">Đường/Hẻm</label>
+                                    <label for="exampleInputEmail1">Chổ ở hiện tại: (Đường/Hẻm)</label>
                                     <input
                                         value={address}
                                         onChange={(e) => setAddress(e.target.value)}
@@ -187,7 +255,7 @@ export default function UpdateFromUser() {
                             style={{ marginTop: '10px', width: '100px' }}
                             onClick={handleCreate}
                         >
-                            Đăng kí
+                            Cập nhật
                         </button>
                     </div>
                 </div>

@@ -30,18 +30,18 @@ const Sidebar = () => {
                             </NavLink>
                         </li>
                         <li className="menu-item">
-                            <NavLink activeClassName="active" className="menu-link" to="/products">
+                            <NavLink activeClassName="active" className="menu-link" to="/orders">
                                 <i className="icon fas fa-shopping-bag"></i>
-                                <span className="text">Sản phẩm</span>
+                                <span className="text">Đơn hàng</span>
                             </NavLink>
                         </li>
                         <li className="menu-item">
-                            <NavLink activeClassName="active" className="menu-link" to="/addproduct">
+                            <NavLink activeClassName="active" className="menu-link" to="/ordersReceive">
                                 <i className="icon fas fa-cart-plus"></i>
-                                <span className="text">Thêm sản phẩm</span>
+                                <span className="text">Đơn hàng đã nhận</span>
                             </NavLink>
                         </li>
-                        <li className="menu-item">
+                        {/* <li className="menu-item">
                             <NavLink activeClassName="active" className="menu-link" to="/category">
                                 <i className="icon fas fa-list"></i>
                                 <span className="text">Danh mục sản phẩm</span>
@@ -82,7 +82,7 @@ const Sidebar = () => {
                                 <i className="icon fas fa-store-alt"></i>
                                 <span className="text">Ảnh Bìa</span>
                             </NavLink>
-                        </li>
+                        </li> */}
                     </ul>
                     <br />
                     <br />

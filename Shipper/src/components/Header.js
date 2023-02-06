@@ -35,7 +35,11 @@ const Header = () => {
         <header className="main-header navbar header-color">
             <div className="col-search"></div>
             <div className="col-nav">
-                <button className="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside">
+                <button
+                    className="btn btn-icon btn-mobile me-auto"
+                    style={{ color: '#fff' }}
+                    data-trigger="#offcanvas_aside"
+                >
                     <i className="md-28 fas fa-bars"></i>
                 </button>
                 <ul className="nav">

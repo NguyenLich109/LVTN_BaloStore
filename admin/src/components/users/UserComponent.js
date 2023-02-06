@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { listUser, disabledUser, sendEmailAction, updateProfileUser } from '../../Redux/Actions/userActions';
 import { USER_DISABLED_RESET, SEND_EMAIL_USER_RESET, UPDATE_USER_RESET } from '../../Redux/Constants/UserContants';
@@ -16,6 +16,7 @@ const ToastObjects = {
 };
 const UserComponent = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const userList = useSelector((state) => state.userList);
     const { loading, error, users } = userList;
@@ -85,6 +86,9 @@ const UserComponent = () => {
     const handleResetUser = (user) => {
         dispatch(updateProfileUser({ id: user?._id, password: user?.email }));
     };
+    const handleLink = (id) => {
+        history.push(`/updateUser/${id}`);
+    };
     //hết
     return (
         <section className="content-main">
@@ -112,46 +116,56 @@ const UserComponent = () => {
                                                     <i className="fas fa-ellipsis-h"></i>
                                                 </button>
                                                 <div className="dropdown-menu">
-                                                    <button
-                                                        className="dropdown-item"
-                                                        onClick={() => {
-                                                            onDisabled(user._id, true);
-                                                        }}
-                                                    >
-                                                        Khóa tài khoản
-                                                    </button>
-                                                    <button
-                                                        className="dropdown-item"
-                                                        onClick={() => {
-                                                            offDisabled(user._id, false);
-                                                        }}
-                                                    >
-                                                        Mở tài khoản
-                                                    </button>
-                                                    <button
-                                                        className="dropdown-item"
-                                                        // onClick={() => {
-                                                        //     offDisabled(user._id, false);
-                                                        // }}
-                                                    >
-                                                        Chỉnh sửa
-                                                    </button>
-                                                    <button
-                                                        className="dropdown-item"
-                                                        onClick={() => {
-                                                            handleResetUser(user);
-                                                        }}
-                                                    >
-                                                        Cấp mật khẩu
-                                                    </button>
-                                                    <button
-                                                        className="dropdown-item"
-                                                        onClick={() => {
-                                                            handleSendEmail(user);
-                                                        }}
-                                                    >
-                                                        Gửi TK cho nhân viên
-                                                    </button>
+                                                    {!user?.isAdmin && (
+                                                        <button
+                                                            className="dropdown-item"
+                                                            onClick={() => {
+                                                                onDisabled(user._id, true);
+                                                            }}
+                                                        >
+                                                            Khóa tài khoản
+                                                        </button>
+                                                    )}
+                                                    {!user?.isAdmin && (
+                                                        <button
+                                                            className="dropdown-item"
+                                                            onClick={() => {
+                                                                offDisabled(user._id, false);
+                                                            }}
+                                                        >
+                                                            Mở tài khoản
+                                                        </button>
+                                                    )}
+                                                    {user?.isNv && (
+                                                        <button
+                                                            className="dropdown-item"
+                                                            onClick={() => {
+                                                                handleLink(user?._id);
+                                                            }}
+                                                        >
+                                                            Chỉnh sửa
+                                                        </button>
+                                                    )}
+                                                    {!user?.isAdmin && (
+                                                        <button
+                                                            className="dropdown-item"
+                                                            onClick={() => {
+                                                                handleResetUser(user);
+                                                            }}
+                                                        >
+                                                            Cấp mật khẩu
+                                                        </button>
+                                                    )}
+                                                    {user?.isNv && (
+                                                        <button
+                                                            className="dropdown-item"
+                                                            onClick={() => {
+                                                                handleSendEmail(user);
+                                                            }}
+                                                        >
+                                                            Gửi TK cho nhân viên
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>

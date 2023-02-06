@@ -9,7 +9,7 @@ function PrivateRouter({ component: Component, ...rest }) {
         <Route
             {...rest}
             component={(props) => {
-                if (userInfo) {
+                if (userInfo?.isNv === true) {
                     return <Component {...props} />;
                 } else {
                     return <Redirect to={`/login`} />;
