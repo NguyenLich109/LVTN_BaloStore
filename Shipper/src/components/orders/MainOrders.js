@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import moment from 'moment';
 import Message from '../LoadingError/Error';
 import Loading from '../LoadingError/Loading';
-import { listOrders } from '../../Redux/Actions/OrderActions';
+import { getAllOrdersNv } from '../../Redux/Actions/OrderActions';
 import { useSelector, useDispatch } from 'react-redux';
 import PaginatorOrder from './PaginatorOrder';
 
@@ -11,13 +11,13 @@ const MainOrders = (props) => {
     const { keyword, status, pageNumber } = props;
     const dispatch = useDispatch();
     const history = useHistory();
-    const orderList = useSelector((state) => state.orderList);
-    const { loading, error, orders, page, pages } = orderList;
+    const getAllOrder = useSelector((state) => state.getAllOrder);
+    const { loading, error, orders, page, pages } = getAllOrder;
 
     const [kewywordSearch, setKewywordSearch] = useState('');
     // const [keyword, setKeyword] = useState('');
     useEffect(() => {
-        dispatch(listOrders(keyword, status, pageNumber));
+        dispatch(getAllOrdersNv(keyword, status, pageNumber));
     }, [dispatch, status, keyword, pageNumber]);
 
     const handleStatus = (value) => {
@@ -65,7 +65,7 @@ const MainOrders = (props) => {
                             <select className="form-select" value={status} onChange={handleStatus}>
                                 <option value={'3'}>Đang giao</option>
                                 <option value={'4'}>Thanh toán</option>
-                                <option value={'7'}>Thanh toán bị hủy</option>
+                                <option value={'7'}>Thanh toán không thành công</option>
                             </select>
                         </div>
                     </div>
@@ -76,7 +76,7 @@ const MainOrders = (props) => {
                                 <th scope="col">Phone</th>
                                 <th scope="col">Tổng tiền</th>
                                 <th scope="col">Thanh toán</th>
-                                <th scope="col">Thời gian mua</th>
+                                <th scope="col">Thời gian nhận đơn</th>
                                 <th>Trạng thái</th>
                                 <th scope="col" className="text-end">
                                     Quản lý
@@ -89,7 +89,7 @@ const MainOrders = (props) => {
                                     <td>
                                         <b>{order.name}</b>
                                     </td>
-                                    <td>{order.email}</td>
+                                    <td>{order.phone}</td>
                                     <td>{Number(order?.totalPrice)?.toLocaleString('de-DE')}đ</td>
                                     <td>
                                         {order.isPaid ? (
@@ -100,6 +100,10 @@ const MainOrders = (props) => {
                                                     ? `0${moment(order?.paidAt).minutes()}`
                                                     : moment(order?.paidAt).minutes()}{' '}
                                                 {moment(order?.paidAt).format('DD/MM/YYYY')}{' '}
+                                            </span>
+                                        ) : order.errorPaid ? (
+                                            <span className="badge rounded-pill alert-danger">
+                                                Thanh toán không thành công
                                             </span>
                                         ) : (
                                             <span className="badge rounded-pill alert-danger">Chờ thanh toán</span>
@@ -114,28 +118,16 @@ const MainOrders = (props) => {
                                         {moment(order?.createdAt).format('DD/MM/YYYY')}{' '}
                                     </td>
                                     <td>
-                                        {order?.cancel !== 1 ? (
-                                            order?.waitConfirmation &&
-                                            order?.isDelivered &&
-                                            order?.isPaid &&
-                                            order?.completeUser &&
-                                            order?.completeAdmin ? (
-                                                <span className="badge rounded-pill alert-success">Hoàn tất</span>
-                                            ) : order?.waitConfirmation && order?.isDelivered && order?.isPaid ? (
-                                                <span className="badge alert-success">Đã thanh toán</span>
-                                            ) : order?.waitConfirmation && order?.isDelivered ? (
-                                                <span className="badge alert-warning">Đang giao</span>
-                                            ) : order?.waitConfirmation ? (
-                                                <span className="badge alert-warning">Đã xác nhận</span>
-                                            ) : (
-                                                <span className="badge alert-danger">Chờ xác nhận</span>
-                                            )
+                                        {order?.isDelivered && order?.isPaid ? (
+                                            <span className="badge rounded-pill alert-success">Đã thanh toán</span>
+                                        ) : order?.isDelivered && !order.errorPaid ? (
+                                            <span className="badge alert-success">Đang giao</span>
                                         ) : (
-                                            <span className="badge bg-dark">Đơn này đã bị hủy</span>
+                                            <span className="badge alert-danger">Thanh toán không thành công</span>
                                         )}
                                     </td>
                                     <td className="d-flex justify-content-end align-item-center">
-                                        <Link to={`/order/${order._id}`} className="text-success">
+                                        <Link to={`/orderReceive/${order._id}`} className="text-success">
                                             <i className="fas fa-eye"></i>
                                         </Link>
                                     </td>

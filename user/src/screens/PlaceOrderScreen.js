@@ -64,7 +64,7 @@ const PlaceOrderScreen = ({ history }) => {
             .toFixed(0),
     );
     cart.shippingPrice = addDecimals(cart.itemsPrice > 0 ? (cart.itemsPrice > 100 ? 30000 : 20) : 0);
-    cart.taxPrice = addDecimals(Number((0.05 * cart.itemsPrice).toFixed(0)));
+    cart.taxPrice = addDecimals(Number((0 * cart.itemsPrice).toFixed(0)));
     cart.totalPrice =
         cart?.cartItems.length > 0
             ? (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(0)
@@ -177,7 +177,7 @@ const PlaceOrderScreen = ({ history }) => {
                 >
                     <div className="col-lg-4 col-sm-4 mb-lg-4 mb-2 mb-sm-0 fix-bottom">
                         <div className="row " style={{ display: 'flex', alignItems: 'center' }}>
-                            <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom">
+                            <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom d-flex justify-content-end">
                                 <div className="alert-success order-box fix-none">
                                     <i class="fas fa-user"></i>
                                 </div>
@@ -200,7 +200,7 @@ const PlaceOrderScreen = ({ history }) => {
                             className="row"
                             style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}
                         >
-                            <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom">
+                            <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom d-flex justify-content-end">
                                 <div className="alert-success order-box fix-none">
                                     <i className="fas fa-map-marker-alt"></i>
                                 </div>
@@ -216,7 +216,7 @@ const PlaceOrderScreen = ({ history }) => {
                     {/* 3 */}
                     <div className="col-lg-4 col-sm-4 mb-lg-4 mb-2 mb-sm-0 fix-bottom">
                         <div className="row" style={{ display: 'flex', alignItems: 'center' }}>
-                            <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom">
+                            <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom d-flex justify-content-end">
                                 <div className="alert-success order-box fix-none">
                                     <i class="fab fa-paypal"></i>
                                 </div>

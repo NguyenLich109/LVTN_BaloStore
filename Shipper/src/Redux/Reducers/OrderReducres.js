@@ -1,4 +1,10 @@
 import {
+    GET_ORDER_NV_DETAIL_FAIL,
+    GET_ORDER_NV_DETAIL_REQUEST,
+    GET_ORDER_NV_DETAIL_SUCCESS,
+    GET_ORDER_NV_LIST_FAIL,
+    GET_ORDER_NV_LIST_REQUEST,
+    GET_ORDER_NV_LIST_SUCCESS,
     ORDER_CANCEL_FAIL,
     ORDER_CANCEL_REQUEST,
     ORDER_CANCEL_RESET,
@@ -7,6 +13,10 @@ import {
     ORDER_COMPLETE_ADMIN_REQUEST,
     ORDER_COMPLETE_ADMIN_RESET,
     ORDER_COMPLETE_ADMIN_SUCCESS,
+    ORDER_CONTENT_ERROR_PAID_FAIL,
+    ORDER_CONTENT_ERROR_PAID_REQUEST,
+    ORDER_CONTENT_ERROR_PAID_RESET,
+    ORDER_CONTENT_ERROR_PAID_SUCCESS,
     ORDER_DELIVERED_FAIL,
     ORDER_DELIVERED_REQUEST,
     ORDER_DELIVERED_RESET,
@@ -14,6 +24,10 @@ import {
     ORDER_DETAILS_FAIL,
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS,
+    ORDER_ERROR_PAID_FAIL,
+    ORDER_ERROR_PAID_REQUEST,
+    ORDER_ERROR_PAID_RESET,
+    ORDER_ERROR_PAID_SUCCESS,
     ORDER_LIST_COMPLETE_FAIL,
     ORDER_LIST_COMPLETE_REQUEST,
     ORDER_LIST_COMPLETE_SUCCESS,
@@ -42,6 +56,24 @@ export const orderListReducer = (state = {}, action) => {
                 page: action.payload.page,
             };
         case ORDER_LIST_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+};
+
+export const getAllOrderNvReducer = (state = {}, action) => {
+    switch (action.type) {
+        case GET_ORDER_NV_LIST_REQUEST:
+            return { loading: true };
+        case GET_ORDER_NV_LIST_SUCCESS:
+            return {
+                loading: false,
+                orders: action.payload.orders,
+                pages: action.payload.pages,
+                page: action.payload.page,
+            };
+        case GET_ORDER_NV_LIST_FAIL:
             return { loading: false, error: action.payload };
         default:
             return state;
@@ -78,6 +110,20 @@ export const orderDetailsReducer = (state = { loading: true, orderItems: [], shi
     }
 };
 
+// ORDER DETAILS
+export const orderReceiveDetailsReducer = (state = { loading: true, orderItems: [], shippingAddress: {} }, action) => {
+    switch (action.type) {
+        case GET_ORDER_NV_DETAIL_REQUEST:
+            return { ...state, loading: true };
+        case GET_ORDER_NV_DETAIL_SUCCESS:
+            return { loading: false, order: action.payload };
+        case GET_ORDER_NV_DETAIL_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+};
+
 // ORDER DELIVERED
 export const orderDeliveredReducer = (state = {}, action) => {
     switch (action.type) {
@@ -103,6 +149,38 @@ export const orderPaidReducer = (state = {}, action) => {
         case ORDER_PAID_FAIL:
             return { loading: false, error: action.payload };
         case ORDER_PAID_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+// ERROR PAID
+export const orderErrorPaidReducer = (state = {}, action) => {
+    switch (action.type) {
+        case ORDER_ERROR_PAID_REQUEST:
+            return { loading: true };
+        case ORDER_ERROR_PAID_SUCCESS:
+            return { loading: false, success: true };
+        case ORDER_ERROR_PAID_FAIL:
+            return { loading: false, error: action.payload };
+        case ORDER_ERROR_PAID_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+// CONTENT ERROR PAID
+export const orderContentErrorPaidReducer = (state = {}, action) => {
+    switch (action.type) {
+        case ORDER_CONTENT_ERROR_PAID_REQUEST:
+            return { loading: true };
+        case ORDER_CONTENT_ERROR_PAID_SUCCESS:
+            return { loading: false, success: true, content: action.payload };
+        case ORDER_CONTENT_ERROR_PAID_FAIL:
+            return { loading: false, error: action.payload };
+        case ORDER_CONTENT_ERROR_PAID_RESET:
             return {};
         default:
             return state;

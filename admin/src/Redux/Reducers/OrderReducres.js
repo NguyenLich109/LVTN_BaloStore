@@ -14,6 +14,18 @@ import {
     ORDER_DETAILS_FAIL,
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS,
+    ORDER_ERROR_PAID_CONTENT_FAIL,
+    ORDER_ERROR_PAID_CONTENT_REQUEST,
+    ORDER_ERROR_PAID_CONTENT_RESET,
+    ORDER_ERROR_PAID_CONTENT_SUCCESS,
+    ORDER_ERROR_PAID_FAIL,
+    ORDER_ERROR_PAID_REQUEST,
+    ORDER_ERROR_PAID_RESET,
+    ORDER_ERROR_PAID_SUCCESS,
+    ORDER_GUARANTEE_REQUEST,
+    ORDER_GUARANTEE_SUCCESS,
+    ORDER_GUARANTEE_FAIL,
+    ORDER_GUARANTEE_RESET,
     ORDER_LIST_COMPLETE_FAIL,
     ORDER_LIST_COMPLETE_REQUEST,
     ORDER_LIST_COMPLETE_SUCCESS,
@@ -28,6 +40,10 @@ import {
     ORDER_WAITCONFIRMATION_REQUEST,
     ORDER_WAITCONFIRMATION_RESET,
     ORDER_WAITCONFIRMATION_SUCCESS,
+    ORDER_NOTE_GUAREEN_REQUEST,
+    ORDER_NOTE_GUAREEN_SUCCESS,
+    ORDER_NOTE_GUAREEN_FAIL,
+    ORDER_NOTE_GUAREEN_RESET,
 } from '../Constants/OrderConstants';
 
 export const orderListReducer = (state = {}, action) => {
@@ -148,6 +164,66 @@ export const ordercompleteAdminReducer = (state = {}, action) => {
         case ORDER_COMPLETE_ADMIN_FAIL:
             return { loading: false, error: action.payload };
         case ORDER_COMPLETE_ADMIN_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const orderErrorPaidReducer = (state = {}, action) => {
+    switch (action.type) {
+        case ORDER_ERROR_PAID_REQUEST:
+            return { loading: true };
+        case ORDER_ERROR_PAID_SUCCESS:
+            return { loading: false, success: true };
+        case ORDER_ERROR_PAID_FAIL:
+            return { loading: false, error: action.payload };
+        case ORDER_ERROR_PAID_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const orderContentErrorPaidReducer = (state = {}, action) => {
+    switch (action.type) {
+        case ORDER_ERROR_PAID_CONTENT_REQUEST:
+            return { loading: true };
+        case ORDER_ERROR_PAID_CONTENT_SUCCESS:
+            return { loading: false, success: true };
+        case ORDER_ERROR_PAID_CONTENT_FAIL:
+            return { loading: false, error: action.payload };
+        case ORDER_ERROR_PAID_CONTENT_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const orderGuaranteeReducer = (state = {}, action) => {
+    switch (action.type) {
+        case ORDER_GUARANTEE_REQUEST:
+            return { loading: true };
+        case ORDER_GUARANTEE_SUCCESS:
+            return { loading: false, success: true };
+        case ORDER_GUARANTEE_FAIL:
+            return { loading: false, error: action.payload };
+        case ORDER_GUARANTEE_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const orderNoteGuaranteeReducer = (state = {}, action) => {
+    switch (action.type) {
+        case ORDER_NOTE_GUAREEN_REQUEST:
+            return { loading: true };
+        case ORDER_NOTE_GUAREEN_SUCCESS:
+            return { loading: false, success: true };
+        case ORDER_NOTE_GUAREEN_FAIL:
+            return { loading: false, error: action.payload };
+        case ORDER_NOTE_GUAREEN_RESET:
             return {};
         default:
             return state;

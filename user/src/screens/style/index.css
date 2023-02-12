@@ -1,0 +1,11 @@
+@media screen and (min-width: 1200px) {
+    .col-xl-2 {
+        width: 20%;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .col-lg-2 {
+        width: 20%;
+    }
+}

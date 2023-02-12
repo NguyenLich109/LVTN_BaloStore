@@ -1,18 +1,17 @@
 import React from 'react';
 import Sidebar from './../components/sidebar';
 import Header from './../components/Header';
-import MainCategories from './../components/Categories/MainCategories';
+import OrderReceiveDetailmain from '../components/orders/OrderReceiveDetailmain';
 
-const CategoriesScreen = () => {
+export default function OrderDetailReceiveScreen({ match }) {
+    const orderId = match.params.id;
     return (
         <>
             <Sidebar />
             <main className="main-wrap">
                 <Header />
-                {/* <MainCategories /> */}
+                <OrderReceiveDetailmain orderId={orderId} />
             </main>
         </>
     );
-};
-
-export default CategoriesScreen;
+}

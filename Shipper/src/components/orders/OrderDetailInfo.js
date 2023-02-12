@@ -24,8 +24,7 @@ const OrderDetailInfo = (props) => {
                     </span>
                     <div className="text">
                         <p className="mb-1">
-                            Địa chỉ: {order.shippingAddress.country}, {order.shippingAddress.city}
-                            <br />
+                            Địa chỉ: {order.shippingAddress.country}, {order.shippingAddress.city},{' '}
                             {order.shippingAddress.address}
                             <br />
                             {/* {order.shippingAddress.postalCode} */}

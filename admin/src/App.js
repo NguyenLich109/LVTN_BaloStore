@@ -62,7 +62,7 @@ function App() {
                     <PrivateRouter path="/orders/search/:keyword/status/:status" component={OrderScreen} exact />
                     <PrivateRouter path="/orders/page/:pageNumber/status/:status" component={OrderScreen} exact />
                     <PrivateRouter path="/orders/page/:pageNumber/search/:keyword" component={OrderScreen} exact />
-                    <PrivateRouter path="/orders/page/:pageNumber" component={OrderScreen} exact />
+                    {/* <PrivateRouter path="/orders/page/:pageNumber" component={OrderScreen} exact /> */}
                     <PrivateRouter
                         path="/orders/search/:keyword/page/:pageNumber/status/:status"
                         component={OrderScreen}

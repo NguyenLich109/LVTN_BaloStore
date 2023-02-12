@@ -62,7 +62,15 @@ const Orders = (props) => {
                                                     order?.isDelivered &&
                                                     order?.isPaid &&
                                                     order?.completeUser &&
-                                                    order?.completeAdmin ? (
+                                                    order?.completeAdmin &&
+                                                    order?.isGuarantee ? (
+                                                        <span
+                                                            className="fs-6 text-success"
+                                                            style={{ fontWeight: '600' }}
+                                                        >
+                                                            Bảo hành sản phẩm
+                                                        </span>
+                                                    ) : order?.completeAdmin ? (
                                                         <span
                                                             className="fs-6 text-success"
                                                             style={{ fontWeight: '600' }}
@@ -77,6 +85,15 @@ const Orders = (props) => {
                                                             style={{ fontWeight: '600' }}
                                                         >
                                                             Đã thanh toán
+                                                        </span>
+                                                    ) : order?.errorPaid &&
+                                                      order?.waitConfirmation &&
+                                                      order?.isDelivered ? (
+                                                        <span
+                                                            className="fs-6 text-danger"
+                                                            style={{ fontWeight: '600' }}
+                                                        >
+                                                            Thanh toán không thành công
                                                         </span>
                                                     ) : order?.waitConfirmation && order?.isDelivered ? (
                                                         <span

@@ -3,19 +3,22 @@ import OrderDetailProducts from './OrderDetailProducts';
 import OrderDetailInfo from './OrderDetailInfo';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    cancelOrder,
-    deliverOrder,
-    getOrderDetails,
-    paidOrder,
-    waitConfirmationOrder,
-    completeAdminOrder,
-} from '../../Redux/Actions/OrderActions';
+import { cancelOrder, deliverOrder, getOrderDetails } from '../../Redux/Actions/OrderActions';
+import { ORDER_DELIVERED_RESET } from '../../Redux/Constants/OrderConstants';
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import moment from 'moment';
 // modal
 import CancelModal from '../Modal/CancelModal';
+import { toast } from 'react-toastify';
+import Toast from '../LoadingError/Toast';
+
+const ToastObjects = {
+    pauseOnFocusLoss: false,
+    draggable: false,
+    pauseOnHover: false,
+    autoClose: 2000,
+};
 
 const OrderDetailmain = (props) => {
     const { orderId } = props;
@@ -28,84 +31,46 @@ const OrderDetailmain = (props) => {
     const orderDetails = useSelector((state) => state.orderDetails);
     const { loading, error, order } = orderDetails;
 
-    // const orderUser = useSelector((state) => state.orderPaid);
-    // console.log(orderUser);
-    const orderwaitGetConfirmation = useSelector((state) => state.orderwaitGetConfirmation);
-    const { success: successwaitGetConfirmation } = orderwaitGetConfirmation;
     const orderDeliver = useSelector((state) => state.orderDeliver);
-    const { loading: loadingDelivered, success: successDelivered } = orderDeliver;
-    const orderPaid = useSelector((state) => state.orderPaid);
-    const { loading: loadingPaid, success: successPaid } = orderPaid;
-    const orderGetcompleteAdmin = useSelector((state) => state.orderGetcompleteAdmin);
-    const { success: successCompleteAdmin } = orderGetcompleteAdmin;
-    const orderCancel = useSelector((state) => state.orderCancel);
-    const { loading: loadingCancel, success: successCancel } = orderCancel;
+    const { loading: loadingDelivered, success: successDelivered, error: errorDelivered } = orderDeliver;
+
     useEffect(() => {
         dispatch(getOrderDetails(orderId));
-    }, [
-        dispatch,
-        orderId,
-        successDelivered,
-        successPaid,
-        successCancel,
-        successwaitGetConfirmation,
-        successCompleteAdmin,
-    ]);
+    }, [dispatch, orderId, successDelivered]);
 
-    // const cancelOrderHandler = () => {
-    //     if (window.confirm('Bạn có chắc muốn hủy đơn hàng này??')) {
-    //         dispatch(cancelOrder(order));
-    //     }
-    // };
+    useEffect(() => {
+        if (errorDelivered) {
+            toast.error(errorDelivered, ToastObjects);
+            dispatch({ type: ORDER_DELIVERED_RESET });
+        }
+    }, [dispatch, errorDelivered]);
+
+    useEffect(() => {
+        if (successDelivered) {
+            toast.success('Cập nhật trạng thái thành công', ToastObjects);
+            dispatch({ type: ORDER_DELIVERED_RESET });
+        }
+    }, [dispatch, successDelivered]);
+
     const setTrueCancel = () => {
         setCancel(true);
     };
     const setFalseCancel = () => {
         setCancel(false);
     };
-    const [status, setStatus] = useState('0');
+    const [status, setStatus] = useState('');
+
+    const onHandleDelivery = () => {
+        if (window.confirm('Đồng ý giao hàng')) {
+            dispatch(deliverOrder(order));
+        }
+    };
     useEffect(() => {
-        if (status === '1' && order?.waitConfirmation !== true) {
-            if (window.confirm('Đồng ý xác nhận')) {
-                dispatch(waitConfirmationOrder(order._id, true));
-            } else {
-                setStatus('0');
-            }
-        }
-        if (status === '2' && order?.isDelivered !== true) {
-            if (window.confirm('Đồng ý giao hàng')) {
-                dispatch(deliverOrder(order));
-            } else {
-                setStatus('1');
-            }
-        }
-        if (status === '3' && order?.isPaid !== true) {
-            if (window.confirm('Đồng ý thanh toán')) {
-                dispatch(paidOrder(order));
-            } else {
-                setStatus('2');
-            }
-        }
-        if (status === '4' && order?.completeAdmin !== true) {
-            if (window.confirm('Đồng ý hoàn tất')) {
-                dispatch(completeAdminOrder(order._id));
-            } else {
-                setStatus('3');
-            }
-        }
-    }, [status]);
-    useEffect(() => {
-        if (order?.waitConfirmation === true && order?.isDelivered !== true) {
-            setStatus('1');
-        }
         if (order?.isDelivered === true && order?.isPaid !== true) {
-            setStatus('2');
+            setStatus('Nhận đơn hàng');
         }
-        if (order?.isPaid === true && order?.completeAdmin !== true) {
-            setStatus('3');
-        }
-        if (order?.completeAdmin === true) {
-            setStatus('4');
+        if (order?.isDelivered === false) {
+            setStatus('Trạng thái');
         }
     }, [order]);
     const cancelOrderHandler1 = () => {
@@ -114,6 +79,7 @@ const OrderDetailmain = (props) => {
     };
     return (
         <section className="content-main">
+            <Toast />
             {cancel && (
                 <CancelModal
                     Title="Hủy đơn hàng"
@@ -129,40 +95,24 @@ const OrderDetailmain = (props) => {
                         Quay lại
                     </Link>
                 </div>
-                {order?.waitConfirmation && order?.isDelivered !== true && (
-                    <div className="col-lg-3 col-md-3 d-flex justify-content-end">
-                        <button
-                            className="btn btn-success text-white"
-                            onClick={() => {
-                                if (window.confirm('Đồng ý thu hồi')) {
-                                    dispatch(waitConfirmationOrder(order._id, false));
-                                    setStatus('0');
-                                } else {
-                                    setStatus('1');
-                                }
-                            }}
-                        >
-                            Thu hồi
-                        </button>
-                    </div>
-                )}
                 <div className="col-lg-3 col-md-3">
-                    <select className="form-select" value={status} onChange={(e) => setStatus(e.target.value)}>
-                        {order?.cancel !== 1 && (
-                            <>
-                                <option value={'0'}>Trạng thái...</option>
-                                <option value={'1'}>Xác nhận</option>
-                                {order?.waitConfirmation && <option value={'2'}>Giao hàng</option>}
-                                {order?.waitConfirmation && order?.isDelivered && (
-                                    <option value={'3'}>Thanh toán</option>
-                                )}
-                                {order?.waitConfirmation &&
-                                    order?.isDelivered &&
-                                    order?.isPaid &&
-                                    order?.completeUser && <option value={'4'}>Hoàn tất</option>}
-                            </>
-                        )}
-                    </select>
+                    <div className="dropdown" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <button
+                            className="btn btn-light dropdown-toggle"
+                            type="button"
+                            id="dropdownMenuButton"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            {status ? status : 'Trạng thái'}
+                        </button>
+                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button className="dropdown-item" onClick={onHandleDelivery}>
+                                Nhận đơn hàng
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const OrderDetailProducts = (props) => {
-    const { order, loading, onNoteGuarantee, onErrorContent } = props;
+export default memo(function OrderDeceiveDetailProducts(props) {
+    const { order, loading, content, onHandle } = props;
 
     const [valueContent, setValueContent] = useState('');
-    const [valueNote, setValueNote] = useState('');
+
     useEffect(() => {
-        if (order?.content) {
-            setValueContent(order?.content);
+        if (content) {
+            setValueContent(content);
         }
-        if (order?.noteGuarantee) {
-            setValueNote(order?.noteGuarantee);
-        }
-    }, [order]);
+    }, [content]);
 
     if (!loading) {
         // Calculate Price
@@ -71,22 +68,7 @@ const OrderDetailProducts = (props) => {
                                 rows="6"
                                 className="form-control"
                             ></textarea>
-                            <button className="btn btn-light" onClick={() => onErrorContent(valueContent)}>
-                                Gửi
-                            </button>
-                        </td>
-                    )}
-                    {order?.isGuarantee && (
-                        <td>
-                            <textarea
-                                placeholder="Nội dung mà bạn muốn viết"
-                                value={valueNote}
-                                style={{ color: '#856404' }}
-                                onChange={(e) => setValueNote(e.target.value)}
-                                rows="6"
-                                className="form-control"
-                            ></textarea>
-                            <button className="btn btn-light" onClick={() => onNoteGuarantee(valueNote)}>
+                            <button className="btn btn-light" onClick={() => onHandle(valueContent)}>
                                 Gửi
                             </button>
                         </td>
@@ -122,29 +104,12 @@ const OrderDetailProducts = (props) => {
                                     Trạng thái:
                                 </dt>
                                 <dd>
-                                    {order?.cancel !== 1 ? (
-                                        order?.waitConfirmation &&
-                                        order?.isDelivered &&
-                                        order?.isPaid &&
-                                        order?.completeUser &&
-                                        order?.completeAdmin &&
-                                        order?.isGuarantee ? (
-                                            <span className="badge alert-warning">Bảo hành sản phẩm</span>
-                                        ) : order?.completeAdmin ? (
-                                            <span className="badge rounded-pill alert-success">Hoàn tất</span>
-                                        ) : order?.waitConfirmation && order?.isDelivered && order?.isPaid ? (
-                                            <span className="badge alert-success">Đã thanh toán</span>
-                                        ) : order?.errorPaid && order?.waitConfirmation && order?.isDelivered ? (
-                                            <span className="badge alert-danger">Thanh toán không thành công</span>
-                                        ) : order?.waitConfirmation && order?.isDelivered ? (
-                                            <span className="badge alert-warning">Đang giao</span>
-                                        ) : order?.waitConfirmation ? (
-                                            <span className="badge alert-warning">Đã xác nhận</span>
-                                        ) : (
-                                            <span className="badge alert-danger">Chờ xác nhận</span>
-                                        )
+                                    {order?.isDelivered && order?.isPaid ? (
+                                        <span className="badge rounded-pill alert-success">Đã thanh toán</span>
+                                    ) : order?.isDelivered && !order.errorPaid ? (
+                                        <span className="badge alert-success">Đang giao</span>
                                     ) : (
-                                        <span className="badge bg-dark">Đơn này đã bị hủy</span>
+                                        <span className="badge alert-danger">Thanh toán không thành công</span>
                                     )}
                                 </dd>
                             </dl>
@@ -154,6 +119,4 @@ const OrderDetailProducts = (props) => {
             </tbody>
         </table>
     );
-};
-
-export default OrderDetailProducts;
+});

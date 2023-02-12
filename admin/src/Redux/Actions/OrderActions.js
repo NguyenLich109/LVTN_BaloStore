@@ -11,12 +11,24 @@ import {
     ORDER_DETAILS_FAIL,
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS,
+    ORDER_ERROR_PAID_CONTENT_FAIL,
+    ORDER_ERROR_PAID_CONTENT_REQUEST,
+    ORDER_ERROR_PAID_CONTENT_SUCCESS,
+    ORDER_ERROR_PAID_FAIL,
+    ORDER_ERROR_PAID_REQUEST,
+    ORDER_ERROR_PAID_SUCCESS,
+    ORDER_GUARANTEE_FAIL,
+    ORDER_GUARANTEE_REQUEST,
+    ORDER_GUARANTEE_SUCCESS,
     ORDER_LIST_COMPLETE_FAIL,
     ORDER_LIST_COMPLETE_REQUEST,
     ORDER_LIST_COMPLETE_SUCCESS,
     ORDER_LIST_FAIL,
     ORDER_LIST_REQUEST,
     ORDER_LIST_SUCCESS,
+    ORDER_NOTE_GUAREEN_FAIL,
+    ORDER_NOTE_GUAREEN_REQUEST,
+    ORDER_NOTE_GUAREEN_SUCCESS,
     ORDER_PAID_FAIL,
     ORDER_PAID_REQUEST,
     ORDER_PAID_SUCCESS,
@@ -28,7 +40,7 @@ import { logout } from './userActions';
 import axios from 'axios';
 
 export const listOrders =
-    (keyword = '', status = '', pageNumber = '') =>
+    (keyword = '', status = '', pageNumber = '', date1 = '', date2 = '') =>
     async (dispatch, getState) => {
         try {
             dispatch({ type: ORDER_LIST_REQUEST });
@@ -44,7 +56,7 @@ export const listOrders =
             };
 
             const { data } = await axios.get(
-                `/api/orders/all?keyword=${keyword}&status=${status}&pageNumber=${pageNumber}`,
+                `/api/orders/all?keyword=${keyword}&status=${status}&pageNumber=${pageNumber}&date1=${date1}&date2=${date2}`,
                 config,
             );
 
@@ -134,7 +146,7 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`/api/orders/${order._id}/delivered`, {}, config);
+        const { data } = await axios.put(`/api/orders/${order._id}/deliveredAdmin`, {}, config);
         dispatch({ type: ORDER_DELIVERED_SUCCESS, payload: data });
     } catch (error) {
         const message = error.response && error.response.data.message ? error.response.data.message : error.message;
@@ -163,7 +175,7 @@ export const paidOrder = (order) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`/api/orders/${order._id}/paid`, {}, config);
+        const { data } = await axios.put(`/api/orders/${order._id}/paidAdmin`, {}, config);
         dispatch({ type: ORDER_PAID_SUCCESS, payload: data });
     } catch (error) {
         const message = error.response && error.response.data.message ? error.response.data.message : error.message;
@@ -256,6 +268,122 @@ export const completeAdminOrder = (id) => async (dispatch, getState) => {
         }
         dispatch({
             type: ORDER_COMPLETE_ADMIN_FAIL,
+            payload: message,
+        });
+    }
+};
+
+export const orderErrorPaidAction = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_ERROR_PAID_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.put(`/api/orders/${id}/errorPaidAdmin`, {}, config);
+        dispatch({ type: ORDER_ERROR_PAID_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_ERROR_PAID_FAIL,
+            payload: message,
+        });
+    }
+};
+
+export const orderContentPaidAction = (value) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_ERROR_PAID_CONTENT_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.put(
+            `/api/orders/${value.id}/contentErrorPaidAdmin`,
+            { content: value.content },
+            config,
+        );
+        dispatch({ type: ORDER_ERROR_PAID_CONTENT_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_ERROR_PAID_CONTENT_FAIL,
+            payload: message,
+        });
+    }
+};
+
+export const orderGuaranteeAction = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_GUARANTEE_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.put(`/api/orders/${id}/guarantee`, {}, config);
+        dispatch({ type: ORDER_GUARANTEE_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_GUARANTEE_FAIL,
+            payload: message,
+        });
+    }
+};
+
+export const orderNoteGuaranteeAction = (value) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_NOTE_GUAREEN_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.put(`/api/orders/${value.id}/noteGuarantee`, { note: value.note }, config);
+        dispatch({ type: ORDER_NOTE_GUAREEN_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_NOTE_GUAREEN_FAIL,
             payload: message,
         });
     }

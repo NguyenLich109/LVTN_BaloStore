@@ -36,6 +36,10 @@ import {
     ordercompleteAdminReducer,
     orderwaitConfirmationReducer,
     orderListCompleteReducer,
+    orderNoteGuaranteeReducer,
+    orderGuaranteeReducer,
+    orderContentErrorPaidReducer,
+    orderErrorPaidReducer,
 } from './Reducers/OrderReducres';
 import { sliderCreateReducer, sliderDeleteReducer, sliderListReducer } from './Reducers/SliderListReducers';
 import {
@@ -83,6 +87,10 @@ const reducer = combineReducers({
     orderwaitGetConfirmation: orderwaitConfirmationReducer,
     orderGetcompleteAdmin: ordercompleteAdminReducer,
     orderListComplete: orderListCompleteReducer,
+    orderNoteGuaranteeReducer,
+    orderGuaranteeReducer,
+    orderContentErrorPaidReducer,
+    orderErrorPaidReducer,
     sliderList: sliderListReducer,
     deleteSlider: sliderDeleteReducer,
     sliderCreate: sliderCreateReducer,

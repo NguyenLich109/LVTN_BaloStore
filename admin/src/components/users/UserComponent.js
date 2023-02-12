@@ -153,7 +153,7 @@ const UserComponent = () => {
                                                                 handleResetUser(user);
                                                             }}
                                                         >
-                                                            Cấp mật khẩu
+                                                            Cấp lại mật khẩu
                                                         </button>
                                                     )}
                                                     {user?.isNv && (

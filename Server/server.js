@@ -15,6 +15,7 @@ import Upload from './Routes/Upload.js';
 import newsRouter from './Routes/newsRouter.js';
 import forgotPassRouter from './Routes/forgotPassRouter.js';
 import createUserRouter from './Routes/createUserRouter.js';
+import orderNvRouter from './Routes/orderNvRouter.js';
 
 dotenv.config();
 // import forgotPass from './Routes/forgotPassRouter.js';
@@ -38,6 +39,7 @@ app.use('/api/import', ImportData);
 app.use('/api/products', productRoute);
 app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/ordersNv', orderNvRouter);
 app.use('/api/category', categoryRoute);
 app.get('/api/config/paypal', (req, res) => {
     res.send(process.env.PAYPAL_CLIENT_ID);

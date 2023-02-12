@@ -31,6 +31,7 @@ import { ORDER_PAY_RESET } from '../Redux/Constants/OrderConstants';
 import { toast } from 'react-toastify';
 import Toast from '../components/LoadingError/Toast';
 import { listCart } from '../Redux/Actions/cartActions';
+import './style/index.css';
 
 const Toastobjects = {
     pauseOnFocusLoss: false,
@@ -180,12 +181,12 @@ const OrderScreen = ({ match }) => {
                         >
                             <div className="col-lg-4 col-sm-4 mb-lg-4 mb-2 mb-sm-0 fix-bottom">
                                 <div className="row " style={{ display: 'flex', alignItems: 'center' }}>
-                                    <div className="col-lg-2 col-sm-3 mb-lg-3 center fix-bottom">
+                                    <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom d-flex justify-content-end">
                                         <div className="alert-success order-box fix-none">
                                             <i class="fas fa-user"></i>
                                         </div>
                                     </div>
-                                    <div className="col-lg-10 col-sm-9 mb-lg-9 fix-display">
+                                    <div className="col-lg-9 col-sm-9 mb-lg-9 fix-display">
                                         <p>
                                             <span style={{ fontWeight: '600' }}>Họ tên:</span> {order.name}
                                         </p>
@@ -203,12 +204,12 @@ const OrderScreen = ({ match }) => {
                                     className="row"
                                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}
                                 >
-                                    <div className="col-lg-2 col-sm-3 mb-lg-3 center fix-bottom">
+                                    <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom d-flex justify-content-end">
                                         <div className="alert-success order-box fix-none">
                                             <i className="fas fa-map-marker-alt"></i>
                                         </div>
                                     </div>
-                                    <div className="col-lg-10 col-sm-9 mb-lg-9">
+                                    <div className="col-lg-9 col-sm-9 mb-lg-9">
                                         <p>
                                             <span style={{ fontWeight: '600' }}>Địa chỉ:</span>{' '}
                                             {`${order.shippingAddress.city}, ${order.shippingAddress.address}, ${order.shippingAddress.country}`}
@@ -220,12 +221,12 @@ const OrderScreen = ({ match }) => {
 
                             <div className="col-lg-4 col-sm-4 mb-lg-4 mb-2 mb-sm-0 fix-bottom">
                                 <div className="row" style={{ display: 'flex', alignItems: 'center' }}>
-                                    <div className="col-lg-2 col-sm-3 mb-lg-3 center fix-bottom">
+                                    <div className="col-lg-3 col-sm-3 mb-lg-3 center fix-bottom d-flex justify-content-end">
                                         <div className="alert-success order-box fix-none">
                                             <i class="fab fa-paypal"></i>
                                         </div>
                                     </div>
-                                    <div className="col-lg-10 col-sm-9 mb-lg-9">
+                                    <div className="col-lg-9 col-sm-9 mb-lg-9">
                                         <p>
                                             <p>
                                                 <span style={{ fontWeight: '600' }}>Phương thức:</span>{' '}
@@ -240,7 +241,7 @@ const OrderScreen = ({ match }) => {
                             className="row order-detail"
                             style={{ border: '1px solid rgb(218, 216, 216)', borderRadius: '4px' }}
                         >
-                            <div className="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                            <div className="col-6 col-sm-6 col-md-6 col-lg-2 col-xl-2">
                                 <div className="row" style={{ display: 'flex', alignItems: 'center' }}>
                                     <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                                         <div className="d-flex justify-content-center">
@@ -296,7 +297,7 @@ const OrderScreen = ({ match }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                            <div className="col-6 col-sm-6 col-md-6 col-lg-2 col-xl-2">
                                 <div className="row" style={{ display: 'flex', alignItems: 'center' }}>
                                     <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                                         <div className="d-flex justify-content-center">
@@ -350,7 +351,7 @@ const OrderScreen = ({ match }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                            <div className="col-6 col-sm-6 col-md-6 col-lg-2 col-xl-2">
                                 <div className="row" style={{ display: 'flex', alignItems: 'center' }}>
                                     <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                                         <div className="d-flex justify-content-center">
@@ -367,7 +368,13 @@ const OrderScreen = ({ match }) => {
                                             <div className="d-flex justify-content-center">
                                                 <div
                                                     className="cutoms-css"
-                                                    style={order?.isPaid ? { backgroundColor: '#06dce6ed' } : {}}
+                                                    style={
+                                                        order?.isPaid
+                                                            ? { backgroundColor: '#06dce6ed' }
+                                                            : order?.errorPaid
+                                                            ? { backgroundColor: '#c1270a' }
+                                                            : {}
+                                                    }
                                                 >
                                                     <i class="fas fa-money-bill-alt"></i>
                                                 </div>
@@ -379,7 +386,7 @@ const OrderScreen = ({ match }) => {
                                                             className="text-center text-font"
                                                             style={{ color: 'blue', fontWeight: '600' }}
                                                         >
-                                                            Nhận hàng và thanh toán
+                                                            Đã thanh toán
                                                         </p>
                                                         <span
                                                             style={{
@@ -396,6 +403,29 @@ const OrderScreen = ({ match }) => {
                                                             {moment(order?.paidAt).format('DD/MM/YYYY')}{' '}
                                                         </span>
                                                     </>
+                                                ) : order?.errorPaid ? (
+                                                    <>
+                                                        <p
+                                                            className="text-center text-font"
+                                                            style={{ color: 'red', fontWeight: '600' }}
+                                                        >
+                                                            Thanh toán không thành công
+                                                        </p>
+                                                        <span
+                                                            style={{
+                                                                fontSize: '13px',
+                                                                color: 'red',
+                                                                fontWeight: '600',
+                                                            }}
+                                                        >
+                                                            {moment(order?.errorPaidAt).hours()}
+                                                            {':'}
+                                                            {moment(order?.errorPaidAt).minutes() < 10
+                                                                ? `0${moment(order?.errorPaidAt).minutes()}`
+                                                                : moment(order?.errorPaidAt).minutes()}{' '}
+                                                            {moment(order?.errorPaidAt).format('DD/MM/YYYY')}{' '}
+                                                        </span>
+                                                    </>
                                                 ) : (
                                                     <p className="text-center text-font">Nhận hàng và thanh toán</p>
                                                 )}
@@ -404,7 +434,7 @@ const OrderScreen = ({ match }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                            <div className="col-6 col-sm-6 col-md-6 col-lg-2 col-xl-2">
                                 <div className="row" style={{ display: 'flex', alignItems: 'center' }}>
                                     <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                                         <div className="d-flex justify-content-center">
@@ -456,6 +486,60 @@ const OrderScreen = ({ match }) => {
                                                     </>
                                                 ) : (
                                                     <p className="text-center text-font">Hoàn tất</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6 col-sm-6 col-md-6 col-lg-2 col-xl-2">
+                                <div className="row" style={{ display: 'flex', alignItems: 'center' }}>
+                                    <div className="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                                        <div className="d-flex justify-content-center">
+                                            <span className="arrow-cart">
+                                                <i
+                                                    class="fas fa-arrow-alt-right"
+                                                    style={order?.completeAdmin ? { color: '#06dce6ed' } : {}}
+                                                ></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8">
+                                        <div>
+                                            <div className="d-flex justify-content-center">
+                                                <div
+                                                    className="cutoms-css"
+                                                    style={order?.isGuarantee ? { backgroundColor: '#06dce6ed' } : {}}
+                                                >
+                                                    <i className="fas fa-shield-check"></i>
+                                                </div>
+                                            </div>
+                                            <div className="text-center">
+                                                {order?.isGuarantee ? (
+                                                    <>
+                                                        <p
+                                                            className="text-center text-font"
+                                                            style={{ color: 'blue', fontWeight: '600' }}
+                                                        >
+                                                            Bảo hành sản phẩm
+                                                        </p>
+                                                        <span
+                                                            style={{
+                                                                fontSize: '13px',
+                                                                color: 'red',
+                                                                fontWeight: '600',
+                                                            }}
+                                                        >
+                                                            {moment(order?.isGuaranteeAt).hours()}
+                                                            {':'}
+                                                            {moment(order?.isGuaranteeAt).minutes() < 10
+                                                                ? `0${moment(order?.isGuaranteeAt).minutes()}`
+                                                                : moment(order?.isGuaranteeAt).minutes()}{' '}
+                                                            {moment(order?.isGuaranteeAt).format('DD/MM/YYYY')}{' '}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <p className="text-center text-font">Bảo hành sản phẩm</p>
                                                 )}
                                             </div>
                                         </div>
@@ -534,6 +618,17 @@ const OrderScreen = ({ match }) => {
                                                 )}
                                             </div>
                                         ))}
+                                        <div>
+                                            {order?.errorPaid ? (
+                                                <span style={{ fontSize: '14px', color: 'red' }}>{order?.content}</span>
+                                            ) : order?.isGuarantee ? (
+                                                <span style={{ fontSize: '14px', color: 'red' }}>
+                                                    {order?.noteGuarantee}
+                                                </span>
+                                            ) : (
+                                                ''
+                                            )}
+                                        </div>
                                     </>
                                 )}
                             </div>

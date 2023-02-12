@@ -3,22 +3,6 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { userListReducer, userLoginReducer, userdisabledReducer, updatePasswordReduce } from './Reducers/userReducers';
 import {
-    productCreateReducer,
-    optionColorCreateReducer,
-    productDeleteReducer,
-    productEditReducer,
-    productListReducer,
-    productUpdateReducer,
-    listProductCommentAllReducer,
-    productCreateCommentChildReducer,
-    productOptionUpdateReducer,
-    productDeleteOptionReducer,
-    productCreateImageReducer,
-    productDeleteImageReducer,
-    productDeleteCommentsReducer,
-    productDeleteCommentsChildReducer,
-} from './Reducers/ProductReducers';
-import {
     orderCancelReducer,
     orderDeliveredReducer,
     orderDetailsReducer,
@@ -27,41 +11,17 @@ import {
     ordercompleteAdminReducer,
     orderwaitConfirmationReducer,
     orderListCompleteReducer,
+    getAllOrderNvReducer,
+    orderReceiveDetailsReducer,
+    orderErrorPaidReducer,
+    orderContentErrorPaidReducer,
 } from './Reducers/OrderReducres';
-import { sliderCreateReducer, sliderDeleteReducer, sliderListReducer } from './Reducers/SliderListReducers';
-import {
-    newsCreateReducer,
-    newsDeleteReducer,
-    newsListReducer,
-    editNewsReducer,
-    newsUpdateReducer,
-} from './Reducers/NewsReduce';
-import {
-    categoryAddReducer,
-    categoryDeleteReducer,
-    categoryListReducer,
-    categoryUpdateReducer,
-} from './Reducers/CategoryReducers';
 
 const reducer = combineReducers({
     updatePasswordReduce,
     userLogin: userLoginReducer,
     userList: userListReducer,
     userdisabled: userdisabledReducer,
-    productList: productListReducer,
-    productDelete: productDeleteReducer,
-    productOptionDelete: productDeleteOptionReducer,
-    productCreate: productCreateReducer,
-    optionColorCreate: optionColorCreateReducer,
-    productEdit: productEditReducer,
-    productUpdate: productUpdateReducer,
-    productOptionUpdate: productOptionUpdateReducer,
-    productCommentGet: listProductCommentAllReducer,
-    productCommentChildCreate: productCreateCommentChildReducer,
-    productCreateImage: productCreateImageReducer,
-    productDeleteImage: productDeleteImageReducer,
-    productDeleteComments: productDeleteCommentsReducer,
-    productDeleteCommentsChild: productDeleteCommentsChildReducer,
     orderList: orderListReducer,
     orderDetails: orderDetailsReducer,
     orderDeliver: orderDeliveredReducer,
@@ -70,18 +30,10 @@ const reducer = combineReducers({
     orderwaitGetConfirmation: orderwaitConfirmationReducer,
     orderGetcompleteAdmin: ordercompleteAdminReducer,
     orderListComplete: orderListCompleteReducer,
-    sliderList: sliderListReducer,
-    deleteSlider: sliderDeleteReducer,
-    sliderCreate: sliderCreateReducer,
-    newsList: newsListReducer,
-    deleteNews: newsDeleteReducer,
-    newsCreate: newsCreateReducer,
-    getEditNews: editNewsReducer,
-    newsUpdate: newsUpdateReducer,
-    CategoryList: categoryListReducer,
-    CategoryDelete: categoryDeleteReducer,
-    CategoryAdd: categoryAddReducer,
-    CategoryUpdate: categoryUpdateReducer,
+    getAllOrder: getAllOrderNvReducer,
+    orderReceiveDetails: orderReceiveDetailsReducer,
+    orderContentErrorPaid: orderContentErrorPaidReducer,
+    orderErrorPaid: orderErrorPaidReducer,
 });
 
 // login

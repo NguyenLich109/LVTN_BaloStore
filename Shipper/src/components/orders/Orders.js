@@ -87,7 +87,7 @@ const Orders = (props) => {
                                     <td>
                                         <b>{order.name}</b>
                                     </td>
-                                    <td>{order.email}</td>
+                                    <td>{order.phone}</td>
                                     <td>{Number(order?.totalPrice)?.toLocaleString('de-DE')}đ</td>
                                     <td>
                                         {order.isPaid ? (

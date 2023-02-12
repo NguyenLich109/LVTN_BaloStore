@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import { admin, protect } from '../Middleware/AuthMiddleware.js';
 import Product from '../Models/ProductModel.js';
 import Order from './../Models/OrderModel.js';
+import OrderNv from './../Models/OrderNvModel.js';
 
 const orderRouter = express.Router();
 
@@ -189,6 +190,10 @@ orderRouter.get(
                 $options: 'i',
             };
         }
+
+        if (req.query.date1 && req.query.date2) {
+            search.createdAt = { $gte: req.query.date1, $lt: req.query.date2 };
+        }
         if (status == 0) {
             search.cancel = 0;
         }
@@ -204,6 +209,7 @@ orderRouter.get(
         if (status == 3) {
             search.cancel = 0;
             search.isDelivered = true;
+            search.errorPaid = false;
             search.isPaid = false;
         }
         if (status == 4) {
@@ -219,12 +225,17 @@ orderRouter.get(
         if (status == 6) {
             search.cancel = 1;
         }
+        if (status == 7) {
+            search.cancel = 0;
+            search.errorPaid = true;
+        }
         const count = await Order.countDocuments({ ...search });
         let orders = await Order.find({ ...search })
             .limit(pageSize)
             .skip(pageSize * (page - 1))
             .sort({ _id: -1 })
-            .populate('user', 'id name email');
+            .populate('user', 'id name email')
+            .populate('userNv', 'id name email');
 
         res.json({ orders, page, pages: Math.ceil(count / pageSize) });
     }),
@@ -301,6 +312,23 @@ orderRouter.get(
 orderRouter.get(
     '/:id',
     protect,
+    admin,
+    asyncHandler(async (req, res) => {
+        const order = await Order.findById(req.params.id).populate('user', 'name email');
+
+        if (order) {
+            res.json(order);
+        } else {
+            res.status(404);
+            throw new Error('Order Not Found');
+        }
+    }),
+);
+
+// GET ORDER BY ID DETAIL
+orderRouter.get(
+    '/:id/detail',
+    protect,
     asyncHandler(async (req, res) => {
         const order = await Order.findById(req.params.id).populate('user', 'name email');
 
@@ -347,7 +375,7 @@ orderRouter.put(
 // ORDER IS WAITCONFIRMATION
 orderRouter.put(
     '/:id/waitConfirmation',
-    // protect,
+    protect,
     // admin,
     asyncHandler(async (req, res) => {
         const { status } = req.body;
@@ -393,7 +421,7 @@ orderRouter.put(
 // ORDER IS COMMPLETE ADMIN
 orderRouter.put(
     '/:id/completeAdmin',
-    // protect,
+    protect,
     // admin,
     asyncHandler(async (req, res) => {
         const order = await Order.findById(req.params.id);
@@ -401,6 +429,8 @@ orderRouter.put(
         if (order) {
             order.completeAdmin = true;
             order.completeAdminAt = Date.now();
+            order.completeUser = true;
+            order.completeUserAt = Date.now();
 
             const updatedOrder = await order.save();
             res.json(updatedOrder);
@@ -419,9 +449,52 @@ orderRouter.put(
         const order = await Order.findById(req.params.id);
 
         if (order) {
+            if (!order.isDelivered) {
+                order.isDelivered = true;
+                order.deliveredAt = Date.now();
+                order.userNv = req.user._id;
+
+                const createOrder = new OrderNv({
+                    orderItems: order.orderItems,
+                    userKh: order.user._id,
+                    userNv: req.user._id,
+                    shippingAddress: order.shippingAddress,
+                    paymentMethod: order.paymentMethod,
+                    taxPrice: order.taxPrice,
+                    shippingPrice: order.shippingPrice,
+                    totalPrice: order.totalPrice,
+                    phone: order.phone,
+                    name: order.name,
+                    email: order.email,
+                    isDelivered: true,
+                    deliveredAt: Date.now(),
+                    idOrder: order._id,
+                });
+
+                const retult = await createOrder.save();
+                const updatedOrder = await order.save();
+                res.json(updatedOrder);
+            } else {
+                res.status(404);
+                throw new Error('Đơn hàng này đã được một nhân viên khác nhận');
+            }
+        } else {
+            res.status(404);
+            throw new Error('Order Not Found');
+        }
+    }),
+);
+
+// DELIVERED CONFRIM BY ADMIN
+orderRouter.put(
+    '/:id/deliveredAdmin',
+    protect,
+    asyncHandler(async (req, res) => {
+        const order = await Order.findById(req.params.id);
+
+        if (order) {
             order.isDelivered = true;
             order.deliveredAt = Date.now();
-
             const updatedOrder = await order.save();
             res.json(updatedOrder);
         } else {
@@ -431,8 +504,9 @@ orderRouter.put(
     }),
 );
 
+// PAYS CONFIRM BY AMINDIN
 orderRouter.put(
-    '/:id/paid',
+    '/:id/paidAdmin',
     protect,
     asyncHandler(async (req, res) => {
         const order = await Order.findById(req.params.id);
@@ -440,8 +514,178 @@ orderRouter.put(
         if (order) {
             order.isPaid = true;
             order.paidAt = Date.now();
+            order.errorPaid = false;
+            order.errorPaidAt = Date.now();
+            order.content = '';
 
             const updatedOrder = await order.save();
+            res.json(updatedOrder);
+        } else {
+            res.status(404);
+            throw new Error('không tìm thấy đơn hàng');
+        }
+    }),
+);
+
+// PAYS CONFIRM BY NHANVIEN
+orderRouter.put(
+    '/:id/paid',
+    protect,
+    asyncHandler(async (req, res) => {
+        const orderNv = await OrderNv.findById(req.params.id);
+
+        if (orderNv) {
+            const order = await Order.findOne({ _id: orderNv.idOrder });
+            if (order) {
+                order.isPaid = true;
+                order.paidAt = Date.now();
+                order.errorPaid = false;
+                order.errorPaidAt = Date.now();
+                order.content = '';
+                orderNv.isPaid = true;
+                orderNv.paidAt = Date.now();
+                orderNv.errorPaid = false;
+                orderNv.errorPaidAt = Date.now();
+                orderNv.content = '';
+
+                const updateOrderNv = await orderNv.save();
+                const updatedOrder = await order.save();
+                res.json(updatedOrder);
+            } else {
+                res.status(404);
+                throw new Error('không tìm thấy đơn hàng');
+            }
+        } else {
+            res.status(404);
+            throw new Error('Order Not Found');
+        }
+    }),
+);
+
+//ERROR PAID CONFRIM BY AMIDN
+orderRouter.put(
+    '/:id/errorPaidAdmin',
+    protect,
+    asyncHandler(async (req, res) => {
+        const errorOrder = await Order.findById(req.params.id);
+        if (!errorOrder.isPaid) {
+            errorOrder.errorPaid = true;
+            errorOrder.errorPaidAt = Date.now();
+
+            const updatedOrder = await errorOrder.save();
+            res.json(updatedOrder);
+        } else {
+            res.status(404);
+            throw new Error('Trạng thái đã thanh toán nên sẽ không thực hiên được chức năng này');
+        }
+    }),
+);
+
+// UPDATE ERROR PAID
+orderRouter.put(
+    '/:id/errorPaid',
+    protect,
+    asyncHandler(async (req, res) => {
+        const errorOrderNv = await OrderNv.findById(req.params.id);
+
+        if (errorOrderNv) {
+            const errorOrder = await Order.findOne({ _id: errorOrderNv.idOrder });
+            if (!errorOrder.isPaid) {
+                errorOrder.errorPaid = true;
+                errorOrder.errorPaidAt = Date.now();
+                errorOrderNv.errorPaid = true;
+                errorOrderNv.errorPaidAt = Date.now();
+
+                const updateOrderNv = await errorOrderNv.save();
+                const updatedOrder = await errorOrder.save();
+                res.json(updatedOrder);
+            } else {
+                res.status(404);
+                throw new Error('Trạng thái đã thanh toán nên sẽ không thực hiên được chức năng này');
+            }
+        } else {
+            res.status(404);
+            throw new Error('Order Not Found');
+        }
+    }),
+);
+
+// ERROR CONTENT CONFRIM BY ADMIN
+orderRouter.put(
+    '/:id/contentErrorPaidAdmin',
+    protect,
+    asyncHandler(async (req, res) => {
+        const errorContent = await Order.findById(req.params.id);
+
+        if (errorContent.errorPaid) {
+            errorContent.content = req.body.content;
+            const updatedOrder = await errorContent.save();
+            res.json(updatedOrder);
+        } else {
+            res.status(404);
+            throw new Error('Phải đổi trang thái thanh toán không thanh công trước khi gửi');
+        }
+    }),
+);
+
+// ERROR CONTENT
+orderRouter.put(
+    '/:id/contentErrorPaid',
+    protect,
+    asyncHandler(async (req, res) => {
+        const errorContentNv = await OrderNv.findById(req.params.id);
+
+        if (errorContentNv) {
+            const errorContent = await Order.findOne({ _id: errorContentNv.idOrder });
+            if (errorContent.errorPaid) {
+                errorContent.content = req.body.content;
+                errorContentNv.content = req.body.content;
+
+                const updateOrderNv = await errorContentNv.save();
+                const updatedOrder = await errorContent.save();
+                res.json(updatedOrder);
+            } else {
+                res.status(404);
+                throw new Error('Phải đổi trang thái thanh toán không thanh công trước khi gửi');
+            }
+        } else {
+            res.status(404);
+            throw new Error('Order Not Found');
+        }
+    }),
+);
+
+// UPDATE GUARANGEE
+orderRouter.put(
+    '/:id/guarantee',
+    protect,
+    asyncHandler(async (req, res) => {
+        const orderGuarantee = await Order.findById(req.params.id);
+
+        if (orderGuarantee) {
+            orderGuarantee.isGuarantee = true;
+            orderGuarantee.isGuaranteeAt = Date.now();
+
+            const updatedOrder = await orderGuarantee.save();
+            res.json(updatedOrder);
+        } else {
+            res.status(404);
+            throw new Error('Order Not Found');
+        }
+    }),
+);
+
+// UPDATE NOTE GUARANTEE
+orderRouter.put(
+    '/:id/noteGuarantee',
+    protect,
+    asyncHandler(async (req, res) => {
+        const orderNoteGuarantee = await Order.findById(req.params.id);
+
+        if (orderNoteGuarantee) {
+            orderNoteGuarantee.noteGuarantee = req.body.note;
+
+            const updatedOrder = await orderNoteGuarantee.save();
             res.json(updatedOrder);
         } else {
             res.status(404);

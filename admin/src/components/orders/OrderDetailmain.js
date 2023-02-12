@@ -10,6 +10,10 @@ import {
     paidOrder,
     waitConfirmationOrder,
     completeAdminOrder,
+    orderErrorPaidAction,
+    orderContentPaidAction,
+    orderGuaranteeAction,
+    orderNoteGuaranteeAction,
 } from '../../Redux/Actions/OrderActions';
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
@@ -40,6 +44,14 @@ const OrderDetailmain = (props) => {
     const { success: successCompleteAdmin } = orderGetcompleteAdmin;
     const orderCancel = useSelector((state) => state.orderCancel);
     const { loading: loadingCancel, success: successCancel } = orderCancel;
+    const orderErrorPaidReducer = useSelector((state) => state.orderErrorPaidReducer);
+    const { loading: loadingErrorPaid, success: successErrorPaid } = orderErrorPaidReducer;
+    const orderContentErrorPaidReducer = useSelector((state) => state.orderContentErrorPaidReducer);
+    const { loading: loadingContentErrorPaid, success: successContentErrorPaid } = orderContentErrorPaidReducer;
+    const orderGuaranteeReducer = useSelector((state) => state.orderGuaranteeReducer);
+    const { loading: loadingOrderGuarantee, success: successOrderGuarantee } = orderGuaranteeReducer;
+    const orderNoteGuaranteeReducer = useSelector((state) => state.orderNoteGuaranteeReducer);
+    const { loading: loadingOrderNoteGuarantee, success: successOrderNoteGuarantee } = orderNoteGuaranteeReducer;
     useEffect(() => {
         dispatch(getOrderDetails(orderId));
     }, [
@@ -50,6 +62,10 @@ const OrderDetailmain = (props) => {
         successCancel,
         successwaitGetConfirmation,
         successCompleteAdmin,
+        successErrorPaid,
+        successContentErrorPaid,
+        successOrderGuarantee,
+        successOrderNoteGuarantee,
     ]);
 
     // const cancelOrderHandler = () => {
@@ -63,54 +79,85 @@ const OrderDetailmain = (props) => {
     const setFalseCancel = () => {
         setCancel(false);
     };
-    const [status, setStatus] = useState('0');
-    useEffect(() => {
-        if (status === '1' && order?.waitConfirmation !== true) {
-            if (window.confirm('Đồng ý xác nhận')) {
-                dispatch(waitConfirmationOrder(order._id, true));
-            } else {
-                setStatus('0');
-            }
-        }
-        if (status === '2' && order?.isDelivered !== true) {
-            if (window.confirm('Đồng ý giao hàng')) {
-                dispatch(deliverOrder(order));
-            } else {
-                setStatus('1');
-            }
-        }
-        if (status === '3' && order?.isPaid !== true) {
-            if (window.confirm('Đồng ý thanh toán')) {
-                dispatch(paidOrder(order));
-            } else {
-                setStatus('2');
-            }
-        }
-        if (status === '4' && order?.completeAdmin !== true) {
-            if (window.confirm('Đồng ý hoàn tất')) {
-                dispatch(completeAdminOrder(order._id));
-            } else {
-                setStatus('3');
-            }
-        }
-    }, [status]);
+    const [status, setStatus] = useState('Trạng thái');
     useEffect(() => {
         if (order?.waitConfirmation === true && order?.isDelivered !== true) {
-            setStatus('1');
+            setStatus('Xác nhận');
         }
         if (order?.isDelivered === true && order?.isPaid !== true) {
-            setStatus('2');
+            setStatus('Giao hàng');
         }
         if (order?.isPaid === true && order?.completeAdmin !== true) {
-            setStatus('3');
+            setStatus('Thanh toán');
+        }
+        if (order?.errorPaid === true && order?.completeAdmin !== true) {
+            setStatus('Thanh toán không thành công');
         }
         if (order?.completeAdmin === true) {
-            setStatus('4');
+            setStatus('Hoàn tất');
+        }
+        if (order?.isGuarantee === true) {
+            setStatus('Bảo hành sản phẩm');
         }
     }, [order]);
     const cancelOrderHandler1 = () => {
         setCancel(false);
         dispatch(cancelOrder(order));
+    };
+
+    const handleConfirm = () => {
+        if (order?.waitConfirmation !== true) {
+            if (window.confirm('Đồng ý xác nhận')) {
+                dispatch(waitConfirmationOrder(order._id, true));
+            }
+        }
+    };
+    const handleDelivery = () => {
+        if (order?.isDelivered !== true) {
+            if (window.confirm('Đồng ý giao hàng')) {
+                dispatch(deliverOrder(order));
+            }
+        }
+    };
+    const handlePaid = () => {
+        if (order?.isPaid !== true) {
+            if (window.confirm('Đồng ý thanh toán')) {
+                dispatch(paidOrder(order));
+            }
+        }
+    };
+    const handleErrorPaid = () => {
+        if (order?.errorPaid !== true) {
+            if (window.confirm('Đồng ý thanh toán không hoàn thành')) {
+                dispatch(orderErrorPaidAction(order._id));
+            }
+        }
+    };
+    const handleSuccess = () => {
+        if (order?.completeAdmin !== true) {
+            if (window.confirm('Đồng ý hoàn tất')) {
+                dispatch(completeAdminOrder(order._id));
+            }
+        }
+    };
+    const handleGuarantee = () => {
+        if (!order?.isGuarantee) {
+            if (window.confirm('Bạn có muốn bảo hành sản phẩm này không')) {
+                dispatch(orderGuaranteeAction(order._id));
+            }
+        }
+    };
+
+    const onErrorContent = (data) => {
+        if (order?.errorPaid) {
+            dispatch(orderContentPaidAction({ id: order?._id, content: data }));
+        }
+    };
+
+    const onNoteGuarantee = (data) => {
+        if (order?.isGuarantee) {
+            dispatch(orderNoteGuaranteeAction({ id: order?._id, note: data }));
+        }
     };
     return (
         <section className="content-main">
@@ -136,9 +183,9 @@ const OrderDetailmain = (props) => {
                             onClick={() => {
                                 if (window.confirm('Đồng ý thu hồi')) {
                                     dispatch(waitConfirmationOrder(order._id, false));
-                                    setStatus('0');
+                                    setStatus('Trạng thái');
                                 } else {
-                                    setStatus('1');
+                                    setStatus('Xác nhận');
                                 }
                             }}
                         >
@@ -146,23 +193,56 @@ const OrderDetailmain = (props) => {
                         </button>
                     </div>
                 )}
-                <div className="col-lg-3 col-md-3">
-                    <select className="form-select" value={status} onChange={(e) => setStatus(e.target.value)}>
+                <div className="col-lg-2 col-md-2">
+                    <div className="dropdown" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <button
+                            className="btn btn-light dropdown-toggle"
+                            type="button"
+                            id="dropdownMenuButton"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            style={{ width: '250px' }}
+                        >
+                            {status}
+                        </button>
                         {order?.cancel !== 1 && (
-                            <>
-                                <option value={'0'}>Trạng thái...</option>
-                                <option value={'1'}>Xác nhận</option>
-                                {order?.waitConfirmation && <option value={'2'}>Giao hàng</option>}
-                                {order?.waitConfirmation && order?.isDelivered && (
-                                    <option value={'3'}>Thanh toán</option>
+                            <div
+                                className="dropdown-menu"
+                                aria-labelledby="dropdownMenuButton"
+                                style={{ width: '250px', textAlign: 'center' }}
+                            >
+                                <button className="dropdown-item dropdown-item__padding " onClick={handleConfirm}>
+                                    Xác nhận
+                                </button>
+                                {order?.waitConfirmation && (
+                                    <button className="dropdown-item dropdown-item__padding" onClick={handleDelivery}>
+                                        Giao hàng
+                                    </button>
                                 )}
-                                {order?.waitConfirmation &&
-                                    order?.isDelivered &&
-                                    order?.isPaid &&
-                                    order?.completeUser && <option value={'4'}>Hoàn tất</option>}
-                            </>
+                                {order?.isDelivered && (
+                                    <button className="dropdown-item dropdown-item__padding" onClick={handlePaid}>
+                                        Thanh toán
+                                    </button>
+                                )}
+                                {order?.isDelivered && !order?.isPaid && (
+                                    <button className="dropdown-item dropdown-item__padding" onClick={handleErrorPaid}>
+                                        Thanh toán không thành công
+                                    </button>
+                                )}
+                                {order?.isPaid && (
+                                    <button className="dropdown-item dropdown-item__padding" onClick={handleSuccess}>
+                                        Hoàn tất
+                                    </button>
+                                )}
+                                {order?.completeUser && (
+                                    <button className="dropdown-item" onClick={handleGuarantee}>
+                                        Bảo hành sản phẩm
+                                    </button>
+                                )}
+                            </div>
                         )}
-                    </select>
+                    </div>
                 </div>
             </div>
 
@@ -213,7 +293,12 @@ const OrderDetailmain = (props) => {
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="table-responsive">
-                                    <OrderDetailProducts order={order} loading={loading} />
+                                    <OrderDetailProducts
+                                        order={order}
+                                        loading={loading}
+                                        onErrorContent={onErrorContent}
+                                        onNoteGuarantee={onNoteGuarantee}
+                                    />
                                 </div>
                             </div>
                         </div>

@@ -1033,3 +1033,9 @@ ul.row-sm {
 .table-responsive {
     overflow-y: hidden;
 }
+.dropdown-item__padding {
+    padding: 5px 0;
+}
+.search-date:focus {
+    box-shadow: none;
+}

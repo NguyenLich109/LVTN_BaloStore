@@ -13,7 +13,12 @@ const productReviewSchema = mongoose.Schema(
 
 const orderSchema = mongoose.Schema(
     {
-        user: {
+        userKh: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'User',
+        },
+        userNv: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: 'User',
@@ -65,14 +70,6 @@ const orderSchema = mongoose.Schema(
             required: true,
             default: 0.0,
         },
-        waitConfirmation: {
-            type: Boolean,
-            required: true,
-            default: false,
-        },
-        waitConfirmationAt: {
-            type: Date,
-        },
         isPaid: {
             type: Boolean,
             required: true,
@@ -81,25 +78,13 @@ const orderSchema = mongoose.Schema(
         paidAt: {
             type: Date,
         },
-        completeUser: {
+        errorPaid: {
             type: Boolean,
             required: true,
             default: false,
         },
-        completeUserAt: {
+        errorPaidAt: {
             type: Date,
-        },
-        completeAdmin: {
-            type: Boolean,
-            required: true,
-            default: false,
-        },
-        completeAdminAt: {
-            type: Date,
-        },
-        cancel: {
-            type: Number,
-            default: 0,
         },
         isDelivered: {
             type: Boolean,
@@ -121,37 +106,14 @@ const orderSchema = mongoose.Schema(
             type: String,
             require: true,
         },
-        errorPaid: {
-            type: Boolean,
-            required: true,
-            default: false,
-        },
-
-        errorPaidAt: {
-            type: Date,
-        },
-        isGuarantee: {
-            type: Boolean,
-            required: true,
-            default: false,
-        },
-
-        isGuaranteeAt: {
-            type: Date,
-        },
         content: { type: String },
-        noteGuarantee: { type: String },
-        userNv: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: false,
-            ref: 'User',
-        },
+        idOrder: { type: String, require: true },
     },
     {
         timestamps: true,
     },
 );
 
-const Order = mongoose.model('Order', orderSchema);
+const OrderNv = mongoose.model('OrderNv', orderSchema);
 
-export default Order;
+export default OrderNv;
