@@ -59,6 +59,9 @@ const userSchema = mongoose.Schema(
             require: true,
             default: false,
         },
+        discount: {
+            type: Array,
+        },
     },
     {
         timestamps: true,

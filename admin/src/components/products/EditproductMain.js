@@ -49,6 +49,7 @@ const EditproductMain = (props) => {
     const [AddCountInStock, setAddCountInStock] = useState('');
     const [checkEdit, setCheckEdit] = useState(false);
     const [checkAdd, setCheckAdd] = useState(true);
+    const [discount, setDiscount] = useState(0);
     const dispatch = useDispatch();
 
     const productEdit = useSelector((state) => state.productEdit);
@@ -132,6 +133,7 @@ const EditproductMain = (props) => {
                 setDescription(product.description);
                 setCategory(product.category);
                 setPrice(product.price);
+                setDiscount(product.discount);
             }
         }
     }, [product, dispatch, productId, successUpdate]);
@@ -144,6 +146,7 @@ const EditproductMain = (props) => {
                     _id: productId,
                     name,
                     price,
+                    discount,
                     category,
                     description,
                 }),
@@ -246,6 +249,20 @@ const EditproductMain = (props) => {
                                                     //required
                                                     value={price}
                                                     onChange={(e) => setPrice(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="mb-0">
+                                                <label htmlFor="product_price" className="form-label">
+                                                    Giảm giá
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    placeholder="Giá sản phẩm"
+                                                    className="form-control"
+                                                    id="product_price"
+                                                    //required
+                                                    value={discount}
+                                                    onChange={(e) => setDiscount(e.target.value)}
                                                 />
                                             </div>
 

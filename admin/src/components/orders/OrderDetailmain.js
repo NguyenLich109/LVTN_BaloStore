@@ -81,6 +81,9 @@ const OrderDetailmain = (props) => {
     };
     const [status, setStatus] = useState('Trạng thái');
     useEffect(() => {
+        if (order?.waitConfirmation !== true) {
+            setStatus('Trạng thái');
+        }
         if (order?.waitConfirmation === true && order?.isDelivered !== true) {
             setStatus('Xác nhận');
         }
@@ -99,6 +102,7 @@ const OrderDetailmain = (props) => {
         if (order?.isGuarantee === true) {
             setStatus('Bảo hành sản phẩm');
         }
+        return order;
     }, [order]);
     const cancelOrderHandler1 = () => {
         setCancel(false);

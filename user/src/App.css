@@ -1629,3 +1629,9 @@ textarea:focus {
     border-radius: 50%;
     cursor: pointer;
 }
+.text-none {
+    margin-right: 5px;
+    text-decoration: line-through;
+    color: #0000008a;
+    font-weight: 200;
+}

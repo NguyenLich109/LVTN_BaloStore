@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateUserProfile, getUserDetails } from '../Redux/Actions/userActions';
+import { CHECK_DISCOUNT_RESET } from '../Redux/Constants/DiscountConstants';
 import { listCart } from '../Redux/Actions/cartActions';
 import { ListAvatar } from '../Redux/Actions/avatarAction';
 import NavBar from './navbar';
@@ -69,7 +70,9 @@ const Header = (props) => {
 
     useEffect(() => {
         if (user?.disabled) {
-            alert('Tài khoản đã bị khóa, vui lòng liên hệ sđt 0946402578 hay email balostore.owner@gmail.com để liên hệ lấy lại.');
+            alert(
+                'Tài khoản đã bị khóa, vui lòng liên hệ sđt 0946402578 hay email balostore.owner@gmail.com để liên hệ lấy lại.',
+            );
             dispatch(logout());
             history.push('/');
         }
@@ -107,6 +110,9 @@ const Header = (props) => {
             top: 0,
             behavior: 'smooth',
         });
+    };
+    const handleRest = () => {
+        dispatch({ type: CHECK_DISCOUNT_RESET });
     };
     return (
         <>
@@ -149,7 +155,7 @@ const Header = (props) => {
                                         <div className="moblie-menu" onClick={clickIconNavBar}>
                                             <i class="fas fa-bars"></i>
                                         </div>
-                                        <Link className="navbar-brand" to="/">
+                                        <Link className="navbar-brand" onClick={handleRest} to="/">
                                             <img alt="logo" src="/images/logo2.png" />
                                         </Link>
                                     </div>
@@ -222,7 +228,7 @@ const Header = (props) => {
                                             </div>
                                         )}
 
-                                        <Link to="/cart" className="cart-mobile-icon">
+                                        <Link to="/cart" className="cart-mobile-icon" onClick={handleRest}>
                                             <i className="fas fa-shopping-bag"></i>
                                             <span className="badge">{cartItems ? cartItems.length : 0}</span>
                                         </Link>
@@ -255,7 +261,7 @@ const Header = (props) => {
                         <div className="pc-header">
                             <div className="row">
                                 <div className="col-md-3 col-4 d-flex align-items-center">
-                                    <Link className="navbar-brand" to="/">
+                                    <Link className="navbar-brand" onClick={handleRest} to="/">
                                         <img alt="logo" src="/images/logo2.png" />
                                     </Link>
                                 </div>
@@ -345,7 +351,7 @@ const Header = (props) => {
                                         </>
                                     )}
 
-                                    <Link to="/cart">
+                                    <Link to="/cart" onClick={handleRest}>
                                         <i className="fas fa-shopping-bag"></i>
                                         <span className="badge">{cartItems ? cartItems?.length : 0}</span>
                                     </Link>

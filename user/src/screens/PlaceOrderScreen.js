@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 import Loading from '../components/LoadingError/Loading';
 import Toast from '../components/LoadingError/Toast';
 import { getUserDetails } from '../Redux/Actions/userActions';
+import { checkDiscountAction } from '../Redux/Actions/DiscountAction';
+import { CHECK_DISCOUNT_RESET } from '../Redux/Constants/DiscountConstants';
 
 const Toastobjects = {
     pauseOnFocusLoss: false,
@@ -22,8 +24,23 @@ const Toastobjects = {
 const PlaceOrderScreen = ({ history }) => {
     // window.scrollTo(0, 0);
     const dispatch = useDispatch();
-    // const userDetails = useSelector((state) => state.userDetails);
-    // const { loading, user } = userDetails;
+
+    const [checkBoolean, setCheckBoolean] = useState(false);
+    const [nameDiscount, setNameDiscount] = useState('');
+
+    const checkDiscountReducer = useSelector((state) => state.checkDiscountReducer);
+    const { loading: loadingCheck, success: successCheck, error: errorCheck, discount } = checkDiscountReducer;
+
+    useEffect(() => {
+        if (successCheck) {
+            toast.success('Mã này chính xác', Toastobjects);
+        }
+        if (errorCheck) {
+            toast.error(errorCheck, Toastobjects);
+            dispatch({ type: CHECK_DISCOUNT_RESET });
+        }
+    }, [dispatch, successCheck, errorCheck]);
+
     const cart = useSelector((state) => state.cart);
     const { cartItems } = cart;
     const currenCartItems = cartItems
@@ -39,7 +56,7 @@ const PlaceOrderScreen = ({ history }) => {
                 color: pro.color,
                 qty: pro.qty,
                 image: pro.image,
-                price: pro.product.price,
+                price: (pro.product?.price * (100 - pro.product?.discount)) / 100,
                 product: pro.product._id,
             });
             return arr;
@@ -60,14 +77,20 @@ const PlaceOrderScreen = ({ history }) => {
                     return true;
                 }
             })
-            .reduce((a, i) => a + i.qty * i.product.price, 0)
+            .reduce((a, i) => a + i.qty * ((i.product?.price * (100 - i.product?.discount)) / 100), 0)
             .toFixed(0),
     );
     cart.shippingPrice = addDecimals(cart.itemsPrice > 0 ? (cart.itemsPrice > 100 ? 30000 : 20) : 0);
-    cart.taxPrice = addDecimals(Number((0 * cart.itemsPrice).toFixed(0)));
+    cart.taxPrice = addDecimals(Number((0.05 * cart.itemsPrice).toFixed(0)));
+    cart.discountPrice = discount ? discount?.priceDiscount : 0;
     cart.totalPrice =
         cart?.cartItems.length > 0
-            ? (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(0)
+            ? (
+                  Number(cart.itemsPrice) +
+                  Number(cart.shippingPrice) +
+                  Number(cart.taxPrice) -
+                  (discount ? discount?.priceDiscount : 0)
+              ).toFixed(0)
             : 0;
 
     const orderCreate = useSelector((state) => state.orderCreate);
@@ -103,12 +126,14 @@ const PlaceOrderScreen = ({ history }) => {
                 itemsPrice: cart.itemsPrice,
                 shippingPrice: cart.shippingPrice,
                 taxPrice: cart.taxPrice,
+                discountPrice: cart.discountPrice,
                 totalPrice: cart.totalPrice,
                 phone: userInfo.phone,
                 name: userInfo.name,
                 email: userInfo.email,
             }),
         );
+        dispatch({ type: CHECK_DISCOUNT_RESET });
     };
 
     function findCartCountInStock(item) {
@@ -154,14 +179,25 @@ const PlaceOrderScreen = ({ history }) => {
                 </div>
                 <div className="mt-3 mt-md-0 col-md-2 col-4 align-items-end  d-flex flex-column justify-content-center ">
                     <h4 style={{ fontWeight: '600', fontSize: '16px' }}>Giá</h4>
-                    <h6>{(item?.qty * item?.product?.price)?.toLocaleString('de-DE')}đ</h6>
+                    <h6>
+                        {(item?.qty * ((item?.product?.price * (100 - item?.product?.discount)) / 100))?.toLocaleString(
+                            'de-DE',
+                        )}
+                        đ
+                    </h6>
                 </div>
             </>
         );
     }
+    const handleCheck = () => {
+        if (nameDiscount) {
+            dispatch(checkDiscountAction({ nameDiscount: nameDiscount.toUpperCase() }));
+        }
+    };
     return (
         <>
             <Header />
+            {loadingCheck && <Loading />}
             {error && <Loading />}
             <Toast />
             <div className="container">
@@ -257,34 +293,80 @@ const PlaceOrderScreen = ({ history }) => {
                 <div className="row" style={{ padding: '10px 0', backgroundColor: '#fff', marginTop: '10px' }}>
                     {/* total */}
                     <div
-                        className="col-lg-12 d-flex align-items-end flex-column subtotal-order"
+                        className="col-lg-9 d-flex align-items-end flex-column subtotal-order"
                         style={{ border: '1px solid rgb(218, 216, 216)', borderRadius: '4px' }}
                     >
                         <table className="table fix-bottom">
                             <tbody>
                                 <tr>
                                     <td>
-                                        <strong>Sản phẩm</strong>
+                                        <strong>Sản phẩm:</strong>
                                     </td>
                                     <td>{Number(cart?.itemsPrice)?.toLocaleString('de-DE')}đ</td>
                                     <td>
-                                        <strong>Thuế</strong>
+                                        <strong>Thuế:</strong>
                                     </td>
                                     <td>{Number(cart?.taxPrice)?.toLocaleString('de-DE')}đ</td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong>Phí vận chuyển</strong>
+                                        <strong>Phí vận chuyển:</strong>
                                     </td>
                                     <td>{Number(cart?.shippingPrice)?.toLocaleString('de-DE')}đ</td>
 
                                     <td>
-                                        <strong>Tổng tiền</strong>
+                                        <strong>Mã giảm giá:</strong>
+                                    </td>
+                                    <td>-{cart?.discountPrice?.toLocaleString('de-DE')}đ</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong></strong>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <strong>Tổng tiền:</strong>
                                     </td>
                                     <td>{Number(cart?.totalPrice)?.toLocaleString('de-DE')}đ</td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div
+                        className="col-lg-3 d-flex flex-column flex-top-order"
+                        style={{ border: '1px solid rgb(218, 216, 216)', borderRadius: '4px' }}
+                    >
+                        {checkBoolean ? (
+                            <div>
+                                <label style={{ fontSize: '18px', fontWeight: '600', padding: '5px' }}>
+                                    Mã giảm giá:
+                                </label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={nameDiscount}
+                                    onChange={(e) => setNameDiscount(e.target.value)}
+                                    style={{ textTransform: 'uppercase' }}
+                                ></input>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={handleCheck}
+                                    style={{ width: '100%', margin: '5px 0' }}
+                                >
+                                    Kiểm tra
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="d-flex align-self-center" style={{ margin: '38px 0' }}>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => setCheckBoolean(true)}
+                                    style={{ width: '100%', margin: '5px 0' }}
+                                >
+                                    Nhập mã giảm giá
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div

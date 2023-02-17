@@ -72,6 +72,7 @@ const OrderDetailmain = (props) => {
         if (order?.isDelivered === false) {
             setStatus('Trạng thái');
         }
+        return order;
     }, [order]);
     const cancelOrderHandler1 = () => {
         setCancel(false);

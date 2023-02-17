@@ -55,6 +55,12 @@ import {
     categoryListReducer,
     categoryUpdateReducer,
 } from './Reducers/CategoryReducers';
+import {
+    createDiscountReduce,
+    getDiscountReduce,
+    updateDiscountReduce,
+    deleteDiscountReduce,
+} from './Reducers/DiscountReduce';
 
 const reducer = combineReducers({
     userLogin: userLoginReducer,
@@ -103,6 +109,10 @@ const reducer = combineReducers({
     CategoryDelete: categoryDeleteReducer,
     CategoryAdd: categoryAddReducer,
     CategoryUpdate: categoryUpdateReducer,
+    createDiscountReduce,
+    getDiscountReduce,
+    updateDiscountReduce,
+    deleteDiscountReduce,
 });
 
 // login

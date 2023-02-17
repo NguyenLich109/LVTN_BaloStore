@@ -76,7 +76,7 @@ const Orders = (props) => {
         }
     };
     const handleDate2 = (data) => {
-        let x = `${data}T23:59:00`;
+        let x = `${data}T23:59:59`;
         const date = new Date(x);
         const isoDate = date.toISOString();
         if (isoDate) {

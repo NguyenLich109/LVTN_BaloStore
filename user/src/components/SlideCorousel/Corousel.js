@@ -75,7 +75,19 @@ export default function Corousel() {
                                         className="corousel-img"
                                     ></img>
                                     <p className="corousel-noti">{product.name}</p>
-                                    <p className="corousel-price">{product?.price?.toLocaleString('de-DE')}đ</p>
+                                    <div className="d-flex justify-content-center">
+                                        {product?.discount !== 0 && (
+                                            <p className="corousel-price text-none">
+                                                {product?.price?.toLocaleString('de-DE')}đ
+                                            </p>
+                                        )}
+                                        <p className="corousel-price">
+                                            {((product?.price * (100 - product?.discount)) / 100).toLocaleString(
+                                                'de-DE',
+                                            )}
+                                            đ
+                                        </p>
+                                    </div>
                                     <div className="corousel-rating">
                                         <Rating value={product.rating} text={`(${product.numReviews})`} />
                                     </div>

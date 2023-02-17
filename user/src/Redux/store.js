@@ -38,6 +38,7 @@ import { Avatarload } from './Reducers/AvatarReducer';
 import { Province } from './Reducers/AdressProvinceReducers';
 import { getNewsReducer, newsListReducer } from './Reducers/NewsReducer';
 import { categoryListReducer } from './Reducers/CategoryReducers';
+import { checkDiscountReducer } from './Reducers/DiscountReducers';
 
 const reducer = combineReducers({
     listAllOrder: productbestseller,
@@ -74,6 +75,7 @@ const reducer = combineReducers({
     listNews: newsListReducer,
     getDetailNews: getNewsReducer,
     createUserReducer,
+    checkDiscountReducer,
 });
 
 const cartItemsFromLocalStorage = localStorage.getItem('cartItems')

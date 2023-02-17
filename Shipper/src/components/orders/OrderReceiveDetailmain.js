@@ -115,6 +115,7 @@ export default function OrderReceiveDetailmain(props) {
         if (order?.errorPaid === true) {
             setStatus('Thanh toán không thành công');
         }
+        return order;
     }, [order]);
 
     const onHandle = (value) => {

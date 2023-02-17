@@ -25,6 +25,7 @@ import NewsScreen from './screens/NewsScreen';
 import CommentScreen from './screens/CommentScreen';
 import CreateUserScreen from './screens/CreateUserScreen';
 import UpdateUserScreen from './screens/UpdateUserScreen';
+import DiscountScreen from './screens/DiscountScreen';
 
 function App() {
     const dispatch = useDispatch();
@@ -80,6 +81,7 @@ function App() {
                     <PrivateRouter path="/addnews" component={AddNewsScreen} />
                     <PrivateRouter path="/editnews/:id/edit" component={EditNewsScreen} />
                     <PrivateRouter path="/product/:id/edit" component={ProductEditScreen} />
+                    <PrivateRouter path="/discount" component={DiscountScreen} />
                     <Route path="/login" component={Login} />
                     <PrivateRouter path="*" component={NotFound} />
                 </Switch>

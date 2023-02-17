@@ -289,9 +289,11 @@ userRouter.put(
             throw new Error('account lock up');
         }
         if (req.body.image && req.body.image !== user.image) {
-            fs.unlink(path.join(__dirname, 'public/userProfile', user.image), (err) => {
-                if (err) console.log('Delete old avatar have err:', err);
-            });
+            if (user.image) {
+                fs.unlink(path.join(__dirname, 'public/userProfile', user.image), (err) => {
+                    if (err) console.log('Delete old avatar have err:', err);
+                });
+            }
         }
         if (user) {
             user.name = req.body.name || user.name;

@@ -103,10 +103,26 @@ const OrderDetailProducts = (props) => {
                             </dl>
                             <dl className="dlist">
                                 <dt className="fs-6" style={{ fontWeight: '600' }}>
+                                    Mã giảm giá:
+                                </dt>{' '}
+                                <dd className="fs-6" style={{ fontWeight: '600' }}>
+                                    -{order.discountPrice?.toLocaleString('de-DE')}đ
+                                </dd>
+                            </dl>
+                            <dl className="dlist">
+                                <dt className="fs-6" style={{ fontWeight: '600' }}>
                                     Phí ship:
                                 </dt>{' '}
                                 <dd className="fs-6" style={{ fontWeight: '600' }}>
                                     {Number(order.shippingPrice)?.toLocaleString('de-DE')}đ
+                                </dd>
+                            </dl>
+                            <dl className="dlist">
+                                <dt className="fs-6" style={{ fontWeight: '600' }}>
+                                    Thuế:
+                                </dt>{' '}
+                                <dd className="fs-6" style={{ fontWeight: '600' }}>
+                                    {Number(order.taxPrice)?.toLocaleString('de-DE')}đ
                                 </dd>
                             </dl>
                             <dl className="dlist">

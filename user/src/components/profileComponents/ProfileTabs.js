@@ -191,12 +191,12 @@ const ProfileTabs = () => {
     const submitUpdateProfile = (e) => {
         e.preventDefault();
         if (!checkObjProfile()) return;
-        dispatch(updateUserProfile({ id: user._id, name, email, phone, country, city, address, image }));
+        dispatch(updateUserProfile({ id: user._id, name, email, phone, country, city, address }));
     };
     const submitUpdatePassword = (e) => {
         e.preventDefault();
         if (!checkPassword()) return; // check funtion check pass để kiểm tra xem có các trường bị rổng hay không
-        dispatch(updateUserPassword({ id: user._id, oldPassword, password, image }));
+        dispatch(updateUserPassword({ id: user._id, oldPassword, password }));
 
         setOldPassword('');
         setPassword('');
@@ -204,7 +204,7 @@ const ProfileTabs = () => {
     };
 
     //port avatar
-    const [file, setFile] = useState();
+    const [file, setFile] = useState('');
     const [url, setUrl] = useState();
     const [imgAvatar, setImgAvatar] = useState();
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -249,15 +249,19 @@ const ProfileTabs = () => {
                     },
                 })
                 .then((res) => {
+                    if (res?.data) {
+                        dispatch(updateUserProfile({ image: res?.data.filename }));
+                    }
                     res?.data && setUrl(res?.data);
+                    setFile('');
                 });
         }
-    }, [file]);
-    useEffect(() => {
-        if (url !== undefined) {
-            setImage(url.filename);
-        }
-    }, [url]);
+    }, [file, dispatch]);
+    // useEffect(() => {
+    //     if (url !== undefined) {
+    //         setImage(url.filename);
+    //     }
+    // }, [url]);
 
     // ================ đổi input = seclct
     const handleChooseProvince = (e) => {

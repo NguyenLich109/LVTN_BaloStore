@@ -33,6 +33,7 @@ const AddProductMain = () => {
     const [description, setDescription] = useState('');
     const [color, setColor] = useState('');
     const [productId, setProducId] = useState('');
+    const [discount, setDiscount] = useState(0);
     const [validate, setValidate] = useState({});
     const { quill, quillRef } = useQuill();
     const [disabledOptionColor, setDisabledOptionColor] = useState(false);
@@ -71,7 +72,7 @@ const AddProductMain = () => {
 
     useEffect(() => {
         dispatch(ListCategory());
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (successCreactImage) {
@@ -106,6 +107,10 @@ const AddProductMain = () => {
                 msg.borderRed3 = 'border-red';
             }
         }
+        if (isEmpty(discount)) {
+            msg.discount = 'Vui lòng nhập nhập mã giảm giá';
+            msg.borderRed4 = 'border-red';
+        }
         if (isEmpty(description)) {
             msg.description = 'Vui lòng nhập mô tả sản phẩm';
             msg.borderRed6 = 'border-red';
@@ -120,7 +125,7 @@ const AddProductMain = () => {
         const isEmptyValidate = isEmptyCheckEdit();
         if (!isEmptyValidate) return;
         if (category !== -1) {
-            dispatch(createProduct(name, price, description, category));
+            dispatch(createProduct(name, price, description, category, discount));
             setDisabledProduct(false);
             setDisabledOptionColor(true);
         }
@@ -209,6 +214,30 @@ const AddProductMain = () => {
                                                     onChange={(e) => setPrice(e.target.value)}
                                                 />
                                                 <p className="product_validate">{validate.price}</p>
+                                            </div>
+
+                                            <div className="mb-0">
+                                                <label htmlFor="product_price" className="form-label">
+                                                    Giảm giá
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    placeholder="Giá sản phẩm"
+                                                    className={`form-control ${validate.borderRed4}`}
+                                                    id="product_price"
+                                                    //required
+                                                    value={discount}
+                                                    onClick={() => {
+                                                        setValidate((values) => {
+                                                            const x = { ...values };
+                                                            x.borderRed4 = '';
+                                                            x.discount = '';
+                                                            return x;
+                                                        });
+                                                    }}
+                                                    onChange={(e) => setDiscount(e.target.value)}
+                                                />
+                                                <p className="product_validate">{validate.discount}</p>
                                             </div>
 
                                             <div className="mb-0">

@@ -42,7 +42,7 @@ const CartScreen = ({ match, location, history }) => {
                       return item;
                   }
               })
-              .reduce((a, i) => a + i.qty * i.product?.price, 0)
+              .reduce((a, i) => a + i.qty * ((i.product?.price * (100 - i.product?.discount)) / 100), 0)
               .toFixed(0)
         : 0;
     const userLogin = useSelector((state) => state.userLogin);
@@ -190,7 +190,20 @@ const CartScreen = ({ match, location, history }) => {
                                     {findCartColor(item)}
                                     <div className="cart-price mt-3 mt-md-0 col-md-2 align-items-sm-end align-items-start  d-flex flex-column justify-content-center col-sm-7 quantity-css">
                                         <h6>Giá</h6>
-                                        <h4>{item.product?.price?.toLocaleString('de-DE')}đ</h4>
+                                        <div className="d-flex justify-content-center">
+                                            {item.product?.discount !== 0 && (
+                                                <span className="corousel-price text-none">
+                                                    {item.product?.price?.toLocaleString('de-DE')}đ
+                                                </span>
+                                            )}
+                                            <span className="corousel-price">
+                                                {(
+                                                    (item.product?.price * (100 - item.product?.discount)) /
+                                                    100
+                                                ).toLocaleString('de-DE')}
+                                                đ
+                                            </span>
+                                        </div>
                                     </div>
                                     <div
                                         className=" col-md-1 delete-cart"

@@ -646,6 +646,12 @@ const OrderScreen = ({ match }) => {
                                         </tr>
                                         <tr>
                                             <td>
+                                                <strong className="fs-6">Mã giảm giá:</strong>
+                                            </td>
+                                            <td className="fs-6">-{order?.discountPrice?.toLocaleString('de-DE')}đ</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
                                                 <strong className="fs-6">Phí vận chuyển:</strong>
                                             </td>
                                             <td className="fs-6">

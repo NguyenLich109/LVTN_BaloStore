@@ -165,6 +165,9 @@
         padding: 8px;
         border-radius: 5px;
     }
+    .flex-top-order {
+        margin-top: 10px;
+    }
 }
 @media (max-width: 768px) {
     .pc-header {

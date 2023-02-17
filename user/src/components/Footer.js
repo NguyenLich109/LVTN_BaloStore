@@ -9,16 +9,10 @@ const Footer = () => {
                         <h1 className="footer-hearder">Người phát triển</h1>
                         <ul className="footer-list">
                             <li>
-                                <span>Nguyễn Anh Tuấn</span>
+                                <span>Nguyễn Viết Phú</span>
                             </li>
                             <li>
                                 <span>Nguyễn Văn Lịch</span>
-                            </li>
-                            <li>
-                                <span>Phạm Xuân Nhựt</span>
-                            </li>
-                            <li>
-                                <span>Trần Quốc Bảo</span>
                             </li>
                         </ul>
                     </div>

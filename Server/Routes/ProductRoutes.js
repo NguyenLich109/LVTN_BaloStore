@@ -318,7 +318,7 @@ productRoute.post(
     protect,
     admin,
     asyncHandler(async (req, res) => {
-        const { name, price, description, category } = req.body;
+        const { name, price, description, category, discount } = req.body;
         const productExist = await Product.findOne({ name });
         if (price <= 0) {
             res.status(400);
@@ -331,6 +331,7 @@ productRoute.post(
             const product = new Product({
                 name,
                 price,
+                discount,
                 description,
                 category,
                 user: req.user._id,
@@ -387,7 +388,7 @@ productRoute.put(
     protect,
     admin,
     asyncHandler(async (req, res) => {
-        const { name, price, description, category } = req.body;
+        const { name, price, discount, description, category } = req.body;
         const product = await Product.findById(req.params.id);
         if (price <= 0) {
             res.status(400);
@@ -396,6 +397,7 @@ productRoute.put(
         if (product) {
             product.name = name || product.name;
             product.price = price || product.price;
+            product.discount = discount || product.discount;
             product.description = description || product.description;
             product.category = category || product.category;
 

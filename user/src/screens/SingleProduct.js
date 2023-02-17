@@ -285,7 +285,23 @@ const SingleProduct = ({ history, match }) => {
                                             <div className="product-count col-lg-12 ">
                                                 <div className="flex-box d-flex justify-content-between align-items-center">
                                                     <h6>Giá</h6>
-                                                    <span>{product?.price?.toLocaleString('de-DE')}đ</span>
+                                                    <div className="d-flex justify-content-center">
+                                                        {product?.discount !== 0 && (
+                                                            <p className="corousel-price text-none">
+                                                                {product?.price?.toLocaleString('de-DE')}đ
+                                                            </p>
+                                                        )}
+                                                        <p
+                                                            className="corousel-price"
+                                                            style={{ color: 'black', fontSize: '18px' }}
+                                                        >
+                                                            {(
+                                                                (product?.price * (100 - product?.discount)) /
+                                                                100
+                                                            ).toLocaleString('de-DE')}
+                                                            đ
+                                                        </p>
+                                                    </div>
                                                 </div>
                                                 <div className="flex-box d-flex justify-content-between align-items-center">
                                                     <h6>Trạng thái</h6>
@@ -567,8 +583,9 @@ const SingleProduct = ({ history, match }) => {
                                                     <div className="rating-review__flex">
                                                         <img
                                                             src={
-                                                                `/userProfile/${review?.user?.image}` ||
-                                                                '/images/logo.png'
+                                                                review?.user?.image
+                                                                    ? `/userProfile/${review?.user?.image}`
+                                                                    : '/images/user.png'
                                                             } // upload ảnh
                                                             alt=""
                                                             style={{
@@ -658,7 +675,7 @@ const SingleProduct = ({ history, match }) => {
                                         placeholder="Xin mời để lại câu hỏi, BaloStore sẽ trả lời lại trong 1h, các câu hỏi sau 22h - 8h sẽ được trả lời vào sáng hôm sau"
                                         onChange={(e) => {
                                             setQuestion(e.target.value);
-                                            setImageProduct(product?.image[0].image);
+                                            setImageProduct(product?.optionColor[0].image);
                                             setNameProduct(product.name);
                                         }}
                                     ></textarea>

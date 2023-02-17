@@ -160,8 +160,20 @@ const ShopSection = (props) => {
                                                                     {product?.name}
                                                                 </Link>
                                                             </p>
-
-                                                            <h3>{product?.price?.toLocaleString('de-DE')}đ</h3>
+                                                            <div className="d-flex justify-content-center">
+                                                                {product?.discount !== 0 && (
+                                                                    <p className="corousel-price text-none">
+                                                                        {product?.price?.toLocaleString('de-DE')}đ
+                                                                    </p>
+                                                                )}
+                                                                <p className="corousel-price">
+                                                                    {(
+                                                                        (product?.price * (100 - product?.discount)) /
+                                                                        100
+                                                                    ).toLocaleString('de-DE')}
+                                                                    đ
+                                                                </p>
+                                                            </div>
                                                             <Rating
                                                                 value={product?.rating}
                                                                 text={`(${product?.numReviews})`}
