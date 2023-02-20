@@ -212,7 +212,7 @@ const OrderScreen = ({ match }) => {
                                     <div className="col-lg-9 col-sm-9 mb-lg-9">
                                         <p>
                                             <span style={{ fontWeight: '600' }}>Địa chỉ:</span>{' '}
-                                            {`${order.shippingAddress.city}, ${order.shippingAddress.address}, ${order.shippingAddress.country}`}
+                                            {`${order.shippingAddress.address}, ${order.shippingAddress.city},  ${order.shippingAddress.country}`}
                                         </p>
                                     </div>
                                 </div>
@@ -248,7 +248,7 @@ const OrderScreen = ({ match }) => {
                                             <span className="arrow-cart">
                                                 <i
                                                     class="fas fa-arrow-alt-right"
-                                                    style={order.cancel === 0 ? { color: '#06dce6ed' } : {}}
+                                                    style={order.cancel === 0 ? { color: ' #2DC258' } : {}}
                                                 ></i>
                                             </span>
                                         </div>
@@ -259,10 +259,13 @@ const OrderScreen = ({ match }) => {
                                                 <div
                                                     className="cutoms-css"
                                                     style={
-                                                        order?.waitConfirmation ? { backgroundColor: '#06dce6ed' } : {}
+                                                        order?.waitConfirmation ? { border: '3px solid  #2DC258' } : {}
                                                     }
                                                 >
-                                                    <i class="fad fa-calendar-check"></i>
+                                                    <i
+                                                        class="far fa-calendar-check"
+                                                        style={order?.waitConfirmation ? { color: ' #2DC258' } : {}}
+                                                    ></i>{' '}
                                                 </div>
                                             </div>
                                             <div className="text-center">
@@ -304,7 +307,7 @@ const OrderScreen = ({ match }) => {
                                             <span className="arrow-cart">
                                                 <i
                                                     class="fas fa-arrow-alt-right"
-                                                    style={order?.waitConfirmation ? { color: '#06dce6ed' } : {}}
+                                                    style={order?.waitConfirmation ? { color: ' #2DC258' } : {}}
                                                 ></i>
                                             </span>
                                         </div>
@@ -314,9 +317,12 @@ const OrderScreen = ({ match }) => {
                                             <div className="d-flex justify-content-center">
                                                 <div
                                                     className="cutoms-css"
-                                                    style={order?.isDelivered ? { backgroundColor: '#06dce6ed' } : {}}
+                                                    style={order?.isDelivered ? { border: '3px solid #2DC258' } : {}}
                                                 >
-                                                    <i class="fas fa-car-side"></i>
+                                                    <i
+                                                        class="fas fa-truck"
+                                                        style={order?.isDelivered ? { color: '#2DC258' } : {}}
+                                                    ></i>
                                                 </div>
                                             </div>
                                             <div className="text-center">
@@ -358,7 +364,7 @@ const OrderScreen = ({ match }) => {
                                             <span className="arrow-cart">
                                                 <i
                                                     class="fas fa-arrow-alt-right"
-                                                    style={order?.isDelivered ? { color: '#06dce6ed' } : {}}
+                                                    style={order?.isDelivered ? { color: ' #2DC258' } : {}}
                                                 ></i>
                                             </span>
                                         </div>
@@ -370,13 +376,22 @@ const OrderScreen = ({ match }) => {
                                                     className="cutoms-css"
                                                     style={
                                                         order?.isPaid
-                                                            ? { backgroundColor: '#06dce6ed' }
+                                                            ? { border: '3px solid #2DC258' }
                                                             : order?.errorPaid
-                                                            ? { backgroundColor: '#c1270a' }
+                                                            ? { border: '3px solid #c1270a' }
                                                             : {}
                                                     }
                                                 >
-                                                    <i class="fas fa-money-bill-alt"></i>
+                                                    <i
+                                                        class="fas fa-money-bill-alt"
+                                                        style={
+                                                            order?.isPaid
+                                                                ? { color: '#2DC258' }
+                                                                : order?.errorPaid
+                                                                ? { color: '#c1270a' }
+                                                                : {}
+                                                        }
+                                                    ></i>
                                                 </div>
                                             </div>
                                             <div className="text-center">
@@ -441,7 +456,7 @@ const OrderScreen = ({ match }) => {
                                             <span className="arrow-cart">
                                                 <i
                                                     class="fas fa-arrow-alt-right"
-                                                    style={order?.isPaid ? { color: '#06dce6ed' } : {}}
+                                                    style={order?.isPaid ? { color: ' #2DC258' } : {}}
                                                 ></i>
                                             </span>
                                         </div>
@@ -453,11 +468,18 @@ const OrderScreen = ({ match }) => {
                                                     className="cutoms-css"
                                                     style={
                                                         order?.completeUser && order?.completeAdmin
-                                                            ? { backgroundColor: '#06dce6ed' }
+                                                            ? { border: '3px solid #2DC258' }
                                                             : {}
                                                     }
                                                 >
-                                                    <i class="far fa-handshake"></i>
+                                                    <i
+                                                        class="far fa-handshake"
+                                                        style={
+                                                            order?.completeUser && order?.completeAdmin
+                                                                ? { color: '#2DC258' }
+                                                                : {}
+                                                        }
+                                                    ></i>
                                                 </div>
                                             </div>
                                             <div className="text-center">
@@ -499,7 +521,7 @@ const OrderScreen = ({ match }) => {
                                             <span className="arrow-cart">
                                                 <i
                                                     class="fas fa-arrow-alt-right"
-                                                    style={order?.completeAdmin ? { color: '#06dce6ed' } : {}}
+                                                    style={order?.completeAdmin ? { color: ' #2DC258' } : {}}
                                                 ></i>
                                             </span>
                                         </div>
@@ -509,9 +531,12 @@ const OrderScreen = ({ match }) => {
                                             <div className="d-flex justify-content-center">
                                                 <div
                                                     className="cutoms-css"
-                                                    style={order?.isGuarantee ? { backgroundColor: '#06dce6ed' } : {}}
+                                                    style={order?.isGuarantee ? { border: ' 3px solid #2DC258' } : {}}
                                                 >
-                                                    <i className="fas fa-shield-check"></i>
+                                                    <i
+                                                        className="fas fa-shield-check"
+                                                        style={order?.isGuarantee ? { color: ' #2DC258' } : {}}
+                                                    ></i>
                                                 </div>
                                             </div>
                                             <div className="text-center">
@@ -634,11 +659,11 @@ const OrderScreen = ({ match }) => {
                             </div>
                             {/* total */}
                             <div className="col-lg-3 d-flex align-items-end flex-column subtotal-order">
-                                <table className="table table-bordered">
+                                <table className="table fix-bottom">
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <strong className="fs-6">Sản phẩm:</strong>
+                                                <strong className="fs-6">Sản phẩm</strong>
                                             </td>
                                             <td className="fs-6">
                                                 {Number(order?.itemsPrice)?.toLocaleString('de-DE')}đ
@@ -646,7 +671,7 @@ const OrderScreen = ({ match }) => {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <strong className="fs-6">Phí vận chuyển:</strong>
+                                                <strong className="fs-6">Phí vận chuyển</strong>
                                             </td>
                                             <td className="fs-6">
                                                 {Number(order?.shippingPrice)?.toLocaleString('de-DE')}đ
@@ -654,7 +679,7 @@ const OrderScreen = ({ match }) => {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <strong className="fs-6">Thuế:</strong>
+                                                <strong className="fs-6">Thuế</strong>
                                             </td>
                                             <td className="fs-6">
                                                 {Number(order?.taxPrice)?.toLocaleString('de-DE')}đ
@@ -662,10 +687,12 @@ const OrderScreen = ({ match }) => {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <strong className="fs-6">Tổng tiền:</strong>
+                                                <strong className="fs-6">Tổng tiền</strong>
                                             </td>
                                             <td className="fs-6">
-                                                {Number(order?.totalPrice)?.toLocaleString('de-DE')}đ
+                                                <b style={{ color: '#FF0000' }}>
+                                                    {Number(order?.totalPrice)?.toLocaleString('de-DE')}đ
+                                                </b>
                                             </td>
                                         </tr>
                                     </tbody>

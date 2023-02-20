@@ -98,23 +98,26 @@ const ProfileTabs = () => {
     function checkObjProfile() {
         const profileObj = {};
         if (isEmpty(name)) {
-            profileObj.name = 'Please input your phone';
+            profileObj.name = 'Vui lòng nhập tên ';
+        } else if (name.length <= 3 || name.length > 250) {
+            profileObj.name = 'Họ tên phải dài hơn 3 ký tự và ngắn hơn 250 ký tự';
         }
+
         if (isEmpty(phone)) {
-            profileObj.phone = 'Please input your phone';
+            profileObj.phone = 'Vui lòng nhập số điện thoại';
         } else {
-            if (isNaN(phone)) {
-                profileObj.phone = 'Incorrect phone number';
+            if (!/^\+?\d{1,3}?[- .]?\(?(?:\d{2,3})\)?[- .]?\d\d\d[- .]?\d\d\d\d$/.test(phone)) {
+                profileObj.phone = 'Số điện thoại không hợp lệ';
             }
         }
         if (isEmpty(address)) {
-            profileObj.address = 'Please input your address';
+            profileObj.address = 'Vui lòng nhập địa chỉ cụ thể';
         }
         if (isEmpty(city)) {
-            profileObj.city = 'Please input your city';
+            profileObj.city = 'Vui lòng nhập tỉnh/thành phố';
         }
         if (isEmpty(country)) {
-            profileObj.country = 'Please input your country';
+            profileObj.country = 'Vui lòng nhập huyện/quận';
         }
         setObjProfile(profileObj);
         if (Object.keys(profileObj).length > 0) return false;

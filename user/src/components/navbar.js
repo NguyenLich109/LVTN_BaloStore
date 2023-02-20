@@ -18,13 +18,13 @@ export default function NavBar({ onRemove }) {
             {/* Pc-navbar */}
 
             <div className="navbar-menu">
-                <ul className="navbar-list">
+                <div className="navbar-list">
                     {categories.map((category) => (
-                        <li className="navbar-list__li">
-                            <Link to={`/category/${category._id}`}>{category.name}</Link>
-                        </li>
+                        <Link to={`/category/${category._id}`}>
+                            <button className="navbar-list__li">{category.name}</button>
+                        </Link>
                     ))}
-                </ul>
+                </div>
             </div>
             {/* tablet-mobile modal */}
             <div className="navbar-tablet">

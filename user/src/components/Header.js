@@ -69,7 +69,9 @@ const Header = (props) => {
 
     useEffect(() => {
         if (user?.disabled) {
-            alert('Tài khoản đã bị khóa, vui lòng liên hệ sđt 0946402578 hay email balostore.owner@gmail.com để liên hệ lấy lại.');
+            alert(
+                'Tài khoản đã bị khóa, vui lòng liên hệ sđt 0946402578 hay email balostore.owner@gmail.com để liên hệ lấy lại.',
+            );
             dispatch(logout());
             history.push('/');
         }
@@ -116,22 +118,27 @@ const Header = (props) => {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-6 d-flex align-items-center display-none">
-                                <p>Đường dây nóng: 0123456789</p>
+                                <h5 className="header__hotline">
+                                    Hotline: &nbsp;
+                                    <a href="tel:0123456789" className="header__hotline-phone">
+                                        <b>0123456789</b>
+                                    </a>
+                                </h5>
                             </div>
                             <div className=" col-12 col-lg-6 justify-content-center justify-content-lg-end d-flex align-items-center">
-                                <Link to="">
+                                <Link className="header__icon" to="">
                                     <i className="fab fa-facebook-f"></i>
                                 </Link>
-                                <Link to="">
+                                <Link className="header__icon" to="">
                                     <i className="fab fa-instagram"></i>
                                 </Link>
-                                <Link to="">
+                                <Link className="header__icon" to="">
                                     <i className="fab fa-linkedin-in"></i>
                                 </Link>
-                                <Link to="">
+                                <Link className="header__icon" to="">
                                     <i className="fab fa-youtube"></i>
                                 </Link>
-                                <Link to="">
+                                <Link className="header__icon" to="">
                                     <i className="fab fa-pinterest-p"></i>
                                 </Link>
                             </div>
@@ -223,8 +230,13 @@ const Header = (props) => {
                                         )}
 
                                         <Link to="/cart" className="cart-mobile-icon">
-                                            <i className="fas fa-shopping-bag"></i>
-                                            <span className="badge">{cartItems ? cartItems.length : 0}</span>
+                                            <i
+                                                class="fas fa-shopping-cart"
+                                                style={{ color: '#00483d', fontSize: '20px' }}
+                                            ></i>
+                                            <span className="badge count-product-cart">
+                                                {cartItems ? cartItems.length : 0}
+                                            </span>
                                         </Link>
                                     </div>
                                     <div className="col-12 d-flex align-items-center">
@@ -346,8 +358,13 @@ const Header = (props) => {
                                     )}
 
                                     <Link to="/cart">
-                                        <i className="fas fa-shopping-bag"></i>
-                                        <span className="badge">{cartItems ? cartItems?.length : 0}</span>
+                                        <i
+                                            class="fas fa-shopping-cart"
+                                            style={{ color: '#00483d', fontSize: '20px' }}
+                                        ></i>
+                                        <span className="badge count-product-cart">
+                                            {cartItems ? cartItems?.length : 0}
+                                        </span>
                                     </Link>
                                 </div>
                             </div>

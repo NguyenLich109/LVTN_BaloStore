@@ -208,7 +208,7 @@ const PlaceOrderScreen = ({ history }) => {
                             <div className="col-lg-9 col-sm-9 mb-lg-9">
                                 <p>
                                     <span style={{ fontWeight: '600' }}>Địa chỉ:</span>{' '}
-                                    {`${userInfo?.city}, ${userInfo?.address}, ${userInfo?.country}`}
+                                    {` ${userInfo?.address},${userInfo?.city}, ${userInfo?.country}`}
                                 </p>
                             </div>
                         </div>
@@ -234,7 +234,7 @@ const PlaceOrderScreen = ({ history }) => {
                 </div>
 
                 <div className="row order-products justify-content-between">
-                    <div className="col-lg-12 fix-padding cart-scroll">
+                    <div className="col-lg-9 col-md-12col-12 fix-padding cart-scroll">
                         {cart.cartItems.length === 0 ? (
                             <Message variant="alert-info mt-5">Không có sản phẩm nào được chọn</Message>
                         ) : (
@@ -253,9 +253,54 @@ const PlaceOrderScreen = ({ history }) => {
                             </>
                         )}
                     </div>
+                    <div className="col-lg-3 col-md-12 col-12 ">
+                        <table className="table fix-bottom">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Sản phẩm</strong>
+                                    </td>
+                                    <td>{Number(cart?.itemsPrice)?.toLocaleString('de-DE')}đ</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Thuế</strong>
+                                    </td>
+                                    <td>{Number(cart?.taxPrice)?.toLocaleString('de-DE')}đ</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Phí vận chuyển</strong>
+                                    </td>
+                                    <td>{Number(cart?.shippingPrice)?.toLocaleString('de-DE')}đ</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Tổng tiền</strong>
+                                    </td>
+                                    <td style={{ color: '#FF0000' }}>
+                                        <b>{Number(cart?.totalPrice)?.toLocaleString('de-DE')}đ</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div className="btn-reserve">
+                            {cart.cartItems.length === 0 ? null : (
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary pay-button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop"
+                                    style={{ backgroundColor: '#00483d', borderColor: '#00483d', padding: '12px 30px' }}
+                                >
+                                    Đặt hàng
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
-                <div className="row" style={{ padding: '10px 0', backgroundColor: '#fff', marginTop: '10px' }}>
-                    {/* total */}
+
+                {/* <div className="row" style={{ padding: '10px 0', backgroundColor: '#fff', marginTop: '10px' }}>
                     <div
                         className="col-lg-12 d-flex align-items-end flex-column subtotal-order"
                         style={{ border: '1px solid rgb(218, 216, 216)', borderRadius: '4px' }}
@@ -286,14 +331,15 @@ const PlaceOrderScreen = ({ history }) => {
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div
+                </div> */}
+                {/* <div
                     className="row"
                     style={{ padding: '10px 0', backgroundColor: '#fff', marginTop: '10px', marginBottom: '30px' }}
                 >
                     <div className="col-lg-12 fix-right">
                         <div style={{ fontWeight: '600', paddingRight: '10px' }}>
-                            Tổng tiền: {Number(cart.totalPrice)?.toLocaleString('de-DE')}đ
+                            Tổng tiền:{' '}
+                            <b style={{ color: '#FF0000' }}>{Number(cart.totalPrice)?.toLocaleString('de-DE')}đ</b>
                         </div>
                         {cart.cartItems.length === 0 ? null : (
                             <button
@@ -303,13 +349,13 @@ const PlaceOrderScreen = ({ history }) => {
                                 class="btn btn-primary pay-button"
                                 data-bs-toggle="modal"
                                 data-bs-target="#staticBackdrop"
-                                style={{ backgroundColor: '#00483d', borderColor: '#00483d' }}
+                                style={{ backgroundColor: '#00483d', borderColor: '#00483d', padding: '6px 12px' }}
                             >
                                 Đặt hàng
                             </button>
                         )}
                     </div>
-                </div>
+                </div> */}
             </div>
         </>
     );

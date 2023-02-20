@@ -70,7 +70,7 @@ export default function CorouselOder() {
                         {products &&
                             products?.map((product, index) => {
                                 return (
-                                    <div key={index} className="corousel-div">
+                                    <div key={index} className="corousel-div border-product">
                                         <Link to={`/products/${product._id}`} className="corousel-link">
                                             <img
                                                 src={`/productImage/${product?.optionColor[0]?.image}`}

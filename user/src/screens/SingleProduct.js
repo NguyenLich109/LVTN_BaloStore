@@ -344,9 +344,21 @@ const SingleProduct = ({ history, match }) => {
                                                                 )}
                                                             </select>
                                                         </div>
-                                                        <button onClick={AddToCartHandle} className="round-black-btn">
-                                                            Thêm vào giỏ
-                                                        </button>
+                                                        <div className="btn-add-product d-flex">
+                                                            <button
+                                                                onClick={AddToCartHandle}
+                                                                className="round-black-btn"
+                                                            >
+                                                                <i class="fas fa-cart-plus"></i>
+                                                                Thêm vào giỏ hàng
+                                                            </button>
+                                                            <button
+                                                                onClick={AddToCartHandle}
+                                                                className="round-black-btn"
+                                                            >
+                                                                MUA NGAY
+                                                            </button>
+                                                        </div>
                                                     </>
                                                 ) : null}
                                             </div>

@@ -68,7 +68,7 @@ export default function Corousel() {
                 <Slider {...settings}>
                     {products?.map((product, index) => {
                         return (
-                            <div key={index} className="corousel-div" style={{ maxHeight: '300px' }}>
+                            <div key={index} className="corousel-div border-product" style={{ maxHeight: '300px' }}>
                                 <Link to={`/products/${product._id}`} className="corousel-link">
                                     <img
                                         src={`/productImage/${product?.optionColor[0]?.image}`}
