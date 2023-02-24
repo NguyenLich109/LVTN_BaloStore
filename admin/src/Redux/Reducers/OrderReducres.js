@@ -44,6 +44,10 @@ import {
     ORDER_NOTE_GUAREEN_SUCCESS,
     ORDER_NOTE_GUAREEN_FAIL,
     ORDER_NOTE_GUAREEN_RESET,
+    PRINT_ORDER_REQUEST,
+    PRINT_ORDER_SUCCESS,
+    PRINT_ORDER_FAIL,
+    PRINT_ORDER_RESET,
 } from '../Constants/OrderConstants';
 
 export const orderListReducer = (state = {}, action) => {
@@ -224,6 +228,21 @@ export const orderNoteGuaranteeReducer = (state = {}, action) => {
         case ORDER_NOTE_GUAREEN_FAIL:
             return { loading: false, error: action.payload };
         case ORDER_NOTE_GUAREEN_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const printOrderReducer = (state = {}, action) => {
+    switch (action.type) {
+        case PRINT_ORDER_REQUEST:
+            return { loading: true };
+        case PRINT_ORDER_SUCCESS:
+            return { loading: false, success: true, file: action.payload };
+        case PRINT_ORDER_FAIL:
+            return { loading: false, error: action.payload };
+        case PRINT_ORDER_RESET:
             return {};
         default:
             return state;

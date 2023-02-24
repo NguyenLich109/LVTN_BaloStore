@@ -4,6 +4,7 @@ import { admin, protect } from '../Middleware/AuthMiddleware.js';
 import Product from '../Models/ProductModel.js';
 import Order from './../Models/OrderModel.js';
 import OrderNv from './../Models/OrderNvModel.js';
+import xlsx from 'xlsx';
 
 const orderRouter = express.Router();
 
@@ -752,6 +753,105 @@ orderRouter.get(
         } else {
             res.status(404);
             throw new Error('Not found order of user');
+        }
+    }),
+);
+
+orderRouter.post(
+    '/print',
+    protect,
+    admin,
+    asyncHandler(async (req, res) => {
+        const { date1, date2 } = req.body;
+        const search = {};
+        if (date1 && date2) {
+            search.createdAt = { $gte: date1, $lt: date2 };
+        }
+        const finds = await Order.find({ ...search })
+            .sort({ _id: -1 })
+            .populate('user', 'id name email')
+            .populate('userNv', 'id name email');
+        if (finds) {
+            const data = [
+                [
+                    `Danh sách thống kê hóa đơn bán hàng từ ${new Date(date1).toLocaleString()} đến ${new Date(
+                        date2,
+                    ).toLocaleString()}`,
+                ],
+                [
+                    'Stt',
+                    'Họ tên',
+                    'Số điện thoại',
+                    'email',
+                    'Tiền mua',
+                    'Thời gian mua',
+                    'Trạng thái',
+                    'Tg Trạng thái',
+                    'Người vận chuyển',
+                ],
+            ];
+            finds.forEach((value, index) => {
+                let objOrder = [];
+                if (value) {
+                    const time1 = new Date(value.createdAt).toLocaleString();
+                    let status = '';
+                    let time2 = '';
+                    let name = '';
+                    value.cancel !== 1
+                        ? value.waitConfirmation &&
+                          value.isDelivered &&
+                          value.isPaid &&
+                          value.completeUser &&
+                          value.completeAdmin &&
+                          value.isGuarantee
+                            ? ((status = 'Bảo hành sản phẩm'), (time2 = new Date(value.isGuaranteeAt).toLocaleString()))
+                            : value.completeAdmin
+                            ? ((status = 'Hoàn tất'), (time2 = new Date(value.completeAdminAt).toLocaleString()))
+                            : value.waitConfirmation && value.isDelivered && value.isPaid
+                            ? ((status = 'Đã thanh toán'), (time2 = new Date(value.paidAt).toLocaleString()))
+                            : value.errorPaid && value.waitConfirmation && value.isDelivered
+                            ? ((status = 'Thanh toán không thành công'),
+                              (time2 = new Date(value.errorPaidAt).toLocaleString()))
+                            : value.waitConfirmation && value.isDelivered
+                            ? ((status = 'Đang giao'), (time2 = new Date(value.deliveredAt).toLocaleString()))
+                            : value.waitConfirmation
+                            ? ((status = 'Đã xác nhận'), (time2 = new Date(value.waitConfirmationAt).toLocaleString()))
+                            : ((status = 'Chờ xác nhận'), (time2 = new Date(value.createdAt).toLocaleString()))
+                        : (status = 'Hủy đơn hàng');
+
+                    value.isDelivered
+                        ? value.userNv
+                            ? (name = value.userNv.name)
+                            : (name = 'Bên thứ 3 vận chuyển')
+                        : (name = '');
+
+                    objOrder.push(
+                        index,
+                        value.name,
+                        value.phone,
+                        value.email,
+                        value.totalPrice,
+                        time1,
+                        status,
+                        time2,
+                        name,
+                    );
+                }
+                data.push(objOrder);
+            });
+
+            // Tạo workbook và worksheet
+            const wb = xlsx.utils.book_new();
+            const ws = xlsx.utils.aoa_to_sheet(data);
+
+            // Thêm worksheet vào workbook
+            xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+            // Tạo buffer để lưu workbook
+            const buffer = xlsx.write(wb, { bookType: 'xlsx', type: 'buffer' });
+            res.set('Content-Disposition', 'attachment; filename="data.xlsx"');
+            res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            res.send(buffer);
         }
     }),
 );

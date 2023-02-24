@@ -31,6 +31,7 @@ const MainDiscount = () => {
     const [priceDiscount, setPriceDiscount] = useState(50000);
     const [dateDiscount, setDateDiscount] = useState('');
     const [senconTime, setSenconTime] = useState('');
+    const [countInStock, setCountInStock] = useState(1);
     const [idDiscount, setIddiscount] = useState('');
 
     const createDiscountReduce = useSelector((state) => state.createDiscountReduce);
@@ -103,6 +104,7 @@ const MainDiscount = () => {
             if (findDiscount) {
                 setNameDiscount(findDiscount.nameDiscount);
                 setPriceDiscount(findDiscount.priceDiscount);
+                setCountInStock(findDiscount.countInStock);
                 setTimeDiscount(findDiscount.date1);
                 setDateDiscount(findDiscount.date2);
                 setSenconTime(findDiscount.timeDiscount);
@@ -111,11 +113,12 @@ const MainDiscount = () => {
     }, [idDiscount, discount]);
 
     const handleSave = () => {
-        if (nameDiscount && senconTime && priceDiscount) {
+        if (nameDiscount && senconTime && priceDiscount && countInStock) {
             dispatch(
                 createDiscountAction({
                     nameDiscount: nameDiscount.toUpperCase(),
                     priceDiscount,
+                    countInStock,
                     timeDiscount: senconTime,
                     date1: timeDiscount,
                     date2: dateDiscount,
@@ -126,6 +129,7 @@ const MainDiscount = () => {
             setTimeDiscount('');
             setDateDiscount('');
             setSenconTime('');
+            setCountInStock(1);
         }
     };
 
@@ -136,6 +140,7 @@ const MainDiscount = () => {
                     id: idDiscount,
                     nameDiscount: nameDiscount.toUpperCase(),
                     priceDiscount,
+                    countInStock,
                     timeDiscount: senconTime,
                     date1: timeDiscount,
                     date2: dateDiscount,
@@ -147,6 +152,7 @@ const MainDiscount = () => {
             setDateDiscount('');
             setSenconTime('');
             setIddiscount('');
+            setCountInStock(1);
         }
     };
     return (
@@ -194,6 +200,21 @@ const MainDiscount = () => {
                                     />
                                 </div>
 
+                                <div className="mb-1">
+                                    <label htmlFor="product_name" className="form-label">
+                                        Số lượng:
+                                    </label>
+                                    <input
+                                        required
+                                        type="text"
+                                        className="form-control"
+                                        placeholder=""
+                                        id="product_name"
+                                        value={countInStock}
+                                        onChange={(e) => setCountInStock(e.target.value)}
+                                    />
+                                </div>
+
                                 <label className="form-label">Thời hạn giảm giá:</label>
                                 <div className="mb-2">
                                     <input
@@ -231,6 +252,7 @@ const MainDiscount = () => {
                                             <th>Tên mã</th>
                                             <th>Thời hạn</th>
                                             <th>Giá tiền</th>
+                                            <th>Số lượng</th>
                                             <th className="text-end">Chỉnh sửa</th>
                                         </tr>
                                     </thead>
@@ -248,6 +270,9 @@ const MainDiscount = () => {
                                                     </td>
                                                     <td>
                                                         <span>{data?.priceDiscount.toLocaleString('de-DE')}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>{data?.countInStock}</span>
                                                     </td>
                                                     <td className="text-end">
                                                         <div className="dropdown">

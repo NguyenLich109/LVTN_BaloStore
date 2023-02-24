@@ -72,10 +72,13 @@ export default function CorouselOder() {
                                 return (
                                     <div key={index} className="corousel-div">
                                         <Link to={`/products/${product._id}`} className="corousel-link">
-                                            <img
-                                                src={`/productImage/${product?.optionColor[0]?.image}`}
-                                                className="corousel-img"
-                                            ></img>
+                                            <div className="product-postion">
+                                                <img
+                                                    src={`/productImage/${product?.optionColor[0]?.image}`}
+                                                    className="corousel-img"
+                                                ></img>
+                                                {product?.discount > 0 ? <span>-{product?.discount}%</span> : ''}
+                                            </div>
                                             <p className="corousel-noti">{product.name}</p>
                                             <div className="d-flex justify-content-center">
                                                 {product?.discount !== 0 && (

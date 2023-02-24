@@ -40,6 +40,7 @@ import {
     orderGuaranteeReducer,
     orderContentErrorPaidReducer,
     orderErrorPaidReducer,
+    printOrderReducer,
 } from './Reducers/OrderReducres';
 import { sliderCreateReducer, sliderDeleteReducer, sliderListReducer } from './Reducers/SliderListReducers';
 import {
@@ -97,6 +98,7 @@ const reducer = combineReducers({
     orderGuaranteeReducer,
     orderContentErrorPaidReducer,
     orderErrorPaidReducer,
+    printOrderReducer,
     sliderList: sliderListReducer,
     deleteSlider: sliderDeleteReducer,
     sliderCreate: sliderCreateReducer,

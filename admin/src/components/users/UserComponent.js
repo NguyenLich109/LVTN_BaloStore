@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { listUser, disabledUser, sendEmailAction, updateProfileUser } from '../../Redux/Actions/userActions';
 import { USER_DISABLED_RESET, SEND_EMAIL_USER_RESET, UPDATE_USER_RESET } from '../../Redux/Constants/UserContants';
@@ -64,7 +64,7 @@ const UserComponent = () => {
             toast.error('Tài khoản này đã được mở khóa rồi', ToastObjects);
         }
         dispatch({ type: USER_DISABLED_RESET });
-    }, [userNoti, errorDisabled]);
+    }, [userNoti, errorDisabled, dispatch]);
 
     const onDisabled = (id, disabled) => {
         if (window.confirm('Bạn có muốn khóa tài khoản này không')) {

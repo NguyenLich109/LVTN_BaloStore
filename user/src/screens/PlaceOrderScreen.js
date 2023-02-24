@@ -30,13 +30,14 @@ const PlaceOrderScreen = ({ history }) => {
 
     const checkDiscountReducer = useSelector((state) => state.checkDiscountReducer);
     const { loading: loadingCheck, success: successCheck, error: errorCheck, discount } = checkDiscountReducer;
+    console.log(checkDiscountReducer);
 
     useEffect(() => {
         if (successCheck) {
             toast.success('Mã này chính xác', Toastobjects);
         }
         if (errorCheck) {
-            toast.error(errorCheck, Toastobjects);
+            toast.error(errorCheck);
             dispatch({ type: CHECK_DISCOUNT_RESET });
         }
     }, [dispatch, successCheck, errorCheck]);
@@ -348,13 +349,15 @@ const PlaceOrderScreen = ({ history }) => {
                                     onChange={(e) => setNameDiscount(e.target.value)}
                                     style={{ textTransform: 'uppercase' }}
                                 ></input>
-                                <button
-                                    className="btn btn-primary"
-                                    onClick={handleCheck}
-                                    style={{ width: '100%', margin: '5px 0' }}
-                                >
-                                    Kiểm tra
-                                </button>
+                                {!successCheck && (
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={handleCheck}
+                                        style={{ width: '100%', margin: '5px 0' }}
+                                    >
+                                        Kiểm tra
+                                    </button>
+                                )}
                             </div>
                         ) : (
                             <div className="d-flex align-self-center" style={{ margin: '38px 0' }}>

@@ -12,12 +12,13 @@ discountRoutes.post(
     protect,
     admin,
     asyncHandler(async (req, res) => {
-        const { nameDiscount, priceDiscount, timeDiscount, date1, date2 } = req.body;
+        const { nameDiscount, priceDiscount, countInStock, timeDiscount, date1, date2 } = req.body;
         const findName = await discount.findOne({ nameDiscount });
         if (!findName) {
             const createDiscount = new discount({
                 nameDiscount,
                 priceDiscount,
+                countInStock,
                 timeDiscount,
                 date1,
                 date2,
@@ -67,21 +68,24 @@ discountRoutes.put(
     protect,
     admin,
     asyncHandler(async (req, res) => {
-        const { nameDiscount, priceDiscount, timeDiscount, date1, date2 } = req.body;
+        const { nameDiscount, priceDiscount, countInStock, timeDiscount, date1, date2 } = req.body;
         const findDiscount = await discount.findById(req.params.id);
 
         if (findDiscount) {
-            const getAllUser = await User.find({ isAdmin: false, isNv: false });
-            if (getAllUser) {
-                getAllUser.forEach(async (user) => {
-                    let filterDiscount = user.discount.filter((discount) => findDiscount.nameDiscount != discount);
-                    user.discount = filterDiscount;
-                    await User.updateOne({ _id: user._id }, { $set: { discount: user.discount } });
-                });
+            if (nameDiscount || timeDiscount) {
+                const getAllUser = await User.find({ isAdmin: false, isNv: false });
+                if (getAllUser) {
+                    getAllUser.forEach(async (user) => {
+                        let filterDiscount = user.discount.filter((discount) => findDiscount.nameDiscount != discount);
+                        user.discount = filterDiscount;
+                        await User.updateOne({ _id: user._id }, { $set: { discount: user.discount } });
+                    });
+                }
             }
 
             findDiscount.nameDiscount = nameDiscount || findDiscount.nameDiscount;
             findDiscount.priceDiscount = priceDiscount || findDiscount.priceDiscount;
+            findDiscount.countInStock = countInStock || findDiscount.countInStock;
             findDiscount.timeDiscount = timeDiscount || findDiscount.timeDiscount;
             findDiscount.date1 = date1 || findDiscount.date1;
             findDiscount.date2 = date2 || findDiscount.date2;
@@ -123,10 +127,12 @@ discountRoutes.post(
         const findUser = await User.findById(req.user.id);
         if (findDiscount) {
             let time = new Date().getTime();
-            if (time <= findDiscount.timeDiscount) {
+            if (time <= findDiscount.timeDiscount && findDiscount.countInStock > 0) {
                 const check = findUser.discount.find((dis) => dis == nameDiscount);
                 if (!check) {
                     findUser.discount.push(nameDiscount);
+                    findDiscount.countInStock = findDiscount.countInStock < 1 ? 0 : findDiscount.countInStock - 1;
+                    const y = await findDiscount.save();
                     const x = await findUser.save();
                     if (x) {
                         res.status(200).json(findDiscount);
@@ -137,7 +143,7 @@ discountRoutes.post(
                 }
             } else {
                 res.status(404);
-                throw new Error('Mã này đã hết hạn vui lòng đổi mã khác');
+                throw new Error('Mã này đã hết hạn hoặc số lượng đã hết vui lòng đổi mã khác');
             }
         } else {
             res.status(404);

@@ -11,6 +11,11 @@ const discountSchema = mongoose.Schema(
             require: true,
             default: 0,
         },
+        countInStock: {
+            type: Number,
+            require: true,
+            default: 0,
+        },
         timeDiscount: {
             type: Number,
             require: true,

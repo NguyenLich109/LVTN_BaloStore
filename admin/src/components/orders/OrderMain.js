@@ -2,7 +2,7 @@ import React from 'react';
 import Orders from './Orders';
 
 const OrderMain = (props) => {
-    const { keyword, status, pageNumber } = props;
+    const { keyword, status, pageNumber, date1, date2 } = props;
     return (
         <section className="content-main">
             <div className="content-header">
@@ -12,7 +12,7 @@ const OrderMain = (props) => {
             <div className="card mb-4 shadow-sm">
                 <div className="card-body">
                     <div className="table-responsive">
-                        <Orders keyword={keyword} status={status} pageNumber={pageNumber} />
+                        <Orders keyword={keyword} status={status} pageNumber={pageNumber} date1={date1} date2={date2} />
                     </div>
                 </div>
             </div>

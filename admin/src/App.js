@@ -57,15 +57,54 @@ function App() {
                     />
                     <PrivateRouter path="/category" component={CategoriesScreen} />
                     <PrivateRouter path="/orders" component={OrderScreen} exact />
-                    <PrivateRouter path="/orders/page/:pageNumber" component={OrderScreen} exact />
+                    <PrivateRouter
+                        path="/orders/page/:pageNumber/date1/:time1/date2/:time2"
+                        component={OrderScreen}
+                        exact
+                    />
                     <PrivateRouter path="/orders/search/:keyword" component={OrderScreen} exact />
+                    <PrivateRouter
+                        path="/orders/search/:keyword/date1/:time1/date2/:time2"
+                        component={OrderScreen}
+                        exact
+                    />
                     <PrivateRouter path="/orders/status/:status" component={OrderScreen} exact />
+                    <PrivateRouter
+                        path="/orders/status/:status/date1/:time1/date2/:time2"
+                        component={OrderScreen}
+                        exact
+                    />
+                    <PrivateRouter
+                        path="/orders/search/:keyword/status/:status/date1/:time1/date2/:time2"
+                        component={OrderScreen}
+                        exact
+                    />
                     <PrivateRouter path="/orders/search/:keyword/status/:status" component={OrderScreen} exact />
                     <PrivateRouter path="/orders/page/:pageNumber/status/:status" component={OrderScreen} exact />
                     <PrivateRouter path="/orders/page/:pageNumber/search/:keyword" component={OrderScreen} exact />
-                    {/* <PrivateRouter path="/orders/page/:pageNumber" component={OrderScreen} exact /> */}
+                    <PrivateRouter
+                        path="/orders/page/:pageNumber/status/:status/date1/:time1/date2/:time2"
+                        component={OrderScreen}
+                        exact
+                    />
+                    <PrivateRouter
+                        path="/orders/page/:pageNumber/search/:keyword/date1/:time1/date2/:time2"
+                        component={OrderScreen}
+                        exact
+                    />
+                    <PrivateRouter path="/orders/page/:pageNumber" component={OrderScreen} exact />
+                    <PrivateRouter
+                        path="/orders/page/:pageNumber/date1/:time1/date2/:time2"
+                        component={OrderScreen}
+                        exact
+                    />
                     <PrivateRouter
                         path="/orders/search/:keyword/page/:pageNumber/status/:status"
+                        component={OrderScreen}
+                        exact
+                    />
+                    <PrivateRouter
+                        path="/orders/search/:keyword/page/:pageNumber/status/:status/date1/:time1/date2/:time2"
                         component={OrderScreen}
                         exact
                     />

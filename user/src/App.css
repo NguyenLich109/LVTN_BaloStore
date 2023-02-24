@@ -1635,3 +1635,21 @@ textarea:focus {
     color: #0000008a;
     font-weight: 200;
 }
+
+.product-postion {
+    position: relative;
+}
+.product-postion span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 35px;
+    width: 35px;
+    border: 1.5px solid red;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    color: black;
+    font-weight: 600;
+}
