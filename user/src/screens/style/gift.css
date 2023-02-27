@@ -1,0 +1,51 @@
+:root {
+    --vc-template-box-shadow: 0.125rem 0.125rem 0.3125rem rgba(0, 0, 0, 0.07);
+}
+.list-voucher {
+    border: 1.5px solid #ccc;
+    border-radius: 4px;
+    box-shadow: var(--vc-template-box-shadow, 0.125rem 0.125rem 0.3125rem rgba(0, 0, 0, 0.07));
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+.flex-voucher {
+    justify-content: space-evenly;
+}
+.flex-voucher button {
+    border: 1px solid #ccc;
+}
+.gift-header {
+    padding-bottom: 10px;
+    font-size: 1.2rem;
+}
+.list-voucher img {
+    height: 80px;
+    width: 80px;
+}
+.noti-gift {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+.noti-gift span {
+    font-size: 1rem;
+}
+.active-voucher.active {
+    color: beige;
+}
+.active-voucher:hover {
+    color: beige;
+}
+.active-voucher:focus {
+    box-shadow: none !important;
+}
+.noti-gift span {
+    font-size: 0.9rem;
+}
+@media screen and (max-width: 960px) {
+    .noti-gift span {
+        font-size: 0.8rem;
+    }
+}

@@ -1,4 +1,8 @@
 import {
+    ADD_GIFT_FAIL,
+    ADD_GIFT_REQUEST,
+    ADD_GIFT_RESET,
+    ADD_GIFT_SUCCESS,
     CREATE_IMAGE_USER_FAIL,
     CREATE_IMAGE_USER_REQUEST,
     CREATE_IMAGE_USER_RESET,
@@ -153,6 +157,22 @@ export const getUserReduce = (state = {}, action) => {
             return { loading: false, userInfo: action.payload, success: true };
         case GET_USER_FAIL:
             return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+};
+
+// ADD GIFT
+export const giftReduce = (state = {}, action) => {
+    switch (action.type) {
+        case ADD_GIFT_REQUEST:
+            return { loading: true };
+        case ADD_GIFT_SUCCESS:
+            return { loading: false, success: true };
+        case ADD_GIFT_FAIL:
+            return { loading: false, error: action.payload };
+        case ADD_GIFT_RESET:
+            return {};
         default:
             return state;
     }

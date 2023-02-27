@@ -101,6 +101,15 @@ const ProfileScreen = () => {
                                         </div>
                                         <Link to="/byproduct">Danh Sách Mua Hàng</Link>
                                     </button>
+                                    <button
+                                        class="nav-link"
+                                        style={{ display: 'flex', alignItems: 'center', fontWeight: '600' }}
+                                    >
+                                        <div style={{ fontSize: '18px', paddingRight: '10px' }}>
+                                            <i class="fas fa-gift"></i>
+                                        </div>
+                                        <Link to="/gift">Vouler</Link>
+                                    </button>
                                 </div>
                             </div>
                         </div>

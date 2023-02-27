@@ -17,6 +17,7 @@ import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen';
 import NotFound from './screens/NotFound';
 import PrivateRouter from './PrivateRouter';
+import GiftScreen from './screens/GiftScreen';
 import Reset from './components/profileComponents/Reset';
 
 // path - router - user
@@ -55,6 +56,7 @@ const App = () => {
                 <Route path="/reset" component={Reset} />
                 <PrivateRouter path="/profile" component={ProfileScreen} />
                 <PrivateRouter path="/byproduct" component={BuyingProductScreen} />
+                <PrivateRouter path="/gift" component={GiftScreen} />
                 <PrivateRouter path="/cart/:id?" component={CartScreen} />
                 <PrivateRouter path="/shipping" component={ShippingScreen} />
                 <PrivateRouter path="/payment" component={PaymentScreen} />

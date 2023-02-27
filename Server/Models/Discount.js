@@ -29,6 +29,14 @@ const discountSchema = mongoose.Schema(
             type: String,
             require: true,
         },
+        verifi: {
+            type: Boolean,
+            require: true,
+            default: false,
+        },
+        idUser: {
+            type: Array,
+        },
     },
     {
         timestamps: true,

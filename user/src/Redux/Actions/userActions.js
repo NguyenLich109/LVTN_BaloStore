@@ -20,6 +20,12 @@ import {
     CREACTE_USER_REQUEST,
     CREACTE_USER_SUCCESS,
     CREACTE_USER_FAIL,
+    GET_GIFT_REQUEST,
+    GET_GIFT_SUCCESS,
+    GET_GIFT_FAIL,
+    ADD_GIFT_REQUEST,
+    ADD_GIFT_SUCCESS,
+    ADD_GIFT_FAIL,
 } from '../Constants/UserContants';
 import axios from 'axios';
 import { ORDER_LIST_MY_RESET } from '../Constants/OrderConstants';
@@ -220,3 +226,64 @@ export const createUser =
             });
         }
     };
+
+// GET GIFT ALL
+
+export const getGiftAction = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: GET_GIFT_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.get(`/api/discount/gift`, config);
+        dispatch({ type: GET_GIFT_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: GET_GIFT_FAIL,
+            payload: message,
+        });
+    }
+};
+
+//ADD GIFT
+export const addGiftAction = (values) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ADD_GIFT_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.put(`/api/users/addGift`, values, config);
+        dispatch({ type: ADD_GIFT_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ADD_GIFT_FAIL,
+            payload: message,
+        });
+    }
+};

@@ -1,4 +1,7 @@
 import {
+    ADD_GIFT_FAIL,
+    ADD_GIFT_REQUEST,
+    ADD_GIFT_SUCCESS,
     CREATE_IMAGE_USER_FAIL,
     CREATE_IMAGE_USER_REQUEST,
     CREATE_IMAGE_USER_SUCCESS,
@@ -263,6 +266,36 @@ export const updateProfileUser = (data) => async (dispatch, getState) => {
         }
         dispatch({
             type: UPDATE_USER_FAIL,
+            payload: message,
+        });
+    }
+};
+
+//ADD GIFT
+export const addGiftAction = (values) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ADD_GIFT_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.put(`/api/users/addGift`, values, config);
+        dispatch({ type: ADD_GIFT_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ADD_GIFT_FAIL,
             payload: message,
         });
     }

@@ -37,21 +37,21 @@ const OrderDetailmain = (props) => {
     const orderwaitGetConfirmation = useSelector((state) => state.orderwaitGetConfirmation);
     const { success: successwaitGetConfirmation } = orderwaitGetConfirmation;
     const orderDeliver = useSelector((state) => state.orderDeliver);
-    const { loading: loadingDelivered, success: successDelivered } = orderDeliver;
+    const { success: successDelivered } = orderDeliver;
     const orderPaid = useSelector((state) => state.orderPaid);
-    const { loading: loadingPaid, success: successPaid } = orderPaid;
+    const { success: successPaid } = orderPaid;
     const orderGetcompleteAdmin = useSelector((state) => state.orderGetcompleteAdmin);
     const { success: successCompleteAdmin } = orderGetcompleteAdmin;
     const orderCancel = useSelector((state) => state.orderCancel);
-    const { loading: loadingCancel, success: successCancel } = orderCancel;
+    const { success: successCancel } = orderCancel;
     const orderErrorPaidReducer = useSelector((state) => state.orderErrorPaidReducer);
-    const { loading: loadingErrorPaid, success: successErrorPaid } = orderErrorPaidReducer;
+    const { success: successErrorPaid } = orderErrorPaidReducer;
     const orderContentErrorPaidReducer = useSelector((state) => state.orderContentErrorPaidReducer);
-    const { loading: loadingContentErrorPaid, success: successContentErrorPaid } = orderContentErrorPaidReducer;
+    const { success: successContentErrorPaid } = orderContentErrorPaidReducer;
     const orderGuaranteeReducer = useSelector((state) => state.orderGuaranteeReducer);
-    const { loading: loadingOrderGuarantee, success: successOrderGuarantee } = orderGuaranteeReducer;
+    const { success: successOrderGuarantee } = orderGuaranteeReducer;
     const orderNoteGuaranteeReducer = useSelector((state) => state.orderNoteGuaranteeReducer);
-    const { loading: loadingOrderNoteGuarantee, success: successOrderNoteGuarantee } = orderNoteGuaranteeReducer;
+    const { success: successOrderNoteGuarantee } = orderNoteGuaranteeReducer;
     useEffect(() => {
         dispatch(getOrderDetails(orderId));
     }, [

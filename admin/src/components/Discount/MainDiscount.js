@@ -6,11 +6,13 @@ import {
     getDiscountAction,
     updateDiscountAction,
     deleteDiscountAction,
+    verifiDiscountAction,
 } from '../../Redux/Actions/DiscountActions';
 import {
     CREATE_DISCOUNT_RESET,
     UPDATE_DISCOUNT_RESET,
     DELETE_DISCOUNT_RESET,
+    VERIFI_DISCOUNT_RESET,
 } from '../../Redux/Constants/DiscountContainer';
 import Loading from '../LoadingError/Loading';
 import { toast } from 'react-toastify';
@@ -45,6 +47,9 @@ const MainDiscount = () => {
 
     const updateDiscountReduce = useSelector((state) => state.updateDiscountReduce);
     const { loading: loadingUpdate, success: successUpdate, error: errorUpdate } = updateDiscountReduce;
+
+    const verifiDiscountReduce = useSelector((state) => state.verifiDiscountReduce);
+    const { loading: loadingVerifi, success: successVerifi, error: errorVerifi } = verifiDiscountReduce;
 
     useEffect(() => {
         dispatch(getDiscountAction());
@@ -88,6 +93,17 @@ const MainDiscount = () => {
             dispatch({ type: UPDATE_DISCOUNT_RESET });
         }
     }, [dispatch, successUpdate, errorUpdate]);
+
+    useEffect(() => {
+        if (successVerifi) {
+            toast.success('Đã gửi thành công', ToastObjects);
+            dispatch({ type: VERIFI_DISCOUNT_RESET });
+        }
+        if (errorVerifi) {
+            toast.error(errorVerifi, ToastObjects);
+            dispatch({ type: VERIFI_DISCOUNT_RESET });
+        }
+    }, [dispatch, successVerifi, errorVerifi]);
 
     useEffect(() => {
         if (timeDiscount && dateDiscount) {
@@ -159,7 +175,7 @@ const MainDiscount = () => {
         <>
             <Toast />
             <section className="content-main">
-                {(loadingCreate || loadingGet || loadingDelete || loadingUpdate) && <Loading />}
+                {(loadingCreate || loadingGet || loadingDelete || loadingUpdate || loadingVerifi) && <Loading />}
                 <div className="content-header">
                     <h2 className="content-title">Mã giảm giá</h2>
                 </div>
@@ -289,6 +305,19 @@ const MainDiscount = () => {
                                                                     onClick={() => setIddiscount(data?._id)}
                                                                 >
                                                                     Sửa thông tin
+                                                                </button>
+                                                                <button
+                                                                    className="dropdown-item"
+                                                                    onClick={() =>
+                                                                        dispatch(
+                                                                            verifiDiscountAction({
+                                                                                id: data?._id,
+                                                                                verifi: true,
+                                                                            }),
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Tặng mã
                                                                 </button>
                                                                 <button
                                                                     className="dropdown-item"

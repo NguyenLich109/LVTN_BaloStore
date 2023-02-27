@@ -11,6 +11,9 @@ import {
     UPDATE_DISCOUNT_FAIL,
     UPDATE_DISCOUNT_REQUEST,
     UPDATE_DISCOUNT_SUCCESS,
+    VERIFI_DISCOUNT_FAIL,
+    VERIFI_DISCOUNT_REQUEST,
+    VERIFI_DISCOUNT_SUCCESS,
 } from '../Constants/DiscountContainer';
 import { logout } from './userActions';
 import axios from 'axios';
@@ -122,6 +125,34 @@ export const deleteDiscountAction = (value) => async (dispatch, getState) => {
         }
         dispatch({
             type: DELETE_DISCOUNT_FAIL,
+            payload: message,
+        });
+    }
+};
+
+export const verifiDiscountAction = (value) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: VERIFI_DISCOUNT_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.put(`/api/discount/${value.id}/verifi`, { verifi: value.verifi }, config);
+        dispatch({ type: VERIFI_DISCOUNT_SUCCESS, payload: data });
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
+        dispatch({
+            type: VERIFI_DISCOUNT_FAIL,
             payload: message,
         });
     }

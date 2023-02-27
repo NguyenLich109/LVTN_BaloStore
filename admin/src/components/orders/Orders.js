@@ -25,7 +25,7 @@ const Orders = (props) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const orderList = useSelector((state) => state.orderList);
-    const { loading, error, orders, page, pages } = orderList;
+    const { loading, orders, page, pages } = orderList;
     const userdisabled = useSelector((state) => state.userdisabled);
     const { success: successDisbled, error: errorDisabled } = userdisabled;
 

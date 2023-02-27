@@ -21,3 +21,12 @@
     cursor: pointer;
     /* color: #ccc; */
 }
+.fix-click__gift {
+    width: 100%;
+    text-align: left;
+    border: none;
+    padding: 6px;
+}
+.fix-click__gift:hover {
+    background-color: #cbc6c6;
+}
