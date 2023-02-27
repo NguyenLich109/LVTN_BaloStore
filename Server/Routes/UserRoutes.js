@@ -7,6 +7,7 @@ import User from './../Models/UserModel.js';
 import path from 'path';
 import fs from 'fs';
 import nodemailer from 'nodemailer';
+import discount from '../Models/Discount.js';
 
 const __dirname = path.resolve();
 const userRouter = express.Router();
@@ -256,21 +257,9 @@ userRouter.get(
     '/user',
     protect,
     asyncHandler(async (req, res) => {
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.user._id).select('-password');
         if (user) {
-            res.json({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                isAdmin: user.isAdmin,
-                createdAt: user.createdAt,
-                address: user.address,
-                city: user.city,
-                country: user.country,
-                image: user.image,
-                disabled: user.disabled,
-            });
+            res.json(user);
         } else {
             res.status(404);
             throw new Error('User not found');
@@ -377,6 +366,40 @@ userRouter.put(
     }),
 );
 
+// ADD GIFT
+userRouter.put(
+    '/addGift',
+    protect,
+    asyncHandler(async (req, res) => {
+        const { id, gift, date, price } = req.body;
+        const user = await User.findById(id);
+        const findDiscount = await discount.findOne({ nameDiscount: gift });
+        if (findDiscount) {
+            const checkId = findDiscount.idUser.find((user) => user == id);
+            if (findDiscount.countInStock > 0) {
+                if (!checkId) {
+                    user.gift.push({ gift, date, price });
+                    findDiscount.idUser.push(id);
+                    const saveDiscount = await findDiscount.save();
+                    const save = await user.save();
+                    if (save) {
+                        res.send(user);
+                    }
+                } else {
+                    res.status(400);
+                    throw new Error('Mã này đã được nhận');
+                }
+            } else {
+                res.status(400);
+                throw new Error('Số lượng mã này đã hết vui lòng tìm mã khác');
+            }
+        } else {
+            res.status(400);
+            throw new Error('Mã này không tồn tại');
+        }
+    }),
+);
+
 // GET ALL USER ADMIN
 userRouter.get(
     '/',
@@ -438,7 +461,7 @@ userRouter.post(
     asyncHandler(async (req, res) => {
         const { email } = req.body;
         const userExists = await User.findOne({ email });
-        if (userExists) {
+        if (userExists && (await userExists.matchPassword(email))) {
             const text = `
             Tài khoản của quý khách
             Tài khoản: ${email}
@@ -468,6 +491,9 @@ userRouter.post(
                 }
             });
             res.json({ status: 'TK đã gửi qua email, vui lòng kiểm tra hòm thư của bạn' });
+        } else {
+            res.status(400);
+            throw new Error('Tài khoản chưa được cấp lại mật khẩu');
         }
     }),
 );

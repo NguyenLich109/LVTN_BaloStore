@@ -10,6 +10,7 @@ import {
     sendEmailUserReduce,
     updateProfileReduce,
     getUserReduce,
+    giftReduce,
 } from './Reducers/userReducers';
 import {
     productCreateReducer,
@@ -61,6 +62,7 @@ import {
     getDiscountReduce,
     updateDiscountReduce,
     deleteDiscountReduce,
+    verifiDiscountReduce,
 } from './Reducers/DiscountReduce';
 
 const reducer = combineReducers({
@@ -72,6 +74,7 @@ const reducer = combineReducers({
     sendEmailUser: sendEmailUserReduce,
     updateProfileReduce,
     getUserReduce,
+    giftReduce,
     productList: productListReducer,
     productDelete: productDeleteReducer,
     productOptionDelete: productDeleteOptionReducer,
@@ -115,6 +118,7 @@ const reducer = combineReducers({
     getDiscountReduce,
     updateDiscountReduce,
     deleteDiscountReduce,
+    verifiDiscountReduce,
 });
 
 // login

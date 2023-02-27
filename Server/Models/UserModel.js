@@ -59,7 +59,7 @@ const userSchema = mongoose.Schema(
             require: true,
             default: false,
         },
-        discount: {
+        gift: {
             type: Array,
         },
     },

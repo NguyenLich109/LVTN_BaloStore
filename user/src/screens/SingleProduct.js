@@ -268,7 +268,7 @@ const SingleProduct = ({ history, match }) => {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-7 product-postion">
+                                    <div className="col-md-7 ">
                                         <div className="product-dtl">
                                             <div className="product-info">
                                                 <div className="product-name">{product.name}</div>

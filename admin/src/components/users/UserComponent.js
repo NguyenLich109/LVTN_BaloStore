@@ -1,8 +1,20 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { listUser, disabledUser, sendEmailAction, updateProfileUser } from '../../Redux/Actions/userActions';
-import { USER_DISABLED_RESET, SEND_EMAIL_USER_RESET, UPDATE_USER_RESET } from '../../Redux/Constants/UserContants';
+import {
+    listUser,
+    disabledUser,
+    sendEmailAction,
+    updateProfileUser,
+    addGiftAction,
+} from '../../Redux/Actions/userActions';
+import {
+    USER_DISABLED_RESET,
+    SEND_EMAIL_USER_RESET,
+    UPDATE_USER_RESET,
+    ADD_GIFT_RESET,
+} from '../../Redux/Constants/UserContants';
+import ModalVolcher from './ModalVolcher';
 import { toast } from 'react-toastify';
 import Toast from '../LoadingError/Toast';
 import Loading from '../LoadingError/Loading';
@@ -23,9 +35,11 @@ const UserComponent = () => {
     const userdisabled = useSelector((state) => state.userdisabled);
     const { userNoti, error: errorDisabled } = userdisabled;
     const sendEmailUser = useSelector((state) => state.sendEmailUser);
-    const { loading: loadingSendEmail, success: successSendEmail } = sendEmailUser;
+    const { loading: loadingSendEmail, success: successSendEmail, error: errorSendEmail } = sendEmailUser;
     const updateProfileReduce = useSelector((state) => state.updateProfileReduce);
     const { loading: updateloading, success: updatesuccess } = updateProfileReduce;
+    const giftReduce = useSelector((state) => state.giftReduce);
+    const { error: giftError, success: giftSuccess } = giftReduce;
 
     useEffect(() => {
         dispatch(listUser());
@@ -36,7 +50,22 @@ const UserComponent = () => {
             dispatch({ type: SEND_EMAIL_USER_RESET });
             toast.success('Đã gửi thông tin tài khoản qua email của tài khoản này', ToastObjects);
         }
-    }, [dispatch, successSendEmail]);
+        if (errorSendEmail) {
+            toast.error(errorSendEmail, ToastObjects);
+            dispatch({ type: SEND_EMAIL_USER_RESET });
+        }
+    }, [dispatch, successSendEmail, errorSendEmail]);
+
+    useEffect(() => {
+        if (giftSuccess) {
+            dispatch({ type: ADD_GIFT_RESET });
+            toast.success('Bạn đã gửi mã quà tặng', ToastObjects);
+        }
+        if (giftError) {
+            toast.error(giftError, ToastObjects);
+            dispatch({ type: ADD_GIFT_RESET });
+        }
+    }, [dispatch, giftSuccess, giftError]);
 
     useEffect(() => {
         if (updatesuccess) {
@@ -77,11 +106,7 @@ const UserComponent = () => {
         }
     };
     const handleSendEmail = (user) => {
-        if (!user?.isNv) {
-            toast.error('Tài khoản không sử dụng được chức năng này', ToastObjects);
-        } else {
-            dispatch(sendEmailAction({ email: user?.email }));
-        }
+        dispatch(sendEmailAction({ email: user?.email }));
     };
     const handleResetUser = (user) => {
         dispatch(updateProfileUser({ id: user?._id, password: user?.email }));
@@ -90,6 +115,11 @@ const UserComponent = () => {
         history.push(`/updateUser/${id}`);
     };
     //hết
+    const hendleSend = (data) => {
+        if (data) {
+            dispatch(addGiftAction({ id: data.id, gift: data.gift, date: data.date, price: data.price }));
+        }
+    };
     return (
         <section className="content-main">
             <div className="content-header">
@@ -156,7 +186,7 @@ const UserComponent = () => {
                                                             Cấp lại mật khẩu
                                                         </button>
                                                     )}
-                                                    {user?.isNv && (
+                                                    {!user?.isAdmin && (
                                                         <button
                                                             className="dropdown-item"
                                                             onClick={() => {
@@ -167,6 +197,13 @@ const UserComponent = () => {
                                                         </button>
                                                     )}
                                                 </div>
+                                                {!user?.isAdmin && !user?.isNv && (
+                                                    <ModalVolcher
+                                                        open={'#exampleModal'}
+                                                        hendleSend={hendleSend}
+                                                        id={user?._id}
+                                                    />
+                                                )}
                                             </div>
                                         </div>
                                         <div className="card-header">

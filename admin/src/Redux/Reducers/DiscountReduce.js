@@ -14,6 +14,10 @@ import {
     UPDATE_DISCOUNT_REQUEST,
     UPDATE_DISCOUNT_RESET,
     UPDATE_DISCOUNT_SUCCESS,
+    VERIFI_DISCOUNT_FAIL,
+    VERIFI_DISCOUNT_REQUEST,
+    VERIFI_DISCOUNT_RESET,
+    VERIFI_DISCOUNT_SUCCESS,
 } from '../Constants/DiscountContainer';
 
 export const createDiscountReduce = (state = {}, action) => {
@@ -68,6 +72,21 @@ export const deleteDiscountReduce = (state = {}, action) => {
         case DELETE_DISCOUNT_FAIL:
             return { loading: false, error: action.payload };
         case DELETE_DISCOUNT_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const verifiDiscountReduce = (state = {}, action) => {
+    switch (action.type) {
+        case VERIFI_DISCOUNT_REQUEST:
+            return { loading: true };
+        case VERIFI_DISCOUNT_SUCCESS:
+            return { loading: false, success: true };
+        case VERIFI_DISCOUNT_FAIL:
+            return { loading: false, error: action.payload };
+        case VERIFI_DISCOUNT_RESET:
             return {};
         default:
             return state;

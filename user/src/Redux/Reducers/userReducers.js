@@ -23,6 +23,13 @@ import {
     CREACTE_USER_SUCCESS,
     CREACTE_USER_FAIL,
     CREACTE_USER_RESET,
+    GET_GIFT_REQUEST,
+    GET_GIFT_SUCCESS,
+    GET_GIFT_FAIL,
+    ADD_GIFT_REQUEST,
+    ADD_GIFT_SUCCESS,
+    ADD_GIFT_FAIL,
+    ADD_GIFT_RESET,
 } from '../Constants/UserContants';
 
 // LOGIN
@@ -115,6 +122,36 @@ export const createUserReducer = (state = [], action) => {
         case CREACTE_USER_FAIL:
             return { loading: false, error: action.payload };
         case CREACTE_USER_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+// GET ALL GIFT
+export const getGiftReducer = (state = [], action) => {
+    switch (action.type) {
+        case GET_GIFT_REQUEST:
+            return { loading: true };
+        case GET_GIFT_SUCCESS:
+            return { loading: false, giftall: action.payload, success: true };
+        case GET_GIFT_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+};
+
+// GET ALL GIFT
+export const addGiftReducer = (state = [], action) => {
+    switch (action.type) {
+        case ADD_GIFT_REQUEST:
+            return { loading: true };
+        case ADD_GIFT_SUCCESS:
+            return { loading: false, gift: action.payload, success: true };
+        case ADD_GIFT_FAIL:
+            return { loading: false, error: action.payload };
+        case ADD_GIFT_RESET:
             return {};
         default:
             return state;

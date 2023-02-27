@@ -1,7 +1,7 @@
 import { printAction } from '../../Redux/Actions/OrderActions';
 import { PRINT_ORDER_RESET } from '../../Redux/Constants/OrderConstants';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, memo, useState } from 'react';
+import { memo, useState } from 'react';
 
 export default memo(function ModalOrder() {
     const dispatch = useDispatch();
