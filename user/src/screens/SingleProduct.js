@@ -21,7 +21,7 @@ import {
 } from '../Redux/Constants/ProductConstants';
 import { CART_CREATE_RESET } from '../Redux/Constants/CartConstants';
 import moment from 'moment';
-import { addToCart } from '../Redux/Actions/cartActions';
+import { addToCart, listCart } from '../Redux/Actions/cartActions';
 import { listProduct } from '../Redux/Actions/ProductActions';
 import { listUser } from '../Redux/Actions/userActions';
 import OfferProduct from '../components/SlideCorousel/offerProduct';
@@ -196,7 +196,7 @@ const SingleProduct = ({ history, match }) => {
     useEffect(() => {
         if (successAddCart) {
             dispatch({ type: CART_CREATE_RESET });
-            history.push(`/cart/${productId}?qty=${qty}?color=${color}`);
+            dispatch(listCart());
         }
         if (errorAddCart) {
             toast.error(errorAddCart, Toastobjects);
@@ -213,6 +213,13 @@ const SingleProduct = ({ history, match }) => {
     const submitHandler = (e) => {
         e.preventDefault();
         dispatch(createProductReview(productId, rating, reviewColor, comment));
+    };
+
+    const buyCart = () => {
+        if (userInfo) {
+            dispatch(addToCart(productId, color, qty, image, userInfo._id));
+            history.push(`/cart/${productId}?qty=${qty}?color=${color}`);
+        } else history.push('/login');
     };
 
     //comment
@@ -360,9 +367,18 @@ const SingleProduct = ({ history, match }) => {
                                                                 )}
                                                             </select>
                                                         </div>
-                                                        <button onClick={AddToCartHandle} className="round-black-btn">
-                                                            Thêm vào giỏ
-                                                        </button>
+                                                        <div className="btn-add-product d-flex">
+                                                            <button
+                                                                onClick={AddToCartHandle}
+                                                                className="round-black-btn"
+                                                            >
+                                                                <i class="fas fa-cart-plus"></i>
+                                                                Thêm vào giỏ hàng
+                                                            </button>
+                                                            <button onClick={buyCart} className="round-black-btn">
+                                                                MUA NGAY
+                                                            </button>
+                                                        </div>
                                                     </>
                                                 ) : null}
                                             </div>

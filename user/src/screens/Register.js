@@ -53,6 +53,10 @@ const Register = ({ location, history }) => {
             msg.name = 'Vui lòng nhập tên của bạn';
             msg.borderRed1 = 'border-red';
             msg.colorRed1 = 'color-red';
+        } else if (name.length <= 3 || name.length > 250) {
+            msg.name = 'Họ tên phải dài hơn 3 ký tự và ngắn hơn 250 ký tự';
+            msg.borderRed1 = 'border-red';
+            msg.colorRed1 = 'color-red';
         }
 
         if (isEmpty(email)) {
@@ -72,7 +76,7 @@ const Register = ({ location, history }) => {
             msg.borderRed3 = 'border-red';
             msg.colorRed3 = 'color-red';
         } else {
-            if (isNaN(phone)) {
+            if (!/^\+?\d{1,3}?[- .]?\(?(?:\d{2,3})\)?[- .]?\d\d\d[- .]?\d\d\d\d$/.test(phone)) {
                 msg.phone = 'Số điện thoại không hợp lệ';
                 msg.borderRed3 = 'border-red';
                 msg.colorRed3 = 'color-red';
@@ -248,7 +252,7 @@ const Register = ({ location, history }) => {
                     <button type="submit">Đăng ký</button>
                     <p>
                         <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
-                            Tôi đã có tài khoản <strong>Đăng nhập</strong>
+                            Bạn đã có tài khoản? <strong style={{ color: '#00483D' }}>Đăng nhập</strong>
                         </Link>
                     </p>
                 </form>

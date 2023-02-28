@@ -113,13 +113,21 @@ const Login = ({ location, history }) => {
                             Mật khẩu
                         </p>
                     </div>
+                    <p className="forget-password">
+                        <Link to={'/reset'}>
+                            <i style={{ color: '#0097DC' }}>Quên mật khẩu ?</i>
+                        </Link>
+                    </p>
                     <button type="submit">Đăng nhập</button>
                     {/* <a href='http://localhost:3000/reset'>Forgot Password</a> */}
+
                     <p>
-                        <Link to={'/reset'}>Quên mật khẩu</Link>
-                    </p>
-                    <p>
-                        <Link to={redirect ? `/register?redirect=${redirect}` : '/register'}>Tạo tài khoản mới</Link>
+                        <Link
+                            to={redirect ? `/register?redirect=${redirect}` : '/register'}
+                            style={{ color: '#00483D' }}
+                        >
+                            Tạo tài khoản mới
+                        </Link>
                     </p>
                 </form>
             </div>

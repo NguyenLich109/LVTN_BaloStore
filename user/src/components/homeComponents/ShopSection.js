@@ -144,13 +144,18 @@ const ShopSection = (props) => {
                                         {products?.length !== 0 ? (
                                             products?.map((product) => (
                                                 <div className="shop col-lg-3 col-md-4 col-sm-12" key={product?._id}>
-                                                    <div className="border-product text-center">
+                                                    <div className="border-product text-center box-chilld">
                                                         <Link to={`/products/${product?._id}`}>
-                                                            <div className="shopBack">
+                                                            <div className="shopBack product-postion">
                                                                 <img
                                                                     src={`/productImage/${product?.optionColor[0]?.image}`}
                                                                     alt={product?.name}
                                                                 />
+                                                                {product?.discount > 0 ? (
+                                                                    <span>-{product?.discount}%</span>
+                                                                ) : (
+                                                                    ''
+                                                                )}
                                                             </div>
                                                         </Link>
 
