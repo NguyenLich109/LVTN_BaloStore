@@ -54,6 +54,8 @@ app.use(express.static('public'));
 app.use('/api/forgotPass', forgotPassRouter);
 app.use('/api/verifiedEmail', createUserRouter);
 app.use('/api/discount', discountRoutes);
+
+app.use(express.static(path.resolve(__dirname, '../client/build')));
 // ERROR HANDLER
 app.use(notFound);
 app.use(errorHandler);
