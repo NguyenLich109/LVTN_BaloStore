@@ -45,6 +45,14 @@ const CartScreen = ({ match, location, history }) => {
               .reduce((a, i) => a + i.qty * ((i.product?.price * (100 - i.product?.discount)) / 100), 0)
               .toFixed(0)
         : 0;
+
+    const number = cartItems?.filter((item) => {
+        const findOption = item?.product?.optionColor?.find((option) => option.color === item.color);
+        if (findOption?.countInStock >= item.qty && item.isBuy === true) {
+            return item;
+        }
+    });
+
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
 
@@ -69,6 +77,7 @@ const CartScreen = ({ match, location, history }) => {
             dispatch(removefromcart(id));
         }
     };
+
     function findCartCountInStock(item) {
         const findCart = item?.product?.optionColor?.find((option) => option.color === item.color);
         return (
@@ -106,16 +115,15 @@ const CartScreen = ({ match, location, history }) => {
         return (
             <>
                 <div className="cart-qty col-md-2 col-sm-5 mt-3 mt-md-0 d-flex flex-column justify-content-center quantity-css">
-                    <h6>Phân loại hàng</h6>
+                    <h6 className="hidden-PC">Phân loại hàng</h6>
                     <h5>{item?.color}</h5>
                 </div>
                 <div className="cart-qty col-md-2 col-sm-5 mt-3 mt-md-0 d-flex flex-column justify-content-center quantity-css">
-                    <h6>Số lượng</h6>
+                    <h6 className="hidden-PC">Số lượng</h6>
                     <select
                         disabled={findCart?.countInStock <= 0}
                         value={item?.qty}
                         onChange={(e) => {
-                            // console.log(item?.product._id, 'hehehe');
                             dispatch(addToCart(item?.product._id, item?.color, e.target.value, userInfo._id));
                         }}
                     >
@@ -171,6 +179,13 @@ const CartScreen = ({ match, location, history }) => {
                             </Link>
                         </div>
                         {/* cartiterm */}
+                        <div className="cart-iterm-title row">
+                            <div className="col-md-5 d-flex justify-content-center">Sản phẩm</div>
+                            <div className="col-md-2 ">Màu sắc</div>
+                            <div className="col-md-2 ">Số lượng</div>
+                            <div className="col-md-2 d-flex justify-content-center">Giá</div>
+                            <div className="col-md-1 d-flex justify-content-end">Thao tác</div>
+                        </div>
                         <div className="cart-scroll">
                             {cartItems?.map((item) => (
                                 <div key={item?._id} className="cart-iterm row">
@@ -222,7 +237,7 @@ const CartScreen = ({ match, location, history }) => {
                         <hr />
                         <div className="cart-buttons d-flex align-items-center row">
                             <div className="total col-md-6">
-                                <span className="sub">Tổng tiền:</span>
+                                <span className="sub">Tổng thanh toán {`(${number.length} sản phẩm)`}:</span>
                                 <span className="total-price">{Number(total)?.toLocaleString('de-DE')}đ</span>
                             </div>
                             {total > 0 && (

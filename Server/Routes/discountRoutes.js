@@ -72,34 +72,28 @@ discountRoutes.put(
         const allDiscount = await discount.find({});
 
         if (findDiscount) {
-            const check = allDiscount.find((dis) => dis.nameDiscount == nameDiscount);
-            if (!check) {
-                if (nameDiscount || timeDiscount) {
-                    const getAllUser = await User.find({ isAdmin: false, isNv: false });
-                    if (getAllUser) {
-                        getAllUser.forEach(async (user) => {
-                            user.gift = user.gift.filter((value) => value.gift != findDiscount.nameDiscount);
-                            await User.updateOne({ _id: user._id }, { $set: { gift: user.gift } });
-                        });
-                    }
+            if (nameDiscount || timeDiscount) {
+                const getAllUser = await User.find({ isAdmin: false, isNv: false });
+                if (getAllUser) {
+                    getAllUser.forEach(async (user) => {
+                        user.gift = user.gift.filter((value) => value.gift != findDiscount.nameDiscount);
+                        await User.updateOne({ _id: user._id }, { $set: { gift: user.gift } });
+                    });
                 }
+            }
 
-                findDiscount.nameDiscount = nameDiscount || findDiscount.nameDiscount;
-                findDiscount.priceDiscount = priceDiscount || findDiscount.priceDiscount;
-                findDiscount.countInStock = countInStock || findDiscount.countInStock;
-                findDiscount.timeDiscount = timeDiscount || findDiscount.timeDiscount;
-                findDiscount.date1 = date1 || findDiscount.date1;
-                findDiscount.date2 = date2 || findDiscount.date2;
-                findDiscount.verifi = false;
-                findDiscount.idUser = [];
+            findDiscount.nameDiscount = nameDiscount || findDiscount.nameDiscount;
+            findDiscount.priceDiscount = priceDiscount || findDiscount.priceDiscount;
+            findDiscount.countInStock = countInStock || findDiscount.countInStock;
+            findDiscount.timeDiscount = timeDiscount || findDiscount.timeDiscount;
+            findDiscount.date1 = date1 || findDiscount.date1;
+            findDiscount.date2 = date2 || findDiscount.date2;
+            findDiscount.verifi = false;
+            findDiscount.idUser = [];
 
-                const saveDiscount = await findDiscount.save();
-                if (saveDiscount) {
-                    res.status(201).json(saveDiscount);
-                }
-            } else {
-                res.status(404);
-                throw new Error('Mã này đã tồn tại vui lòng đổi mã khác');
+            const saveDiscount = await findDiscount.save();
+            if (saveDiscount) {
+                res.status(201).json(saveDiscount);
             }
         } else {
             res.status(404);
