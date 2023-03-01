@@ -17,7 +17,7 @@ import forgotPassRouter from './Routes/forgotPassRouter.js';
 import createUserRouter from './Routes/createUserRouter.js';
 import orderNvRouter from './Routes/orderNvRouter.js';
 import discountRoutes from './Routes/discountRoutes.js';
-import cors from 'core';
+import cors from 'cors';
 
 dotenv.config();
 // import forgotPass from './Routes/forgotPassRouter.js';
