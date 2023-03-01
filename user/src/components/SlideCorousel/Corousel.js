@@ -92,7 +92,7 @@ export default function Corousel() {
                                         </p>
                                     </div>
                                     <div className="corousel-rating">
-                                        <Rating value={product.rating} text={`(${product.numReviews})`} />
+                                        <Rating value={product?.rating} text={`(${product?.numReviews})`} />
                                     </div>
                                 </Link>
                             </div>

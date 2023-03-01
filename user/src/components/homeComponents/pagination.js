@@ -59,7 +59,7 @@ const Pagination = (props) => {
                     </div>
                 </div>
                 <ul className="pagination justify-content-center" style={{ marginTop: '0', marginBottom: '0' }}>
-                    {(page > 5 ? pageProduct : [...Array(pages > 5 ? 5 : pages).keys()]).map((x) => (
+                    {(page > 5 ? pageProduct : [...Array(pages > 5 ? 5 : pages).keys()])?.map((x) => (
                         <li
                             className={`page-item ${x + 1 === page ? 'active' : ''}`}
                             key={x + 1}
