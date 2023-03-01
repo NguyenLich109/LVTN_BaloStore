@@ -17,6 +17,7 @@ import forgotPassRouter from './Routes/forgotPassRouter.js';
 import createUserRouter from './Routes/createUserRouter.js';
 import orderNvRouter from './Routes/orderNvRouter.js';
 import discountRoutes from './Routes/discountRoutes.js';
+import cors from 'core';
 
 dotenv.config();
 // import forgotPass from './Routes/forgotPassRouter.js';
@@ -32,6 +33,7 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use('/public', express.static('public'));
+app.use(cors());
 
 app.use('/api/cart', cartRoutes);
 app.use('/api/slider', SliderRouter);
