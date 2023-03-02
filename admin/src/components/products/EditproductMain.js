@@ -257,6 +257,8 @@ const EditproductMain = (props) => {
                                                     id="product_price"
                                                     //required
                                                     value={discount}
+                                                    min="0"
+                                                    max="100"
                                                     onChange={(e) => setDiscount(e.target.value)}
                                                 />
                                             </div>

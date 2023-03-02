@@ -217,6 +217,8 @@ const AddProductMain = () => {
                                                     id="product_price"
                                                     //required
                                                     value={discount}
+                                                    min="0"
+                                                    max="100"
                                                     onClick={() => {
                                                         setValidate((values) => {
                                                             const x = { ...values };
