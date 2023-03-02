@@ -204,7 +204,6 @@ const CartScreen = ({ match, location, history }) => {
                                     </div>
                                     {findCartColor(item)}
                                     <div className="cart-price mt-3 mt-md-0 col-md-2 align-items-sm-end align-items-start  d-flex flex-column justify-content-center col-sm-7 quantity-css">
-                                        <h6>Giá</h6>
                                         <div className="d-flex justify-content-center">
                                             {item.product?.discount !== 0 && (
                                                 <span className="corousel-price text-none">
