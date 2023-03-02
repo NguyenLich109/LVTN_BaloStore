@@ -1,6 +1,7 @@
 {
   "name": "BaloShop",
   "version": "0.1.0",
+  "homepage": ".",
   "proxy": "https://lvtn-balo-store-api.vercel.app",
   "private": true,
   "dependencies": {
