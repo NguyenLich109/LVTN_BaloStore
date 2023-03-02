@@ -25,7 +25,7 @@ forgotPassRouter.post('/forgotPassword', async (req, res) => {
         }
         const secret = JWT_SECRET1 + oldUser.password;
         const token1 = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
-            expiresIn: '1m',
+            expiresIn: '30m',
         });
         const link = `https://lvtn-balo-store-api.vercel.app/api/forgotPass/reset-password/${oldUser._id}/${token1}`;
         var transporter = nodemailer.createTransport({

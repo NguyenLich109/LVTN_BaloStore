@@ -21,10 +21,10 @@ createUserRouter.post(
             throw new Error('Tài khoản đã tồn tại');
         }
         const token = jwt.sign({ name, email, phone, password }, JWT_SECRET_VERIFIED, {
-            expiresIn: '2m',
+            expiresIn: '30m',
         });
         if (token) {
-            const link = `https://lvtn-balo-store-api.vercel.app/api/verifiedEmail/verified/${token}`;
+            const link = `http://localhost:5000/api/verifiedEmail/verified/${token}`;
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
