@@ -322,7 +322,11 @@ productRoute.post(
         const productExist = await Product.findOne({ name });
         if (price <= 0) {
             res.status(400);
-            throw new Error('Price is not valid, please correct it and try again');
+            throw new Error('Vui lòng nhập lại giá trị');
+        }
+        if (discount < 0) {
+            res.status(400);
+            throw new Error('Vui lòng nhập lại giá trị');
         }
         if (productExist) {
             res.status(400);
@@ -390,9 +394,14 @@ productRoute.put(
     asyncHandler(async (req, res) => {
         const { name, price, discount, description, category } = req.body;
         const product = await Product.findById(req.params.id);
+
+        if (discount < 0) {
+            res.status(400);
+            throw new Error('Vui lòng nhập lại giá trị');
+        }
         if (price <= 0) {
             res.status(400);
-            throw new Error('Price or Count in stock is not valid, please correct it and try again');
+            throw new Error('Vui lòng nhập lại giá trị');
         }
         if (product) {
             product.name = name || product.name;

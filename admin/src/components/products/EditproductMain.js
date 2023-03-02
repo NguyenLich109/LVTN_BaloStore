@@ -58,7 +58,7 @@ const EditproductMain = (props) => {
     const optionColor = product?.optionColor?.sort(({ color: b }, { color: a }) => (a > b ? 1 : a < b ? -1 : 0));
 
     const productUpdate = useSelector((state) => state.productUpdate);
-    const { success: successUpdate } = productUpdate;
+    const { success: successUpdate, error: errorUpdate } = productUpdate;
 
     const productColor = useSelector((state) => state.optionColorCreate);
     const { success: successOption } = productColor;
@@ -130,6 +130,13 @@ const EditproductMain = (props) => {
             }
         }
     }, [product, dispatch, productId, successUpdate]);
+
+    useEffect(() => {
+        if (errorUpdate) {
+            toast.error(errorUpdate, ToastObjects);
+            dispatch({ type: PRODUCT_UPDATE_RESET });
+        }
+    }, [errorUpdate, dispatch]);
 
     const submitHandler = (e) => {
         e.preventDefault();
