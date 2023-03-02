@@ -271,7 +271,7 @@ productRoute.delete(
         if (listImage) {
             for (let i = 0; i < listImage.length; i++) {
                 fs.unlink(path.join(__dirname, 'public/productImage', listImage[i].image), (err) => {
-                    if (err) console.log('Delete old productImage have err:', err);
+                    if (err) console.log('Delete old productImage have error:', err);
                 });
             }
         }
