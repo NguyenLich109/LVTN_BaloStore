@@ -20,25 +20,21 @@ const HomeScreen = ({ match, location }) => {
 
     return (
         <div>
-            <h1>Test lỗi</h1>
-            {/* <Header keysearch={keyword} /> */}
-            {/* <Silder /> */}
-            {/* {!keyword && !category ? <Sliders /> : ''}
+            {/* <Header keysearch={keyword} />
+            {!keyword && !category ? <Sliders /> : ''}
             {!keyword && !category ? <Corousel /> : ''}
-            {!keyword && !category ? <CorouselOder /> : ''} */}
+            {!keyword && !category ? <CorouselOder /> : ''}
 
-            {/* <ShopSection
+            <ShopSection
                 category={category}
                 keyword={keyword}
                 pageNumber={pageNumber}
                 sortProducts={sortProducts}
                 rating={rating}
-            /> */}
+            />
 
-            {/* <CalltoActionSection /> */}
-            {/* {!keyword && !category ? <NewsMain /> : ''} */}
-            {/* {!keyword && !category ? <ContactInfo /> : ''} */}
-            {/* <Footer /> */}
+            {!keyword && !category ? <NewsMain /> : ''} */}
+            <Footer />
         </div>
     );
 };
