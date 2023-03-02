@@ -70,7 +70,8 @@ createUserRouter.get('/verified/:token', async (req, res) => {
                 phone,
                 password,
             });
-            res.render('verifyUser');
+            res.send('Đăng kí tài khoản thành công');
+            // res.render('verifyUser');
         }
     } catch (error) {
         res.send('Thời gian đã hết hạn hoặc đã xác minh');
