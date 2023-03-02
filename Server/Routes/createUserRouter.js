@@ -24,7 +24,7 @@ createUserRouter.post(
             expiresIn: '2m',
         });
         if (token) {
-            const link = `http://localhost:5000/api/verifiedEmail/verified/${token}`;
+            const link = `https://lvtn-balo-store-api.vercel.app/api/verifiedEmail/verified/${token}`;
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
