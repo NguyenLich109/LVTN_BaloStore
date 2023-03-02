@@ -55,6 +55,12 @@ app.use('/api/forgotPass', forgotPassRouter);
 app.use('/api/verifiedEmail', createUserRouter);
 app.use('/api/discount', discountRoutes);
 
+app.use(express.static(__dirname)); //here is important thing - no static directory, because all static :)
+
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // ERROR HANDLER
 app.use(notFound);
 app.use(errorHandler);
