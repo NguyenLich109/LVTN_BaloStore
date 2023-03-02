@@ -20,10 +20,10 @@ const HomeScreen = ({ match, location }) => {
 
     return (
         <div>
-            {/* <Header keysearch={keyword} />
+            <Header keysearch={keyword} />
             {!keyword && !category ? <Sliders /> : ''}
             {!keyword && !category ? <Corousel /> : ''}
-            {!keyword && !category ? <CorouselOder /> : ''} */}
+            {!keyword && !category ? <CorouselOder /> : ''}
 
             <ShopSection
                 category={category}
@@ -33,7 +33,7 @@ const HomeScreen = ({ match, location }) => {
                 rating={rating}
             />
 
-            {/* {!keyword && !category ? <NewsMain /> : ''}  */}
+            {!keyword && !category ? <NewsMain /> : ''}
             <Footer />
         </div>
     );
