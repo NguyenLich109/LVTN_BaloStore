@@ -16,6 +16,9 @@ import { listOrders } from './Redux/Actions/OrderActions';
 import { listUser } from './Redux/Actions/userActions';
 import OrderReceiveScreen from './screens/OrderReceiveScreen';
 
+import axios from 'axios';
+axios.defaults.baseURL = 'https://lvtn-balo-store-api.vercel.app';
+
 function App() {
     const dispatch = useDispatch();
 

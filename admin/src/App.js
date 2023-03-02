@@ -26,6 +26,8 @@ import CommentScreen from './screens/CommentScreen';
 import CreateUserScreen from './screens/CreateUserScreen';
 import UpdateUserScreen from './screens/UpdateUserScreen';
 import DiscountScreen from './screens/DiscountScreen';
+import axios from 'axios';
+axios.defaults.baseURL = 'https://lvtn-balo-store-api.vercel.app';
 
 function App() {
     const dispatch = useDispatch();
