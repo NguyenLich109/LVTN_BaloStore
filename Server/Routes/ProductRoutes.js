@@ -322,11 +322,11 @@ productRoute.post(
         const productExist = await Product.findOne({ name });
         if (price <= 0) {
             res.status(400);
-            throw new Error('Vui lòng nhập lại giá trị');
+            throw new Error('Không được nhập lại giá trị âm');
         }
         if (discount < 0) {
             res.status(400);
-            throw new Error('Vui lòng nhập lại giá trị');
+            throw new Error('Không được nhập lại giá trị âm');
         }
         if (productExist) {
             res.status(400);
@@ -397,11 +397,11 @@ productRoute.put(
 
         if (discount < 0) {
             res.status(400);
-            throw new Error('Vui lòng nhập lại giá trị');
+            throw new Error('Không được nhập lại giá trị âm');
         }
         if (price <= 0) {
             res.status(400);
-            throw new Error('Vui lòng nhập lại giá trị');
+            throw new Error('Không được nhập lại giá trị âm');
         }
         if (product) {
             product.name = name || product.name;
