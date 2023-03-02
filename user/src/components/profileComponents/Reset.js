@@ -34,8 +34,8 @@ export default class Reset extends Component {
                 // console.log(data, "userRegister");
                 alert(data.status);
             });
-            this.setState({email: ''})
-            this.setState({linkEmail: true})
+        this.setState({ email: '' });
+        this.setState({ linkEmail: true });
     }
     render() {
         return (
@@ -43,7 +43,7 @@ export default class Reset extends Component {
                 <div className={cx('row justify-content-center')}>
                     <div className={cx('col-lg-8 col-md-10')}>
                         <div className={cx('forgot')}>
-                            <img className={cx('logoShop')} alt='hình ảnh' src="/images/logo2.png"/>
+                            <img className={cx('logoShop')} alt="hình ảnh" src="/images/logo2.png" />
                             <h2 className={cx('headContent')}>Quên mật khẩu?</h2>
                             <p className={cx('textContent')}>Thay đổi mật khẩu của bạn trong ba bước đơn giản !</p>
                             <ol className={cx('list-unstyled')}>
@@ -64,7 +64,9 @@ export default class Reset extends Component {
                         <form className={cx('card mt-4')}>
                             <div className={cx('card-body')}>
                                 <div className={cx('form-group')}>
-                                    <h2 for="email-for-pass" className={cx('labelEmail')}>Nhập địa chỉ email của bạn</h2>
+                                    <h2 for="email-for-pass" className={cx('labelEmail')}>
+                                        Nhập địa chỉ email của bạn
+                                    </h2>
                                     <input
                                         id="email-for-pass"
                                         className="form-control"
@@ -82,17 +84,19 @@ export default class Reset extends Component {
                                 <a href="http://localhost:3000/" className={cx('btn-danger')}>
                                     Trở lại trang chủ
                                 </a>
-                                {
-                                    this.state.linkEmail && (<a className={cx('btn-danger')} href='https://accounts.google.com/'>
-                                        <i class="fa fa-chevron-circle-right" aria-hidden="true" style={
-                                            {
-                                                paddingRight: "20px",
-                                                paddingLeft: "10px",
-                                            }
-                                        }></i>
+                                {this.state.linkEmail && (
+                                    <a className={cx('btn-danger')} href="https://accounts.google.com/">
+                                        <i
+                                            class="fa fa-chevron-circle-right"
+                                            aria-hidden="true"
+                                            style={{
+                                                paddingRight: '20px',
+                                                paddingLeft: '10px',
+                                            }}
+                                        ></i>
                                         Đi đến email của bạn
-                                        </a>)
-                                }
+                                    </a>
+                                )}
                             </div>
                         </form>
                     </div>
