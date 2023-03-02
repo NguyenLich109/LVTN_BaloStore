@@ -28,10 +28,11 @@ const AddProductMain = () => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
-    const [inputImage, setInputImage] = useState('');
+    // const [inputImage, setInputImage] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [description, setDescription] = useState('');
     const [color, setColor] = useState('');
+    const [urlImage, setUrlImage] = useState('');
     const [productId, setProducId] = useState('');
     const [discount, setDiscount] = useState(0);
     const [validate, setValidate] = useState({});
@@ -43,7 +44,7 @@ const AddProductMain = () => {
     const productCreate = useSelector((state) => state.productCreate);
     const { loading, error, product } = productCreate;
     const productColor = useSelector((state) => state.optionColorCreate);
-    const { loading: loadingOption, error: errorOption, success: successOption } = productColor;
+    const { error: errorOption, success: successOption } = productColor;
     const lcategories = useSelector((state) => state.CategoryList);
     const { categories } = lcategories;
     const productEdit = useSelector((state) => state.productEdit);
@@ -63,12 +64,13 @@ const AddProductMain = () => {
             dispatch({ type: PRODUCT_OPTIONCOLOR_RESET });
             setColor('');
             setCountInStock(1);
+            setUrlImage('');
         }
     }, [successOption, dispatch]);
 
     useEffect(() => {
         dispatch(editProduct(productId));
-    }, [productId, successOption]);
+    }, [productId, successOption, dispatch]);
 
     useEffect(() => {
         dispatch(ListCategory());
@@ -77,7 +79,6 @@ const AddProductMain = () => {
     useEffect(() => {
         if (successCreactImage) {
             dispatch({ type: PRODUCT_CREATE_IMAGE_RESET });
-            dispatch(createOptionColor(productId, { color, countInStock, image: urlImages[0].filename }));
         }
     }, [successCreactImage, dispatch, productId, color, countInStock, urlImages]);
     useEffect(() => {
@@ -107,10 +108,6 @@ const AddProductMain = () => {
                 msg.borderRed3 = 'border-red';
             }
         }
-        if (isEmpty(discount)) {
-            msg.discount = 'Vui lòng nhập nhập mã giảm giá';
-            msg.borderRed4 = 'border-red';
-        }
         if (isEmpty(description)) {
             msg.description = 'Vui lòng nhập mô tả sản phẩm';
             msg.borderRed6 = 'border-red';
@@ -132,18 +129,11 @@ const AddProductMain = () => {
     };
     const submitOptionHandler = (e) => {
         e.preventDefault();
-        if (inputImage === '') {
-            toast.error('Vui lòng chọn ảnh', ToastObjects);
-        } else {
-            let images = new FormData();
-            images.append('image', inputImage);
-            dispatch(createImageProduct(images));
-            setInputImage('');
+        if (color && countInStock && urlImage) {
+            dispatch(createOptionColor(productId, { color, countInStock, image: urlImage }));
         }
     };
-    const handlerOnchane = (e) => {
-        setInputImage(e.target.files[0]);
-    };
+
     return (
         <>
             <Toast />
@@ -325,7 +315,7 @@ const AddProductMain = () => {
                                                         </label>
                                                         <input
                                                             type="text"
-                                                            placeholder=""
+                                                            placeholder="Color"
                                                             className={`form-control ${validate.borderRed5}`}
                                                             id="product_price"
                                                             //required
@@ -349,7 +339,7 @@ const AddProductMain = () => {
                                                         </label>
                                                         <input
                                                             type="number"
-                                                            placeholder=""
+                                                            placeholder="Number"
                                                             className={`form-control ${validate.borderRed5}`}
                                                             id="product_price"
                                                             //required
@@ -373,8 +363,10 @@ const AddProductMain = () => {
                                                         </label>
                                                         <input
                                                             className="form-control col-12 col-sm-12 col-md-12 col-lg-12"
-                                                            onChange={handlerOnchane}
-                                                            type="file"
+                                                            onChange={(e) => setUrlImage(e.target.value)}
+                                                            value={urlImage}
+                                                            type="text"
+                                                            placeholder="Url"
                                                         />
                                                     </div>
 
@@ -418,7 +410,7 @@ const AddProductMain = () => {
                                                                                 height: '40px',
                                                                                 width: '40px',
                                                                             }}
-                                                                            src={`/productImage/${option?.image}`}
+                                                                            src={option?.image}
                                                                             alt="Product"
                                                                         />
                                                                     </td>

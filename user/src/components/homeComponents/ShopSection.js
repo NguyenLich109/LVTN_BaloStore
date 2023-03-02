@@ -148,7 +148,7 @@ const ShopSection = (props) => {
                                                         <Link to={`/products/${product?._id}`}>
                                                             <div className="shopBack product-postion">
                                                                 <img
-                                                                    src={`/productImage/${product?.optionColor[0]?.image}`}
+                                                                    src={product?.optionColor[0]?.image}
                                                                     alt={product?.name}
                                                                 />
                                                                 {product?.discount > 0 ? (

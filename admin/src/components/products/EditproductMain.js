@@ -40,7 +40,6 @@ const EditproductMain = (props) => {
     const [category, setCategory] = useState('');
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
-    const [inputImage, setInputImage] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [description, setDescription] = useState('');
     const [color, setColor] = useState('');
@@ -50,6 +49,7 @@ const EditproductMain = (props) => {
     const [checkEdit, setCheckEdit] = useState(false);
     const [checkAdd, setCheckAdd] = useState(true);
     const [discount, setDiscount] = useState(0);
+    const [urlImage, setUrlImage] = useState('');
     const dispatch = useDispatch();
 
     const productEdit = useSelector((state) => state.productEdit);
@@ -58,10 +58,10 @@ const EditproductMain = (props) => {
     const optionColor = product?.optionColor?.sort(({ color: b }, { color: a }) => (a > b ? 1 : a < b ? -1 : 0));
 
     const productUpdate = useSelector((state) => state.productUpdate);
-    const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = productUpdate;
+    const { success: successUpdate } = productUpdate;
 
     const productColor = useSelector((state) => state.optionColorCreate);
-    const { loading: loadingOption, error: errorOption, success: successOption } = productColor;
+    const { success: successOption } = productColor;
     const productOptionUpdate = useSelector((state) => state.productOptionUpdate);
     const { error: errorOptionUpdate, success: successOptionUpdate } = productOptionUpdate;
 
@@ -70,7 +70,7 @@ const EditproductMain = (props) => {
     const lcategories = useSelector((state) => state.CategoryList);
     const { categories } = lcategories;
     const productCreateImage = useSelector((state) => state.productCreateImage);
-    const { urlImages, success: successCreactImage } = productCreateImage;
+    const { success: successCreactImage } = productCreateImage;
     const productDeleteImage = useSelector((state) => state.productDeleteImage);
     const { success: successDeleteImage } = productDeleteImage;
 
@@ -84,6 +84,9 @@ const EditproductMain = (props) => {
         if (successOption) {
             dispatch({ type: PRODUCT_OPTIONCOLOR_RESET });
             toast.success('Đã cập nhật thành công', ToastObjects);
+            setAddColor('');
+            setAddCountInStock('');
+            setUrlImage('');
         }
         if (successDelete) {
             dispatch({ type: PRODUCT_DELETE_OPTION_RESET });
@@ -94,7 +97,7 @@ const EditproductMain = (props) => {
             toast.success('Đã xóa thành công', ToastObjects);
         }
         dispatch(editProduct(productId));
-    }, [successOptionUpdate, successOption, successDelete, successDeleteImage]);
+    }, [successOptionUpdate, successOption, successDelete, successDeleteImage, productId, dispatch]);
 
     useEffect(() => {
         const options = product?.optionColor?.find((option) => option._id === optionId);
@@ -102,23 +105,13 @@ const EditproductMain = (props) => {
             setColor(options?.color);
             setCountInStock(options?.countInStock);
         }
-    }, [optionId]);
+    }, [optionId, product]);
 
     useEffect(() => {
         if (successCreactImage) {
             dispatch({ type: PRODUCT_CREATE_IMAGE_RESET });
-            dispatch(
-                createOptionColor(productId, {
-                    color: AddColor,
-                    countInStock: AddCountInStock,
-                    image: urlImages[0].filename,
-                }),
-            );
-            setAddColor('');
-            setAddCountInStock('');
-            setInputImage('');
         }
-    }, [urlImages, successCreactImage, dispatch, AddColor, AddCountInStock, productId]);
+    }, [successCreactImage, dispatch]);
 
     useEffect(() => {
         dispatch(ListCategory());
@@ -160,12 +153,14 @@ const EditproductMain = (props) => {
 
     const submitOptionSaveHandler = (e) => {
         e.preventDefault();
-        if (inputImage !== '') {
-            let images = new FormData();
-            images.append('image', inputImage);
-            dispatch(createImageProduct(images));
-        } else {
-            toast.error('Vui lòng chọn ảnh', ToastObjects);
+        if (AddColor && AddCountInStock && urlImage) {
+            dispatch(
+                createOptionColor(productId, {
+                    color: AddColor,
+                    countInStock: AddCountInStock,
+                    image: urlImage,
+                }),
+            );
         }
     };
 
@@ -396,7 +391,7 @@ const EditproductMain = (props) => {
                                                                                 height: '40px',
                                                                                 width: '40px',
                                                                             }}
-                                                                            src={`/productImage/${option?.image}`}
+                                                                            src={option?.image}
                                                                             alt="Product"
                                                                         />
                                                                     </td>
@@ -483,8 +478,10 @@ const EditproductMain = (props) => {
                                                             </label>
                                                             <input
                                                                 className="form-control col-12 col-sm-12 col-md-12 col-lg-12"
-                                                                onChange={(e) => setInputImage(e.target.files[0])}
-                                                                type="file"
+                                                                onChange={(e) => setUrlImage(e.target.value)}
+                                                                value={urlImage}
+                                                                type="text"
+                                                                placeholder="Url"
                                                             />
                                                         </div>
 

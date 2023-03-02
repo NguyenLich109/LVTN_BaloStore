@@ -150,11 +150,11 @@ const PlaceOrderScreen = ({ history }) => {
                 )}
                 {findCart?.countInStock < item?.qty ? (
                     <div className="col-md-2 col-5">
-                        <img src={`/productImage/${item?.image}`} alt={item.name} />
+                        <img src={item?.image} alt={item.name} />
                     </div>
                 ) : (
                     <div className="col-md-2 col-6">
-                        <img src={`/productImage/${item?.image}`} alt={item.name} />
+                        <img src={item?.image} alt={item.name} />
                     </div>
                 )}
                 {findCart?.countInStock < item?.qty ? (

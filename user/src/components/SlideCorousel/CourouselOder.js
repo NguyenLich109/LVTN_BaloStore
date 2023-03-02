@@ -74,7 +74,7 @@ export default function CorouselOder() {
                                         <Link to={`/products/${product._id}`} className="corousel-link">
                                             <div className="product-postion">
                                                 <img
-                                                    src={`/productImage/${product?.optionColor[0]?.image}`}
+                                                    src={product?.optionColor[0]?.image}
                                                     className="corousel-img"
                                                 ></img>
                                                 {product?.discount > 0 ? <span>-{product?.discount}%</span> : ''}

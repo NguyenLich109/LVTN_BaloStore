@@ -593,7 +593,7 @@ const OrderScreen = ({ match }) => {
                                                 >
                                                     <img
                                                         // src={item.image}
-                                                        src={`/productImage/${item.image}`}
+                                                        src={item.image}
                                                         alt={item.name}
                                                     />
                                                 </div>
@@ -821,7 +821,7 @@ const OrderScreen = ({ match }) => {
                                                 <form>
                                                     <div style={{ textAlign: 'center' }}>
                                                         <img
-                                                            src={`/productImage/${product?.image}`}
+                                                            src={product?.image}
                                                             style={{ height: '120px', width: '120px' }}
                                                             alt=""
                                                         ></img>

@@ -193,7 +193,7 @@ const CartScreen = ({ match, location, history }) => {
                                     <div className="cart-image col-md-1 col-4">
                                         <img
                                             style={{ height: '80px', width: '80px' }}
-                                            src={`/productImage/${item?.image}`}
+                                            src={item?.image}
                                             alt={item.product?.name}
                                         />
                                     </div>

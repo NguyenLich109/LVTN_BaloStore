@@ -15,7 +15,7 @@ export default memo(function DetailProduct({ products, indexNumber }) {
                                     data={index}
                                     className={indexNumber === index ? `carousel-item active` : `carousel-item`}
                                 >
-                                    <img className="d-block w-100" src={`/productImage/${product?.image}`} alt=""></img>
+                                    <img className="d-block w-100" src={product?.image} alt=""></img>
                                 </div>
                             }
                         </>

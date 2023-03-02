@@ -49,7 +49,7 @@ export default function CommentMain() {
         const findUser = users?.find((user) => user._id === data.user);
         return (
             <img
-                src={`/userProfile/${findUser?.image}` || '/images/logo2.png'} // upload ảnh
+                src={findUser?.image ? `${findUser?.image}` : '/images/user.png'} // upload ảnh
                 alt=""
                 style={{
                     height: '40px',
@@ -115,7 +115,7 @@ export default function CommentMain() {
                                             <tr>
                                                 <td>
                                                     <img
-                                                        src={`/productImage/${product?.imageProduct}`}
+                                                        src={product?.imageProduct}
                                                         alt=""
                                                         style={{ height: '40px', width: '40px' }}
                                                     />
@@ -141,7 +141,11 @@ export default function CommentMain() {
                                     >
                                         <div className="rating-review__flex">
                                             <img
-                                                src={`/userProfile/${product?.user?.image}` || '/images/logo.png'} // upload ảnh
+                                                src={
+                                                    product?.user?.image
+                                                        ? `${product?.user?.image}`
+                                                        : '/images/user.png'
+                                                } // upload ảnh
                                                 alt=""
                                                 style={{
                                                     height: '40px',

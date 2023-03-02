@@ -19,9 +19,16 @@ const Product = (props) => {
             {product && (
                 <tr>
                     <td style={{ width: '10%' }}>{index + 1}</td>
-                    <td style={{ width: '20%' }}>
+                    {/* <td style={{ width: '20%' }}>
                         <img
                             src={`/productImage/${product?.optionColor[0]?.image}`}
+                            alt="Product"
+                            style={{ height: '40px', width: '40px' }}
+                        />
+                    </td> */}
+                    <td style={{ width: '20%' }}>
+                        <img
+                            src={product?.optionColor[0]?.image}
                             alt="Product"
                             style={{ height: '40px', width: '40px' }}
                         />

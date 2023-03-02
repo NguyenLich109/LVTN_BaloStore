@@ -239,7 +239,7 @@ const SingleProduct = ({ history, match }) => {
         const findUser = users?.find((user) => user._id === data.user);
         return (
             <img
-                src={`/userProfile/${findUser?.image}` || '/images/logo2.png'} // upload ảnh
+                src={findUser?.image ? `${findUser?.image}` : '/images/user.png'} // upload ảnh
                 alt=""
                 style={{
                     height: '40px',
@@ -733,8 +733,9 @@ const SingleProduct = ({ history, match }) => {
                                                     <div className="rating-review__flex">
                                                         <img
                                                             src={
-                                                                `/userProfile/${review?.user?.image}` ||
-                                                                '/images/logo.png'
+                                                                review?.user?.image
+                                                                    ? `${review?.user?.image}`
+                                                                    : '/images/user.png'
                                                             }
                                                             alt=""
                                                             style={{

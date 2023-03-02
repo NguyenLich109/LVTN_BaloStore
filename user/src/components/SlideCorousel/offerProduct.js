@@ -62,10 +62,7 @@ export default function OfferProduct(data) {
                             return (
                                 <div key={index} className="corousel-div border-product" style={{ maxHeight: '300px' }}>
                                     <Link to={`/products/${product._id}`} className="corousel-link">
-                                        <img
-                                            src={`/productImage/${product?.optionColor[0]?.image}`}
-                                            className="corousel-img"
-                                        ></img>
+                                        <img src={product?.optionColor[0]?.image} className="corousel-img"></img>
                                         <p className="corousel-noti">{product?.name}</p>
                                         <p className="corousel-price">{product?.price?.toLocaleString('de-DE')}đ</p>
                                         <div className="corousel-rating">

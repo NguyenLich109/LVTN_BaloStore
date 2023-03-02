@@ -87,7 +87,7 @@ const FromCreateUser = () => {
                                 alt="Img"
                                 className="create-user__image"
                             ></img>
-                            <label htmlFor="image" className="create-user__label">
+                            {/* <label htmlFor="image" className="create-user__label">
                                 <i className="far fa-camera"></i>
                             </label>
                             <input
@@ -95,7 +95,7 @@ const FromCreateUser = () => {
                                 type="file"
                                 id="image"
                                 onChange={(e) => setImage(e.target.files[0])}
-                            ></input>
+                            ></input> */}
                         </div>
                     </div>
                     <div className="col-xl-9 col-lg-9">

@@ -506,7 +506,7 @@ const ProfileTabs = () => {
                         className="col-lg-12 col-md-12 col-sm-12 text-center display_none"
                         style={checkFile === true ? {} : { display: 'none' }}
                     >
-                        <img
+                        {/* <img
                             src={
                                 url?.filename === undefined
                                     ? user?.image === undefined
@@ -522,9 +522,9 @@ const ProfileTabs = () => {
                                 flexShrink: '0',
                             }}
                             alt=""
-                        ></img>
+                        ></img> */}
                         <div className="text-center">
-                            <input
+                            {/* <input
                                 id="id_file"
                                 type="file"
                                 style={{ display: 'none' }}
@@ -546,7 +546,7 @@ const ProfileTabs = () => {
                                 }}
                             >
                                 Chọn ảnh
-                            </label>
+                            </label> */}
                         </div>
                     </div>
                     <div
