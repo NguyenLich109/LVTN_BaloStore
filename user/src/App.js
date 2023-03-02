@@ -20,8 +20,8 @@ import PrivateRouter from './PrivateRouter';
 import GiftScreen from './screens/GiftScreen';
 import Reset from './components/profileComponents/Reset';
 
-// import axios from 'axios';
-// axios.defaults.baseURL = 'https://lvtn-balo-store-api.vercel.app';
+import axios from 'axios';
+axios.defaults.baseURL = 'https://lvtn-balo-store-api.vercel.app';
 
 // path - router - user
 

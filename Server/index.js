@@ -27,6 +27,7 @@ connectDatabase();
 const app = express();
 app.use(express.json());
 
+app.use(express.static('public'));
 // API
 
 // cấu hình định danh file ejs bên express
