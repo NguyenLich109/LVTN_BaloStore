@@ -45,12 +45,11 @@ app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/ordersNv', orderNvRouter);
 app.use('/api/category', categoryRoute);
-app.get('/api/config/paypal', (req, res) => {
-    res.send(process.env.PAYPAL_CLIENT_ID);
-});
+// app.get('/api/config/paypal', (req, res) => {
+//     res.send(process.env.PAYPAL_CLIENT_ID);
+// });
 app.use('/api/uploadAvatar', Upload);
 app.use('/api/imageProfile', imageProfile);
-// app.use(express.static('public'));
 // forgot
 app.use('/api/forgotPass', forgotPassRouter);
 app.use('/api/verifiedEmail', createUserRouter);
