@@ -2,7 +2,7 @@
   "name": "BaloShop",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://lvtn-balo-store-api.vercel.app",
+  "proxy": "https://dp-balo-store-api.vercel.app",
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
