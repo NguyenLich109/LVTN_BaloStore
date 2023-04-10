@@ -50,7 +50,7 @@ app.get('/api/config/paypal', (req, res) => {
 });
 app.use('/api/uploadAvatar', Upload);
 app.use('/api/imageProfile', imageProfile);
-app.use(express.static('public'));
+// app.use(express.static('public'));
 // forgot
 app.use('/api/forgotPass', forgotPassRouter);
 app.use('/api/verifiedEmail', createUserRouter);
