@@ -61,7 +61,7 @@ export default function NewsMain() {
         <div className="container corousel-container mb-5 mt-1">
             <h2 className="section-title">
                 <b></b>
-                <span className="section-title-main">Tin Tức & Sự Kiện</span>
+                <span className="section-title-main">Tin Tức && Sự Kiện</span>
                 <b></b>
             </h2>
             <div></div>
